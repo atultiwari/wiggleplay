@@ -1,0 +1,158 @@
+{
+  "sourceImage": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/refs/plane.png",
+  "zonesDir": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/plane/di",
+  "detailInventory": {
+    "scanMethod": "grid-3x3",
+    "targetMinDetails": 6,
+    "details": [
+      {
+        "id": "belly-stripe",
+        "kind": "linework",
+        "description": "red stripe along the blue belly line from the nose to the wing",
+        "region": {
+          "x": 0.15,
+          "y": 0.58,
+          "width": 0.35,
+          "height": 0.1,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": [
+          "albedo"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "belly-stripe"
+        }
+      },
+      {
+        "id": "fin-stripes",
+        "kind": "linework",
+        "description": "red and blue stripes along the fin's trailing edge",
+        "region": {
+          "x": 0.78,
+          "y": 0.18,
+          "width": 0.14,
+          "height": 0.4,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": [
+          "albedo"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "fin-stripes"
+        }
+      },
+      {
+        "id": "portholes",
+        "kind": "decal",
+        "description": "four glossy blue portholes in a row",
+        "region": {
+          "x": 0.43,
+          "y": 0.45,
+          "width": 0.28,
+          "height": 0.1,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": [
+          "albedo"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "porthole-1"
+        }
+      },
+      {
+        "id": "face-decal",
+        "kind": "decal",
+        "description": "two eyes with catchlights, eyebrows, cheeks and a smile on the nose",
+        "region": {
+          "x": 0.1,
+          "y": 0.4,
+          "width": 0.28,
+          "height": 0.2,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": [
+          "albedo"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "eye-a"
+        }
+      },
+      {
+        "id": "intake-disc",
+        "kind": "gloss",
+        "description": "blue intake disc on the engine pod",
+        "region": {
+          "x": 0.52,
+          "y": 0.72,
+          "width": 0.06,
+          "height": 0.08,
+          "units": "normalized"
+        },
+        "scale": "micro",
+        "affects": [
+          "roughness"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "intake-near"
+        }
+      },
+      {
+        "id": "nose-gloss",
+        "kind": "gloss",
+        "description": "small light dot on the blue nose",
+        "region": {
+          "x": 0.04,
+          "y": 0.56,
+          "width": 0.03,
+          "height": 0.03,
+          "units": "normalized"
+        },
+        "scale": "micro",
+        "affects": [
+          "roughness"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "nose-gloss"
+        }
+      },
+      {
+        "id": "belly-cap",
+        "kind": "decal",
+        "description": "blue nose cap and belly",
+        "region": {
+          "x": 0.02,
+          "y": 0.54,
+          "width": 0.48,
+          "height": 0.22,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": [
+          "albedo"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "belly"
+        }
+      }
+    ]
+  },
+  "authoringInstruction": "Open each zone crop under zonesDir and replace every detail stub's kind, description, scale, affects, mapsTo, and confidence with what is actually observed. Add more detail entries per zone if a single zone contains multiple distinct marks; do not leave stubs unfilled or unlinked (mapsTo must reference a real component.localFeatures or material.localOverrides entry)."
+}

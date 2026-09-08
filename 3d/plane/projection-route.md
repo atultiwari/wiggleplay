@@ -1,0 +1,1 @@
+Projection route: **not applicable** — flat sticker with no photographic surface detail; every material is declared textureless and every marking is a flat colour region built as geometry or vertex paint. No camera solve, de-lighting or texture projection.

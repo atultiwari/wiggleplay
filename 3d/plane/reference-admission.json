@@ -1,0 +1,14 @@
+{
+  "admitted": true,
+  "reasons": [],
+  "provenance": {
+    "viewpoint": "reference",
+    "sourcePath": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/refs/plane-clean.png",
+    "width": 512,
+    "height": 512,
+    "foregroundCoverage": 0.1588,
+    "largestComponentFraction": 0.8912,
+    "pHash": 16924751636575080658,
+    "duplicateOfHash": null
+  }
+}

@@ -25,9 +25,9 @@ for i in $(seq 1 30); do
 done
 sleep 1
 echo "== capture"
-GROUND=0 node e2e/lab-capture.mjs $MODEL $M/renders match,right,rear,left,orbit-plus,orbit-minus,rear-quarter 2>&1 | grep -c captured
+BG='#303030' GROUND=0 node e2e/lab-capture.mjs $MODEL $M/renders match,right,rear,left,orbit-plus,orbit-minus,rear-quarter 2>&1 | grep -c captured
 node e2e/lab-capture.mjs $MODEL $M/renders hero,head,head-quarter 2>&1 | grep -c captured
-GROUND=0 UNLIT=1 node e2e/lab-capture.mjs $MODEL $M/renders match 2>&1 | grep -c captured
+GROUND=0 BG='#303030' UNLIT=1 node e2e/lab-capture.mjs $MODEL $M/renders match 2>&1 | grep -c captured
 node e2e/lab-export-meshes.mjs $MODEL $M/meshes.json | tail -1
 node e2e/lab-export-parts.mjs $MODEL $M/parts.json | tail -1
 python3 - "$M" <<'PY'

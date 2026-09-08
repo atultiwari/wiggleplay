@@ -19,7 +19,7 @@ page.on('pageerror', (e) => errors.push(e.message))
 page.on('console', (m) => m.type() === 'error' && errors.push(m.text()))
 
 for (const view of views) {
-  const url = `${BASE_URL}/#/lab/${modelId}?view=${encodeURIComponent(view)}&size=${size}${process.env.GROUND === '0' ? '&ground=0' : ''}${process.env.UNLIT === '1' ? '&unlit=1' : ''}`
+  const url = `${BASE_URL}/#/lab/${modelId}?view=${encodeURIComponent(view)}&size=${size}${process.env.GROUND === '0' ? '&ground=0' : ''}${process.env.UNLIT === '1' ? '&unlit=1' : ''}${process.env.BG ? `&bg=${encodeURIComponent(process.env.BG)}` : ''}`
   await page.goto(url, { waitUntil: 'networkidle' })
   await page.waitForFunction(() => window.__IMG2THREEJS_READY__ === true && document.querySelector('.lab')?.getAttribute('data-status') === 'ready', null, { timeout: 60000 })
   await page.waitForTimeout(300)

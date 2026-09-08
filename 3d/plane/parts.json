@@ -1,0 +1,175 @@
+{
+  "model": "WigglePlay plane",
+  "parts": [
+    {
+      "name": "root",
+      "kind": "part",
+      "module": "root",
+      "triangles": 192
+    },
+    {
+      "name": "fuselage",
+      "kind": "part",
+      "module": "root",
+      "triangles": 7680
+    },
+    {
+      "name": "nose-cap",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 5120
+    },
+    {
+      "name": "airfoil-near",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "airfoil-far",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "stabiliser-near",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "stabiliser-far",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "fin",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 44
+    },
+    {
+      "name": "engine-near",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "intake-near",
+      "kind": "part",
+      "module": "engine-near",
+      "triangles": 1216
+    },
+    {
+      "name": "porthole-1",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "porthole-2",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "porthole-3",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "porthole-4",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "eye-a",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "eye-b",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "catchlight-a",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "catchlight-a2",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "catchlight-b",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "cheek-a",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "cheek-b",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "nose-gloss",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 1216
+    },
+    {
+      "name": "belly-stripe",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 128
+    },
+    {
+      "name": "fin-stripe-red",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 112
+    },
+    {
+      "name": "fin-stripe-blue",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 112
+    },
+    {
+      "name": "smile",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 48
+    },
+    {
+      "name": "brow-a",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 16
+    },
+    {
+      "name": "brow-b",
+      "kind": "part",
+      "module": "fuselage",
+      "triangles": 16
+    }
+  ],
+  "unnamedMeshes": 3,
+  "integralMeshes": 28
+}

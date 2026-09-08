@@ -1,0 +1,2 @@
+# Reference suitability — refs/plane.png
+Verdict: **pass (stylized object)**. One subject filling ~90% of the frame, clean silhouette, all materials visible, bilateral symmetry lets the far side be mirrored, every part decomposes into a lathe, ellipsoids, an extrude and capsules. Two cheated-perspective blobs (far wing beside the nose, far tailplane above the tail) are 2D conventions and are accepted as silhouette loss. Stylization accepted by the user.

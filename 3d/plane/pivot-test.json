@@ -1,0 +1,44 @@
+{
+  "pivot-bank": {
+    "applied": [
+      "fuselage"
+    ],
+    "missing": [],
+    "nodeCount": 28,
+    "rimPoints": {
+      "fuselage": [
+        -0.4195,
+        -0.1587,
+        -0.215
+      ]
+    },
+    "restRimPoints": {
+      "fuselage": [
+        0.0056,
+        0.2864,
+        0
+      ]
+    }
+  },
+  "pivot-pitch": {
+    "applied": [
+      "fuselage"
+    ],
+    "missing": [],
+    "nodeCount": 28,
+    "rimPoints": {
+      "fuselage": [
+        -0.2766,
+        -0.1637,
+        0
+      ]
+    },
+    "restRimPoints": {
+      "fuselage": [
+        0.0056,
+        0.2864,
+        0
+      ]
+    }
+  }
+}

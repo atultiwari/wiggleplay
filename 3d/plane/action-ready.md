@@ -1,0 +1,8 @@
+# Action-ready evidence — WigglePlay plane
+- Built parts: 31 meshes, 11968 triangles (see part-coverage-final.json).
+- No skeleton: rigid toy prop. Every part hangs off the fuselage node, so banking/pitching the fuselage moves the whole plane; nodes live in root.userData.sculptRuntime.nodes.
+- Pivot test (e2e/lab-pivot-test.mjs, rim point = node-local (0.5,0,0) in world space, rest vs posed): {"pivot-bank": {"applied": ["fuselage"], "missing": [], "nodeCount": 28, "rimPoints": {"fuselage": [-0.4195, -0.1587, -0.215]}, "restRimPoints": {"fuselage": [0.0056, 0.2864, 0]}}, "pivot-pitch": {"applied": ["fuselage"], "missing": [], "nodeCount": 28, "rimPoints": {"fuselage": [-0.2766, -0.1637, 0]}, "restRimPoints": {"fuselage": [0.0056, 0.2864, 0]}}}
+- Sockets: {"root": ["ground"], "fuselage": ["wing-near", "wing-far", "fin", "tail-near", "tail-far", "skin", "engine-near"], "engine-near": ["intake"]}
+- Colliders: {"root": "box", "fuselage": "capsule", "nose-cap": "box", "airfoil-near": "box", "airfoil-far": "box", "stabiliser-near": "box", "stabiliser-far": "box", "fin": "box", "engine-near": "capsule", "intake-near": "box", "porthole-1": "box", "porthole-2": "box", "porthole-3": "box", "porthole-4": "box", "eye-a": "box", "eye-b": "box", "catchlight-a": "box", "catchlight-a2": "box", "catchlight-b": "box", "cheek-a": "box", "cheek-b": "box", "nose-gloss": "box", "belly-stripe": "box", "fin-stripe-red": "box", "fin-stripe-blue": "box", "smile": "box", "brow-a": "box", "brow-b": "box"}
+- Renders: renders/pivot-bank.png, renders/pivot-pitch.png.
+- Display side: the games show the +z side; the far wing/stabiliser are cheated like the sticker, so flip scale.z when the plane flies the other way.
