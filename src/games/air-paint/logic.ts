@@ -65,10 +65,10 @@ const trimStrokes = (strokes: readonly Stroke[]): readonly Stroke[] => {
 }
 
 /** Adds a point to the current stroke, starting one if needed. Ignores tiny movements. */
-export const extendStroke = (state: PaintState, p: Point): PaintState => {
+export const extendStroke = (state: PaintState, p: Point, width: number = BRUSH_WIDTH): PaintState => {
   const color = brushColor(state)
   if (!state.current) {
-    return { ...state, current: { color, width: BRUSH_WIDTH, points: [p] } }
+    return { ...state, current: { color, width, points: [p] } }
   }
   const last = state.current.points[state.current.points.length - 1]
   if (distance(last, p) < MIN_POINT_DISTANCE) return state

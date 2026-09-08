@@ -11,8 +11,9 @@ import { say } from '../../lib/audio/voice'
 import { prepareCanvas } from '../../lib/game/canvas'
 import { drawParticles } from '../../lib/game/particles'
 import { useGameLoop } from '../../lib/game/useGameLoop'
+import { useSettingsRef } from '../../lib/settings/context'
 import { recordEvent } from '../../lib/storage/progress'
-import { BASKET, basketTop, createCatchState, stepCatch, type CatchState } from './logic'
+import { BASKET, basketTop, configFromSettings, createCatchState, stepCatch, type CatchConfig, type CatchState } from './logic'
 
 const NUMBER_WORDS = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
 
@@ -26,9 +27,10 @@ const drawSky = (ctx: CanvasRenderingContext2D, width: number, height: number) =
   ctx.fillRect(0, 0, width, height)
 }
 
-const drawBasket = (ctx: CanvasRenderingContext2D, state: CatchState, height: number, mascot: HTMLImageElement) => {
+const drawBasket = (ctx: CanvasRenderingContext2D, state: CatchState, config: CatchConfig, height: number, mascot: HTMLImageElement) => {
   const top = basketTop(height)
   const x = state.basketX
+  const halfWidth = config.basketWidth / 2
   const mascotSize = BASKET.height * 1.5
   ctx.drawImage(mascot, x - mascotSize / 2, top - mascotSize * 0.62, mascotSize, mascotSize)
   ctx.save()
@@ -36,10 +38,10 @@ const drawBasket = (ctx: CanvasRenderingContext2D, state: CatchState, height: nu
   ctx.strokeStyle = '#8a4b1c'
   ctx.lineWidth = 6
   ctx.beginPath()
-  ctx.moveTo(x - BASKET.width / 2, top)
-  ctx.lineTo(x + BASKET.width / 2, top)
-  ctx.lineTo(x + BASKET.width / 2 - 24, top + BASKET.height)
-  ctx.lineTo(x - BASKET.width / 2 + 24, top + BASKET.height)
+  ctx.moveTo(x - halfWidth, top)
+  ctx.lineTo(x + halfWidth, top)
+  ctx.lineTo(x + halfWidth - 24, top + BASKET.height)
+  ctx.lineTo(x - halfWidth + 24, top + BASKET.height)
   ctx.closePath()
   ctx.fill()
   ctx.stroke()
@@ -48,8 +50,8 @@ const drawBasket = (ctx: CanvasRenderingContext2D, state: CatchState, height: nu
   for (let i = 1; i < 5; i += 1) {
     const y = top + (BASKET.height / 5) * i
     ctx.beginPath()
-    ctx.moveTo(x - BASKET.width / 2 + 6 * i, y)
-    ctx.lineTo(x + BASKET.width / 2 - 6 * i, y)
+    ctx.moveTo(x - halfWidth + 6 * i, y)
+    ctx.lineTo(x + halfWidth - 6 * i, y)
     ctx.stroke()
   }
   ctx.restore()
@@ -67,6 +69,7 @@ const drawStars = (ctx: CanvasRenderingContext2D, state: CatchState, star: HTMLI
 
 const CatchStarsStage = ({ stage }: { readonly stage: GameStage }) => {
   const stateRef = useRef<CatchState>(createCatchState(stage.size.width))
+  const settingsRef = useSettingsRef()
   const [images, setImages] = useState<Images | null>(null)
   const [count, setCount] = useState(0)
   const [total, setTotal] = useState(0)
@@ -90,12 +93,14 @@ const CatchStarsStage = ({ stage }: { readonly stage: GameStage }) => {
     if (!ctx) return
     const { width, height } = stage.size
     const hand = stage.handsRef.current[0]
+    const config = configFromSettings(settingsRef.current.catchStars)
 
     if (stage.active) {
       const { state, events } = stepCatch(stateRef.current, dtSec, {
         targetX: hand ? hand.palm.x : null,
         width,
         height,
+        config,
       })
       stateRef.current = state
       events.caught.forEach((n) => {
@@ -118,9 +123,9 @@ const CatchStarsStage = ({ stage }: { readonly stage: GameStage }) => {
     ctx.clearRect(0, 0, width, height)
     drawSky(ctx, width, height)
     drawStars(ctx, state, images.star)
-    drawBasket(ctx, state, height, images.mascot)
+    drawBasket(ctx, state, config, height, images.mascot)
     drawParticles(ctx, state.particles)
-    if (hand) drawHandCursor(ctx, hand, '#ffd60a')
+    if (hand && settingsRef.current.global.showHandCursor) drawHandCursor(ctx, hand, '#ffd60a')
   }, stage.size.width > 0)
 
   return (

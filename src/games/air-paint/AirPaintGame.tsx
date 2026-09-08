@@ -10,6 +10,7 @@ import { prepareCanvas } from '../../lib/game/canvas'
 import { DWELL_IDLE, dwellProgress, updateDwell, type DwellState } from '../../lib/game/dwell'
 import { useGameLoop } from '../../lib/game/useGameLoop'
 import { drawParticles, spawnBurst, stepParticles, type Particle } from '../../lib/game/particles'
+import { useSettingsRef } from '../../lib/settings/context'
 import { recordEvent } from '../../lib/storage/progress'
 import { isFist } from '../../lib/hands/features'
 import {
@@ -31,7 +32,6 @@ import {
   type Swatch,
 } from './logic'
 
-const DWELL_MS = 700
 const NOTE_EVERY_PX = 60
 
 interface FrameState {
@@ -99,6 +99,7 @@ const AirPaintStage = ({ stage }: { readonly stage: GameStage }) => {
     distanceSinceNote: 0,
   })
   const lastTipRef = useRef<{ x: number; y: number } | null>(null)
+  const settingsRef = useSettingsRef()
   const [colorName, setColorName] = useState('Blue')
 
   useGameLoop((dtSec) => {
@@ -111,6 +112,8 @@ const AirPaintStage = ({ stage }: { readonly stage: GameStage }) => {
     const hands = stage.handsRef.current
     const hand = hands[0]
     const previous = frameRef.current
+    const { airPaint, global } = settingsRef.current
+    const dwellMs = airPaint.dwellMs
 
     let paint = { ...previous.paint, hue: advanceHue(previous.paint.hue, dtSec) }
     let particles = stepParticles(previous.particles, dtSec)
@@ -119,7 +122,7 @@ const AirPaintStage = ({ stage }: { readonly stage: GameStage }) => {
 
     if (stage.active && hand) {
       const target = hitSwatch(layout, hand.tip)
-      const dwellUpdate = updateDwell(previous.dwell, target, dtSec * 1000, DWELL_MS)
+      const dwellUpdate = updateDwell(previous.dwell, target, dtSec * 1000, dwellMs)
       dwell = dwellUpdate.state
       if (dwellUpdate.triggered === CLEAR_ID) {
         paint = clearPaint(paint)
@@ -136,10 +139,10 @@ const AirPaintStage = ({ stage }: { readonly stage: GameStage }) => {
       }
 
       const onPalette = target !== null
-      const penDown = !onPalette && !isFist(hand.points)
+      const penDown = !onPalette && !(airPaint.fistLifts && isFist(hand.points))
       if (penDown) {
         const moved = lastTipRef.current ? Math.hypot(hand.tip.x - lastTipRef.current.x, hand.tip.y - lastTipRef.current.y) : 0
-        paint = extendStroke(paint, hand.tip)
+        paint = extendStroke(paint, hand.tip, airPaint.brushSize)
         distanceSinceNote += moved
         if (distanceSinceNote > NOTE_EVERY_PX) {
           distanceSinceNote = 0
@@ -164,9 +167,9 @@ const AirPaintStage = ({ stage }: { readonly stage: GameStage }) => {
     if (paint.current) drawStroke(ctx, paint.current)
     drawParticles(ctx, particles)
     layout.forEach((swatch) =>
-      drawSwatch(ctx, swatch, paint.hue, swatch.id === paint.colorId, dwell.targetId === swatch.id ? dwellProgress(dwell, DWELL_MS) : 0),
+      drawSwatch(ctx, swatch, paint.hue, swatch.id === paint.colorId, dwell.targetId === swatch.id ? dwellProgress(dwell, dwellMs) : 0),
     )
-    if (hand) drawHandCursor(ctx, hand, brushColor(paint))
+    if (hand && global.showHandCursor) drawHandCursor(ctx, hand, brushColor(paint))
   }, stage.size.width > 0)
 
   return <Hud badges={[{ id: 'color', text: `🎨 ${colorName}`, accent: true }]} />

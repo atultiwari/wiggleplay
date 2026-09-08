@@ -1,6 +1,7 @@
 import {
   advanceHue,
   brushColor,
+  BRUSH_WIDTH,
   CLEAR_ID,
   clearPaint,
   countPoints,
@@ -25,6 +26,8 @@ describe('air paint logic', () => {
     state = extendStroke(state, { x: 20, y: 0 })
     expect(state.current?.points).toHaveLength(2)
     expect(state.current?.color).toBe(brushColor(INITIAL_PAINT_STATE))
+    expect(state.current?.width).toBe(BRUSH_WIDTH)
+    expect(extendStroke(INITIAL_PAINT_STATE, { x: 0, y: 0 }, 40).current?.width).toBe(40)
   })
 
   it('lifts the brush into the stroke list and clears', () => {

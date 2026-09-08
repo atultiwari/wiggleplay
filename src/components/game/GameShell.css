@@ -116,3 +116,17 @@
     transform: translateX(-50%) scale(1.06);
   }
 }
+
+.shell__fps {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  z-index: 5;
+  pointer-events: none;
+}

@@ -62,3 +62,28 @@ describe('catch stars logic', () => {
     expect(basketCenter(state, size.height)).toEqual({ x: 500, y: basketTop(size.height) + BASKET.height / 2 })
   })
 })
+
+describe('catch stars config', () => {
+  it('maps parent settings to the rules', async () => {
+    const { configFromSettings, DEFAULT_CATCH_CONFIG } = await import('./logic')
+    const config = configFromSettings({ fallSpeed: 2, spawnIntervalSec: 0.5, basketWidth: 1.5, starSize: 0.5 })
+    expect(config).toEqual({ fallSpeedScale: 2, spawnIntervalSec: 0.5, basketWidth: BASKET.width * 1.5, sizeScale: 0.5 })
+    expect(DEFAULT_CATCH_CONFIG.basketWidth).toBe(BASKET.width)
+  })
+
+  it('a wider basket catches a star a normal basket misses', () => {
+    const star = { id: 1, x: 500 + BASKET.width / 2 + 40, y: basketTop(size.height), vy: 10, rotation: 0, spin: 0, size: 70 }
+    const state = { ...createCatchState(size.width), stars: [star], spawnInSec: 99 }
+    const normal = stepCatch(state, 0.01, { targetX: null, ...size }, createSeededRng(7))
+    const wide = stepCatch(state, 0.01, { targetX: null, ...size, config: { fallSpeedScale: 1, spawnIntervalSec: 1.5, basketWidth: BASKET.width * 2, sizeScale: 1 } }, createSeededRng(7))
+    expect(normal.events.caught).toHaveLength(0)
+    expect(wide.events.caught).toHaveLength(1)
+  })
+
+  it('scales star speed and size', () => {
+    const fast = spawnStar(size.width, 1, 1, createSeededRng(3), { fallSpeedScale: 2, spawnIntervalSec: 1, basketWidth: 200, sizeScale: 0.5 })
+    const normal = spawnStar(size.width, 1, 1, createSeededRng(3))
+    expect(fast.vy).toBeCloseTo(normal.vy * 2)
+    expect(fast.size).toBeCloseTo(normal.size * 0.5)
+  })
+})

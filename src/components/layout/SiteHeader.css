@@ -53,3 +53,16 @@
   text-align: center;
   color: var(--color-muted);
 }
+
+.site-header__nav .site-header__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+}
+
+@media (max-width: 520px) {
+  .settings-button__label {
+    display: none;
+  }
+}

@@ -1,4 +1,5 @@
 import { useEffect, useState, type RefObject } from 'react'
+import type { CameraQuality } from '../settings/schema'
 
 export type CameraStatus = 'idle' | 'requesting' | 'ready' | 'denied' | 'unavailable'
 
@@ -7,10 +8,25 @@ export interface CameraState {
   readonly error: string | null
 }
 
-const CAMERA_CONSTRAINTS: MediaStreamConstraints = {
-  audio: false,
-  video: { facingMode: 'user', width: { ideal: 960 }, height: { ideal: 540 } },
+/**
+ * The hand model looks at a small image anyway, so a lower camera resolution
+ * costs no accuracy but saves a lot of per-frame work on slower laptops.
+ */
+export const CAMERA_RESOLUTIONS: Readonly<Record<CameraQuality, { width: number; height: number }>> = {
+  low: { width: 480, height: 270 },
+  medium: { width: 640, height: 360 },
+  high: { width: 960, height: 540 },
 }
+
+export const cameraConstraints = (quality: CameraQuality): MediaStreamConstraints => ({
+  audio: false,
+  video: {
+    facingMode: 'user',
+    width: { ideal: CAMERA_RESOLUTIONS[quality].width },
+    height: { ideal: CAMERA_RESOLUTIONS[quality].height },
+    frameRate: { ideal: 30 },
+  },
+})
 
 const describeError = (error: unknown): { status: CameraStatus; message: string } => {
   const name = error instanceof DOMException ? error.name : ''
@@ -27,7 +43,11 @@ const describeError = (error: unknown): { status: CameraStatus; message: string 
 }
 
 /** Starts the selfie camera into `videoRef` while `enabled` is true, and stops it on cleanup. */
-export const useCamera = (videoRef: RefObject<HTMLVideoElement | null>, enabled: boolean): CameraState => {
+export const useCamera = (
+  videoRef: RefObject<HTMLVideoElement | null>,
+  enabled: boolean,
+  quality: CameraQuality = 'medium',
+): CameraState => {
   const [outcome, setOutcome] = useState<CameraState>({ status: 'idle', error: null })
 
   useEffect(() => {
@@ -37,7 +57,7 @@ export const useCamera = (videoRef: RefObject<HTMLVideoElement | null>, enabled:
     const video = videoRef.current
 
     const request = navigator.mediaDevices?.getUserMedia
-      ? navigator.mediaDevices.getUserMedia(CAMERA_CONSTRAINTS)
+      ? navigator.mediaDevices.getUserMedia(cameraConstraints(quality))
       : Promise.reject(new Error('This browser does not support camera access.'))
 
     request
@@ -65,7 +85,7 @@ export const useCamera = (videoRef: RefObject<HTMLVideoElement | null>, enabled:
       if (video) video.srcObject = null
       setOutcome({ status: 'idle', error: null })
     }
-  }, [enabled, videoRef])
+  }, [enabled, quality, videoRef])
 
   if (enabled && outcome.status === 'idle') return { status: 'requesting', error: null }
   return outcome

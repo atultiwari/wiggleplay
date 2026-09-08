@@ -5,8 +5,9 @@ import {
   createSliceState,
   FRUIT_KINDS,
   launchFruit,
+  DEFAULT_SLICE_CONFIG,
   MILESTONE_EVERY,
-  SLICE_MIN_SPEED,
+  SLICE_TOLERANCE,
   stepSlice,
   TRAIL_LENGTH,
   updateTrails,
@@ -70,7 +71,7 @@ describe('fruit slice logic', () => {
     state = stepSlice(state, 0.016, { hands: [start], ...size }).state
     const slow = makeHand(1, { x: 496, y: 300 })
     const dt = 1
-    expect(1 / dt).toBeLessThan(SLICE_MIN_SPEED)
+    expect(1 / dt).toBeLessThan(DEFAULT_SLICE_CONFIG.minSliceSpeed)
     const { events } = stepSlice(state, dt, { hands: [slow], ...size })
     expect(events.sliced).toHaveLength(0)
   })
@@ -91,5 +92,39 @@ describe('fruit slice logic', () => {
     expect(events.milestone).toBe(true)
     const later = stepSlice(sliced, 5, { hands: [], ...size }).state
     expect(later.halves).toHaveLength(0)
+  })
+})
+
+describe('fruit slice config', () => {
+  it('maps parent settings, including slice tolerance', async () => {
+    const { configFromSettings, SLICE_TOLERANCE } = await import('./logic')
+    const config = configFromSettings({ maxFruits: 6, spawnIntervalSec: 2, speed: 1.5, fruitSize: 0.8, tolerance: 'generous' })
+    expect(config).toMatchObject({ maxFruits: 6, spawnIntervalSec: 2, speedScale: 1.5, sizeScale: 0.8, ...SLICE_TOLERANCE.generous })
+    expect(SLICE_TOLERANCE.generous.hitMarginPx).toBeGreaterThan(SLICE_TOLERANCE.fine.hitMarginPx)
+    expect(SLICE_TOLERANCE.generous.minSliceSpeed).toBeLessThan(SLICE_TOLERANCE.fine.minSliceSpeed)
+  })
+
+  it('lets a generous tolerance slice on a near miss that fine would ignore', () => {
+    const fruit = fruitAt(500, 300)
+    const start = makeHand(1, { x: 400, y: 300 + fruit.r + 20 })
+    const swipe = makeHand(1, { x: 600, y: 300 + fruit.r + 20 })
+    const run = (tolerance: 'fine' | 'generous') => {
+      const config = { ...DEFAULT_SLICE_CONFIG, ...SLICE_TOLERANCE[tolerance] }
+      let state: SliceState = { ...createSliceState(), fruits: [fruit], spawnInSec: 99 }
+      state = stepSlice(state, 0.016, { hands: [start], ...size, config }).state
+      return stepSlice(state, 0.016, { hands: [swipe], ...size, config }).events.sliced.length
+    }
+    expect(run('fine')).toBe(0)
+    expect(run('generous')).toBe(1)
+  })
+
+  it('scales fruit size and keeps spawn count under the configured maximum', () => {
+    const config = { ...DEFAULT_SLICE_CONFIG, sizeScale: 2, maxFruits: 1 }
+    const big = launchFruit(size.width, size.height, 1, createSeededRng(9), config)
+    const normal = launchFruit(size.width, size.height, 1, createSeededRng(9))
+    expect(big.r).toBeCloseTo(normal.r * 2)
+    let state = createSliceState()
+    for (let i = 0; i < 100; i += 1) state = stepSlice(state, 0.1, { hands: [], ...size, config }, createSeededRng(i)).state
+    expect(state.fruits.length).toBeLessThanOrEqual(1)
   })
 })

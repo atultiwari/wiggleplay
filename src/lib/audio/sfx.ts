@@ -1,16 +1,39 @@
 /**
  * Procedural sound effects with the Web Audio API. No audio files needed,
  * so everything works offline and loads instantly.
+ *
+ * All sounds go through a master gain (user volume, up to 300 %) and a
+ * limiter so "very loud" never turns into clipping.
  */
-let audioContext: AudioContext | null = null
+import { clamp } from '../math/vec'
 
-const getContext = (): AudioContext | null => audioContext
+export const MAX_EFFECTS_VOLUME = 3
+export const DEFAULT_EFFECTS_VOLUME = 2
+
+let audioContext: AudioContext | null = null
+let masterGain: GainNode | null = null
+let requestedVolume = DEFAULT_EFFECTS_VOLUME
+
+const ensureGraph = (ctx: AudioContext): GainNode => {
+  if (masterGain) return masterGain
+  const limiter = ctx.createDynamicsCompressor()
+  limiter.threshold.value = -10
+  limiter.knee.value = 12
+  limiter.ratio.value = 12
+  limiter.attack.value = 0.002
+  limiter.release.value = 0.15
+  masterGain = ctx.createGain()
+  masterGain.gain.value = requestedVolume
+  masterGain.connect(limiter).connect(ctx.destination)
+  return masterGain
+}
 
 /** Must be called from a user gesture (tap on the Play button) before any sound plays. */
 export const unlockAudio = async (): Promise<boolean> => {
   try {
     audioContext ??= new AudioContext()
     if (audioContext.state === 'suspended') await audioContext.resume()
+    ensureGraph(audioContext)
     return audioContext.state === 'running'
   } catch (error) {
     console.warn('[sfx] audio unavailable', error)
@@ -18,13 +41,21 @@ export const unlockAudio = async (): Promise<boolean> => {
   }
 }
 
-type OscType = OscillatorType
+/** 0 = mute, 1 = normal, 3 = very loud. Safe to call before audio is unlocked. */
+export const setEffectsVolume = (volume: number): void => {
+  requestedVolume = clamp(volume, 0, MAX_EFFECTS_VOLUME)
+  if (masterGain && audioContext) {
+    masterGain.gain.setTargetAtTime(requestedVolume, audioContext.currentTime, 0.02)
+  }
+}
+
+export const getEffectsVolume = (): number => requestedVolume
 
 interface ToneOptions {
   readonly from: number
   readonly to?: number
   readonly duration: number
-  readonly type?: OscType
+  readonly type?: OscillatorType
   readonly gain?: number
   readonly delay?: number
 }
@@ -38,16 +69,16 @@ const playTone = (ctx: AudioContext, options: ToneOptions): void => {
   if (options.to !== undefined) {
     osc.frequency.exponentialRampToValueAtTime(Math.max(20, options.to), start + options.duration)
   }
-  const peak = options.gain ?? 0.25
+  const peak = options.gain ?? 0.35
   gain.gain.setValueAtTime(0.0001, start)
   gain.gain.exponentialRampToValueAtTime(peak, start + 0.01)
   gain.gain.exponentialRampToValueAtTime(0.0001, start + options.duration)
-  osc.connect(gain).connect(ctx.destination)
+  osc.connect(gain).connect(ensureGraph(ctx))
   osc.start(start)
   osc.stop(start + options.duration + 0.02)
 }
 
-const playNoise = (ctx: AudioContext, duration: number, filterFrequency: number, gainValue = 0.3): void => {
+const playNoise = (ctx: AudioContext, duration: number, filterFrequency: number, gainValue = 0.4): void => {
   const sampleCount = Math.floor(ctx.sampleRate * duration)
   const buffer = ctx.createBuffer(1, sampleCount, ctx.sampleRate)
   const data = buffer.getChannelData(0)
@@ -62,12 +93,12 @@ const playNoise = (ctx: AudioContext, duration: number, filterFrequency: number,
   const now = ctx.currentTime
   gain.gain.setValueAtTime(gainValue, now)
   gain.gain.exponentialRampToValueAtTime(0.0001, now + duration)
-  source.connect(filter).connect(gain).connect(ctx.destination)
+  source.connect(filter).connect(gain).connect(ensureGraph(ctx))
   source.start(now)
 }
 
 const withContext = (play: (ctx: AudioContext) => void): void => {
-  const ctx = getContext()
+  const ctx = audioContext
   if (!ctx || ctx.state !== 'running') return
   try {
     play(ctx)
@@ -76,29 +107,32 @@ const withContext = (play: (ctx: AudioContext) => void): void => {
   }
 }
 
-/** Bubble pop: quick downward chirp. */
+/** Bubble pop: quick downward chirp with a little click. */
 export const playPop = (): void =>
-  withContext((ctx) => playTone(ctx, { from: 700, to: 180, duration: 0.14, gain: 0.3 }))
+  withContext((ctx) => {
+    playTone(ctx, { from: 760, to: 160, duration: 0.14, gain: 0.5 })
+    playNoise(ctx, 0.05, 2400, 0.25)
+  })
 
 /** Star catch: rising happy blip. */
 export const playCatch = (): void =>
   withContext((ctx) => {
-    playTone(ctx, { from: 520, to: 1040, duration: 0.18, type: 'triangle' })
-    playTone(ctx, { from: 1040, to: 1560, duration: 0.14, type: 'triangle', delay: 0.12, gain: 0.18 })
+    playTone(ctx, { from: 520, to: 1040, duration: 0.18, type: 'triangle', gain: 0.45 })
+    playTone(ctx, { from: 1040, to: 1560, duration: 0.14, type: 'triangle', delay: 0.12, gain: 0.3 })
   })
 
 /** Sparkle: two tiny high blips. */
 export const playSparkle = (): void =>
   withContext((ctx) => {
-    playTone(ctx, { from: 1400, duration: 0.08, gain: 0.12 })
-    playTone(ctx, { from: 2100, duration: 0.1, gain: 0.1, delay: 0.07 })
+    playTone(ctx, { from: 1400, duration: 0.08, gain: 0.22 })
+    playTone(ctx, { from: 2100, duration: 0.1, gain: 0.18, delay: 0.07 })
   })
 
 /** Fruit slice: airy swish plus a wet thud. */
 export const playSlice = (): void =>
   withContext((ctx) => {
-    playNoise(ctx, 0.18, 1800, 0.35)
-    playTone(ctx, { from: 220, to: 90, duration: 0.16, type: 'square', gain: 0.12 })
+    playNoise(ctx, 0.18, 1800, 0.55)
+    playTone(ctx, { from: 220, to: 90, duration: 0.16, type: 'square', gain: 0.2 })
   })
 
 /** Celebration arpeggio for milestones. */
@@ -106,13 +140,13 @@ export const playCheer = (): void =>
   withContext((ctx) => {
     const notes = [523.25, 659.25, 783.99, 1046.5]
     notes.forEach((frequency, i) =>
-      playTone(ctx, { from: frequency, duration: 0.35, type: 'triangle', delay: i * 0.11, gain: 0.22 }),
+      playTone(ctx, { from: frequency, duration: 0.35, type: 'triangle', delay: i * 0.11, gain: 0.35 }),
     )
   })
 
 /** Painting note: a soft tone whose pitch follows the brush. */
 export const playNote = (frequency: number, duration = 0.12): void =>
-  withContext((ctx) => playTone(ctx, { from: frequency, duration, type: 'sine', gain: 0.08 }))
+  withContext((ctx) => playTone(ctx, { from: frequency, duration, type: 'sine', gain: 0.14 }))
 
 /** Musical scale used by the paint brush (C major pentatonic, two octaves). */
 export const PENTATONIC = [261.63, 293.66, 329.63, 392.0, 440.0, 523.25, 587.33, 659.25, 783.99, 880.0]

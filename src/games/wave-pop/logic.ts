@@ -2,6 +2,7 @@ import type { HandPose } from '../../types/hand'
 import { circleContainsPoint } from '../../lib/game/collision'
 import { spawnBurst, stepParticles, type Particle } from '../../lib/game/particles'
 import { pickOne, randomBetween, type Rng } from '../../lib/game/random'
+import type { WavePopSettings } from '../../lib/settings/schema'
 
 export interface BubbleColor {
   readonly name: string
@@ -38,10 +39,21 @@ export interface PopState {
   readonly timeSec: number
 }
 
+/** Tunable rules, derived from the parent settings. */
+export interface PopConfig {
+  readonly maxBubbles: number
+  readonly spawnIntervalSec: number
+  readonly sizeScale: number
+  readonly speedScale: number
+  /** Extra reach (px) so a near miss still pops. */
+  readonly hitMarginPx: number
+}
+
 export interface PopInput {
   readonly hands: readonly HandPose[]
   readonly width: number
   readonly height: number
+  readonly config?: PopConfig
 }
 
 export interface PopEvents {
@@ -49,13 +61,25 @@ export interface PopEvents {
   readonly milestone: boolean
 }
 
-export const MAX_BUBBLES = 7
 export const MILESTONE_EVERY = 10
 export const BUBBLE_RADIUS = [46, 80] as const
 const RISE_SPEED = [40, 90] as const
-const SPAWN_INTERVAL_SEC = 0.9
-/** Extra reach so a near miss still pops. */
-const HIT_MARGIN = 18
+
+export const DEFAULT_POP_CONFIG: PopConfig = {
+  maxBubbles: 7,
+  spawnIntervalSec: 0.9,
+  sizeScale: 1,
+  speedScale: 1,
+  hitMarginPx: 18,
+}
+
+export const configFromSettings = (settings: WavePopSettings): PopConfig => ({
+  maxBubbles: settings.maxBubbles,
+  spawnIntervalSec: settings.spawnIntervalSec,
+  sizeScale: settings.bubbleSize,
+  speedScale: settings.riseSpeed,
+  hitMarginPx: DEFAULT_POP_CONFIG.hitMarginPx,
+})
 
 export const createPopState = (): PopState => ({
   bubbles: [],
@@ -66,14 +90,20 @@ export const createPopState = (): PopState => ({
   timeSec: 0,
 })
 
-export const spawnBubble = (width: number, height: number, id: number, rng: Rng): Bubble => {
-  const r = randomBetween(BUBBLE_RADIUS[0], BUBBLE_RADIUS[1], rng)
+export const spawnBubble = (
+  width: number,
+  height: number,
+  id: number,
+  rng: Rng,
+  config: PopConfig = DEFAULT_POP_CONFIG,
+): Bubble => {
+  const r = randomBetween(BUBBLE_RADIUS[0], BUBBLE_RADIUS[1], rng) * config.sizeScale
   return {
     id,
     x: randomBetween(r, Math.max(r, width - r), rng),
     y: height + r,
     r,
-    vy: -randomBetween(RISE_SPEED[0], RISE_SPEED[1], rng),
+    vy: -randomBetween(RISE_SPEED[0], RISE_SPEED[1], rng) * config.speedScale,
     wobbleAmp: randomBetween(8, 28, rng),
     wobblePhase: randomBetween(0, Math.PI * 2, rng),
     color: pickOne(BUBBLE_COLORS, rng),
@@ -84,9 +114,9 @@ export const spawnBubble = (width: number, height: number, id: number, rng: Rng)
 export const bubbleDrawX = (bubble: Bubble, timeSec: number): number =>
   bubble.x + Math.sin(timeSec * 1.6 + bubble.wobblePhase) * bubble.wobbleAmp
 
-const touchedByHands = (bubble: Bubble, timeSec: number, hands: readonly HandPose[]): boolean => {
+const touchedByHands = (bubble: Bubble, timeSec: number, hands: readonly HandPose[], margin: number): boolean => {
   const centre = { x: bubbleDrawX(bubble, timeSec), y: bubble.y }
-  return hands.some((hand) => hand.points.some((p) => circleContainsPoint(centre, bubble.r + HIT_MARGIN, p)))
+  return hands.some((hand) => hand.points.some((p) => circleContainsPoint(centre, bubble.r + margin, p)))
 }
 
 export const stepPop = (
@@ -95,10 +125,11 @@ export const stepPop = (
   input: PopInput,
   rng: Rng = Math.random,
 ): { readonly state: PopState; readonly events: PopEvents } => {
+  const config = input.config ?? DEFAULT_POP_CONFIG
   const timeSec = state.timeSec + dtSec
   const risen = state.bubbles.map((b) => ({ ...b, y: b.y + b.vy * dtSec }))
   const alive = risen.filter((b) => b.y > -b.r)
-  const popped = alive.filter((b) => touchedByHands(b, timeSec, input.hands))
+  const popped = alive.filter((b) => touchedByHands(b, timeSec, input.hands, config.hitMarginPx))
   const remaining = alive.filter((b) => !popped.includes(b))
 
   const bursts = popped.flatMap((b) =>
@@ -112,10 +143,10 @@ export const stepPop = (
   let spawnInSec = state.spawnInSec - dtSec
   let bubbles = remaining
   let nextId = state.nextId
-  if (spawnInSec <= 0 && bubbles.length < MAX_BUBBLES && input.width > 0) {
-    bubbles = [...bubbles, spawnBubble(input.width, input.height, nextId, rng)]
+  if (spawnInSec <= 0 && bubbles.length < config.maxBubbles && input.width > 0) {
+    bubbles = [...bubbles, spawnBubble(input.width, input.height, nextId, rng, config)]
     nextId += 1
-    spawnInSec = SPAWN_INTERVAL_SEC
+    spawnInSec = config.spawnIntervalSec
   }
 
   const total = state.popped + popped.length

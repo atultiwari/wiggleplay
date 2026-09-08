@@ -1,6 +1,7 @@
 import { lerp, type Point } from '../../lib/math/vec'
 import { randomBetween, type Rng } from '../../lib/game/random'
 import { spawnBurst, stepParticles, type Particle } from '../../lib/game/particles'
+import type { CatchStarsSettings } from '../../lib/settings/schema'
 
 export interface Star {
   readonly id: number
@@ -18,11 +19,20 @@ export interface CatchState {
   /** Stars caught in the current run to ten. */
   readonly count: number
   readonly total: number
+  /** Adaptive difficulty: creeps up with catches, eases off with misses. */
   readonly speedScale: number
   readonly spawnInSec: number
   readonly celebrationSec: number
   readonly particles: readonly Particle[]
   readonly nextId: number
+}
+
+/** Tunable rules, derived from the parent settings. */
+export interface CatchConfig {
+  readonly fallSpeedScale: number
+  readonly spawnIntervalSec: number
+  readonly basketWidth: number
+  readonly sizeScale: number
 }
 
 export interface CatchEvents {
@@ -36,19 +46,33 @@ export interface CatchInput {
   readonly targetX: number | null
   readonly width: number
   readonly height: number
+  readonly config?: CatchConfig
 }
 
 export const COUNT_TARGET = 10
 export const BASKET = { width: 210, height: 96, bottomMargin: 26 } as const
 export const STAR_SIZE = [64, 96] as const
 const BASE_SPEED = [130, 210] as const
-const SPAWN_INTERVAL_SEC = 1.5
 const CELEBRATION_SEC = 2.6
 const BASKET_FOLLOW = 0.28
 const SPEED_UP_PER_CATCH = 0.025
 const SLOW_DOWN_PER_MISS = 0.05
 const SPEED_RANGE = [0.7, 1.7] as const
 export const STAR_COLORS = ['#ffd60a', '#ffb703', '#fff3b0', '#ff9f1c']
+
+export const DEFAULT_CATCH_CONFIG: CatchConfig = {
+  fallSpeedScale: 1,
+  spawnIntervalSec: 1.5,
+  basketWidth: BASKET.width,
+  sizeScale: 1,
+}
+
+export const configFromSettings = (settings: CatchStarsSettings): CatchConfig => ({
+  fallSpeedScale: settings.fallSpeed,
+  spawnIntervalSec: settings.spawnIntervalSec,
+  basketWidth: BASKET.width * settings.basketWidth,
+  sizeScale: settings.starSize,
+})
 
 export const createCatchState = (width: number): CatchState => ({
   stars: [],
@@ -62,13 +86,19 @@ export const createCatchState = (width: number): CatchState => ({
   nextId: 1,
 })
 
-export const spawnStar = (width: number, speedScale: number, id: number, rng: Rng): Star => {
-  const size = randomBetween(STAR_SIZE[0], STAR_SIZE[1], rng)
+export const spawnStar = (
+  width: number,
+  speedScale: number,
+  id: number,
+  rng: Rng,
+  config: CatchConfig = DEFAULT_CATCH_CONFIG,
+): Star => {
+  const size = randomBetween(STAR_SIZE[0], STAR_SIZE[1], rng) * config.sizeScale
   return {
     id,
     x: randomBetween(size, Math.max(size, width - size), rng),
     y: -size,
-    vy: randomBetween(BASE_SPEED[0], BASE_SPEED[1], rng) * speedScale,
+    vy: randomBetween(BASE_SPEED[0], BASE_SPEED[1], rng) * speedScale * config.fallSpeedScale,
     rotation: randomBetween(0, Math.PI * 2, rng),
     spin: randomBetween(-1.5, 1.5, rng),
     size,
@@ -77,10 +107,10 @@ export const spawnStar = (width: number, speedScale: number, id: number, rng: Rn
 
 export const basketTop = (height: number): number => height - BASKET.bottomMargin - BASKET.height
 
-const isCaught = (star: Star, basketX: number, height: number): boolean => {
+const isCaught = (star: Star, basketX: number, basketWidth: number, height: number): boolean => {
   const top = basketTop(height)
   const withinY = star.y >= top - star.size * 0.15 && star.y <= top + BASKET.height * 0.55
-  const withinX = Math.abs(star.x - basketX) <= BASKET.width / 2 + star.size * 0.2
+  const withinX = Math.abs(star.x - basketX) <= basketWidth / 2 + star.size * 0.2
   return withinY && withinX
 }
 
@@ -92,12 +122,13 @@ export const stepCatch = (
   input: CatchInput,
   rng: Rng = Math.random,
 ): { readonly state: CatchState; readonly events: CatchEvents } => {
+  const config = input.config ?? DEFAULT_CATCH_CONFIG
   // With no hand in view the basket drifts back to the middle, ready for the next wave.
   const targetX = input.targetX ?? input.width / 2
   const basketX = lerp(state.basketX, targetX, BASKET_FOLLOW)
   const moved = state.stars.map((s) => ({ ...s, y: s.y + s.vy * dtSec, rotation: s.rotation + s.spin * dtSec }))
 
-  const caughtStars = moved.filter((s) => isCaught(s, basketX, input.height))
+  const caughtStars = moved.filter((s) => isCaught(s, basketX, config.basketWidth, input.height))
   const missedStars = moved.filter((s) => !caughtStars.includes(s) && s.y > input.height + s.size)
   const remaining = moved.filter((s) => !caughtStars.includes(s) && !missedStars.includes(s))
 
@@ -133,9 +164,9 @@ export const stepCatch = (
   let stars = remaining
   let nextId = state.nextId
   if (spawnInSec <= 0 && celebrationSec === 0 && input.width > 0) {
-    stars = [...stars, spawnStar(input.width, speedScale, nextId, rng)]
+    stars = [...stars, spawnStar(input.width, speedScale, nextId, rng, config)]
     nextId += 1
-    spawnInSec = SPAWN_INTERVAL_SEC / speedScale
+    spawnInSec = config.spawnIntervalSec / speedScale
   }
 
   return {

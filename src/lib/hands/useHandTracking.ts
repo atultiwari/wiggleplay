@@ -11,8 +11,12 @@ export interface HandTrackingOptions {
   readonly width: number
   readonly height: number
   readonly mirrored?: boolean
-  /** 0..1 — share of the new position kept each frame. */
+  /** Changing this restarts the tracker. */
+  readonly numHands?: number
+  /** 0..1 minimum smoothing share; applied live. */
   readonly smoothing?: number
+  /** Seconds of motion prediction; applied live. */
+  readonly predictionSec?: number
 }
 
 export interface HandTrackingState {
@@ -29,16 +33,16 @@ export const HAND_MODEL_PATH = `${BASE}models/hand_landmarker.task`
 
 /** Runs hand detection on every new video frame and exposes smoothed HandPose objects. */
 export const useHandTracking = (options: HandTrackingOptions): HandTrackingState => {
-  const { videoRef, enabled, width, height, mirrored = true, smoothing = 0.55 } = options
+  const { videoRef, enabled, width, height, mirrored = true, numHands = 2, smoothing = 0.6, predictionSec = 0 } = options
   const handsRef = useRef<readonly HandPose[]>([])
-  const sizeRef = useRef({ width, height })
+  const liveRef = useRef({ width, height, smoothing, predictionSec })
   const [outcome, setOutcome] = useState<Exclude<TrackerStatus, 'loading'>>('idle')
   const [error, setError] = useState<string | null>(null)
   const [fps, setFps] = useState(0)
 
   useEffect(() => {
-    sizeRef.current = { width, height }
-  }, [width, height])
+    liveRef.current = { width, height, smoothing, predictionSec }
+  }, [width, height, smoothing, predictionSec])
 
   useEffect(() => {
     if (!enabled) return
@@ -59,15 +63,16 @@ export const useHandTracking = (options: HandTrackingOptions): HandTrackingState
         lastVideoTime = video.currentTime
         try {
           const detected = tracker.detect(video, Math.round(now))
-          const { width: w, height: h } = sizeRef.current
+          const live = liveRef.current
           const result = buildHandPoses({
             previous: handsRef.current,
             detected,
-            width: w,
-            height: h,
+            width: live.width,
+            height: live.height,
             mirrored,
             dtMs: now - lastFrameAt,
-            smoothing,
+            smoothing: live.smoothing,
+            predictionSec: live.predictionSec,
             nextId,
           })
           nextId = result.nextId
@@ -86,7 +91,7 @@ export const useHandTracking = (options: HandTrackingOptions): HandTrackingState
       frameHandle = requestAnimationFrame(loop)
     }
 
-    HandTracker.create({ wasmBasePath: WASM_BASE_PATH, modelPath: HAND_MODEL_PATH })
+    HandTracker.create({ wasmBasePath: WASM_BASE_PATH, modelPath: HAND_MODEL_PATH, numHands })
       .then((created) => {
         if (cancelled) {
           created.close()
@@ -110,8 +115,9 @@ export const useHandTracking = (options: HandTrackingOptions): HandTrackingState
       handsRef.current = []
       setOutcome('idle')
       setError(null)
+      setFps(0)
     }
-  }, [enabled, mirrored, smoothing, videoRef])
+  }, [enabled, mirrored, numHands, videoRef])
 
   const status: TrackerStatus = enabled && outcome === 'idle' ? 'loading' : outcome
   return { handsRef, status, error, fps }

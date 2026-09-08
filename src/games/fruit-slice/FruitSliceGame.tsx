@@ -10,8 +10,10 @@ import { createThrottledSpeaker, say } from '../../lib/audio/voice'
 import { prepareCanvas } from '../../lib/game/canvas'
 import { drawParticles } from '../../lib/game/particles'
 import { useGameLoop } from '../../lib/game/useGameLoop'
+import { useSettingsRef } from '../../lib/settings/context'
 import { recordEvent } from '../../lib/storage/progress'
 import {
+  configFromSettings,
   createSliceState,
   FRUIT_INFO,
   stepSlice,
@@ -70,6 +72,7 @@ const drawTrail = (ctx: CanvasRenderingContext2D, trail: BladeTrail) => {
 
 const FruitSliceStage = ({ stage }: { readonly stage: GameStage }) => {
   const stateRef = useRef<SliceState>(createSliceState())
+  const settingsRef = useSettingsRef()
   const [images, setImages] = useState<FruitImages | null>(null)
   const [sliced, setSliced] = useState(0)
   const [lastFruit, setLastFruit] = useState<string>('')
@@ -102,7 +105,8 @@ const FruitSliceStage = ({ stage }: { readonly stage: GameStage }) => {
     const hands = stage.handsRef.current
 
     if (stage.active) {
-      const { state, events } = stepSlice(stateRef.current, dtSec, { hands, width, height })
+      const config = configFromSettings(settingsRef.current.fruitSlice)
+      const { state, events } = stepSlice(stateRef.current, dtSec, { hands, width, height, config })
       stateRef.current = state
       if (events.sliced.length > 0) {
         playSlice()

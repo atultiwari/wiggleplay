@@ -9,8 +9,9 @@ import { createThrottledSpeaker, say } from '../../lib/audio/voice'
 import { prepareCanvas } from '../../lib/game/canvas'
 import { drawParticles } from '../../lib/game/particles'
 import { useGameLoop } from '../../lib/game/useGameLoop'
+import { useSettingsRef } from '../../lib/settings/context'
 import { recordEvent } from '../../lib/storage/progress'
-import { bubbleDrawX, createPopState, stepPop, type Bubble, type PopState } from './logic'
+import { bubbleDrawX, configFromSettings, createPopState, stepPop, type Bubble, type PopState } from './logic'
 
 const speakColour = createThrottledSpeaker(900)
 
@@ -38,6 +39,7 @@ const drawBubble = (ctx: CanvasRenderingContext2D, bubble: Bubble, timeSec: numb
 
 const WavePopStage = ({ stage }: { readonly stage: GameStage }) => {
   const stateRef = useRef<PopState>(createPopState())
+  const settingsRef = useSettingsRef()
   const [popped, setPopped] = useState(0)
 
   useGameLoop((dtSec) => {
@@ -49,7 +51,8 @@ const WavePopStage = ({ stage }: { readonly stage: GameStage }) => {
     const hands = stage.handsRef.current
 
     if (stage.active) {
-      const { state, events } = stepPop(stateRef.current, dtSec, { hands, width, height })
+      const config = configFromSettings(settingsRef.current.wavePop)
+      const { state, events } = stepPop(stateRef.current, dtSec, { hands, width, height, config })
       stateRef.current = state
       if (events.popped.length > 0) {
         playPop()
@@ -68,7 +71,7 @@ const WavePopStage = ({ stage }: { readonly stage: GameStage }) => {
     ctx.clearRect(0, 0, width, height)
     state.bubbles.forEach((b) => drawBubble(ctx, b, state.timeSec))
     drawParticles(ctx, state.particles)
-    hands.forEach((hand) => drawHandCursor(ctx, hand, '#5cc8ff'))
+    if (settingsRef.current.global.showHandCursor) hands.forEach((hand) => drawHandCursor(ctx, hand, '#5cc8ff'))
   }, stage.size.width > 0)
 
   return <Hud badges={[{ id: 'popped', text: `🫧 ${popped}`, accent: true }]} />

@@ -23,6 +23,8 @@ export interface GameMeta {
   readonly emoji: string
   readonly accent: string
   readonly status: GameStatus
+  /** How many hands the game makes use of; tracking fewer hands is faster. */
+  readonly hands: 1 | 2
 }
 
 export const CATEGORIES: Readonly<Record<GameCategory, { label: string; emoji: string; blurb: string }>> = {
@@ -62,6 +64,7 @@ export const GAMES: readonly GameMeta[] = [
     emoji: '🖌️',
     accent: '#ff7ab6',
     status: 'ready',
+    hands: 1,
   },
   {
     id: 'catch-stars',
@@ -75,6 +78,7 @@ export const GAMES: readonly GameMeta[] = [
     emoji: '⭐',
     accent: '#ffc531',
     status: 'ready',
+    hands: 1,
   },
   {
     id: 'wave-pop',
@@ -88,6 +92,7 @@ export const GAMES: readonly GameMeta[] = [
     emoji: '🫧',
     accent: '#5cc8ff',
     status: 'ready',
+    hands: 2,
   },
   {
     id: 'fruit-slice',
@@ -101,6 +106,7 @@ export const GAMES: readonly GameMeta[] = [
     emoji: '🍉',
     accent: '#7ae582',
     status: 'ready',
+    hands: 2,
   },
   {
     id: 'simon-says',
@@ -114,6 +120,7 @@ export const GAMES: readonly GameMeta[] = [
     emoji: '🪞',
     accent: '#c084fc',
     status: 'soon',
+    hands: 2,
   },
   {
     id: 'tap-farm',
@@ -127,6 +134,7 @@ export const GAMES: readonly GameMeta[] = [
     emoji: '🐄',
     accent: '#fbbf24',
     status: 'soon',
+    hands: 1,
   },
   {
     id: 'animal-call',
@@ -140,6 +148,7 @@ export const GAMES: readonly GameMeta[] = [
     emoji: '🐮',
     accent: '#f97316',
     status: 'soon',
+    hands: 1,
   },
   {
     id: 'shake-tree',
@@ -153,6 +162,7 @@ export const GAMES: readonly GameMeta[] = [
     emoji: '🌳',
     accent: '#4ade80',
     status: 'soon',
+    hands: 1,
   },
 ]
 

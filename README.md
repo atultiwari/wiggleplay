@@ -31,6 +31,28 @@ More games (Simon Says mirror, Tap the Farm, Animal Call, Shake the Tree…) are
 - **Private by default.** Camera frames never leave the device. Nothing is recorded or uploaded.
 - **Offline capable.** The MediaPipe model and WASM runtime are served from the site itself, not a CDN.
 
+## Settings (for grown-ups)
+
+Open the ⚙️ **Settings** drawer from the hub header, or inside a game by **pressing and holding**
+the gear for one second (the parent gate). Everything is saved on the device.
+
+| Section | What you can change |
+|---------|---------------------|
+| 🔊 Sound | Sound effects up to **300 %** (a limiter stops distortion), spoken words on/off, voice volume |
+| 📷 Camera & tracking | **Responsiveness** (smooth ↔ snappy), camera quality (lower = faster), hands tracked (one is fastest), hand cursor, camera picture visibility, FPS readout |
+| ⏰ Session | Minutes of play before the bye-bye screen |
+| 🫧 Wave to Pop | Bubbles on screen, how often they appear, size, rise speed |
+| 🍉 Fruit Slice | Fruit in the air, how often they launch, speed, size, slice accuracy (fine / normal / near miss OK) |
+| ⭐ Catch the Stars | Fall speed, how often stars appear, basket width, star size |
+| 🖌️ Air Painting | Brush size, hover time to pick a colour, whether a fist lifts the brush |
+
+### If hand tracking feels laggy
+
+1. Turn **Responsiveness** up. Smoothing now adapts to speed and adds a little motion prediction, so fast swipes follow the hand almost instantly.
+2. Set **Camera quality** to *Low* and **Hands tracked** to *One*. The model looks at a tiny image anyway.
+3. Switch on **Show tracking speed** to see the FPS. Under ~20 fps, close other tabs, plug the laptop in, and make sure the browser is using the GPU (`chrome://gpu`).
+4. Use Chrome or Edge. Safari and Firefox run the model on the CPU and are noticeably slower.
+
 ## Tech stack
 
 - [Vite](https://vite.dev) + [React 19](https://react.dev) + TypeScript
@@ -74,10 +96,12 @@ src/
     hands/       MediaPipe wrapper, pose building, smoothing, gesture features
     camera/      getUserMedia hook
     game/        game loop, canvas sizing, particles, dwell selection, collision, RNG
-    audio/       procedural sound effects and speech
+    audio/       procedural sound effects (with master volume + limiter) and speech
+    settings/    schema + validation, localStorage persistence, React context
     storage/     local progress log (feeds the future adaptive layer)
   components/
     game/        GameShell (camera + tracking + parent gate), overlays, HUD
+    settings/    settings drawer, sliders/toggles, per-game sections
     catalogue/   game cards and filters for the hub page
     layout/      header and footer
   games/

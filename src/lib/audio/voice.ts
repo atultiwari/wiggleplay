@@ -24,6 +24,21 @@ const isSpeechAvailable = (): boolean =>
 
 let cachedVoice: SpeechSynthesisVoice | null = null
 
+export interface VoiceConfig {
+  readonly enabled: boolean
+  /** 0..1 */
+  readonly volume: number
+}
+
+let voiceConfig: VoiceConfig = { enabled: true, volume: 1 }
+
+export const configureVoice = (patch: Partial<VoiceConfig>): void => {
+  voiceConfig = { ...voiceConfig, ...patch }
+  if (!voiceConfig.enabled) stopSpeaking()
+}
+
+export const getVoiceConfig = (): VoiceConfig => voiceConfig
+
 const pickVoice = (): SpeechSynthesisVoice | null => {
   if (cachedVoice) return cachedVoice
   const voices = window.speechSynthesis.getVoices()
@@ -44,7 +59,7 @@ export const primeVoices = (): void => {
 }
 
 export const say = (text: string, options: SpeakOptions = {}): boolean => {
-  if (!isSpeechAvailable()) return false
+  if (!isSpeechAvailable() || !voiceConfig.enabled) return false
   try {
     if (options.interrupt ?? true) window.speechSynthesis.cancel()
     const utterance = new SpeechSynthesisUtterance(text)
@@ -52,6 +67,7 @@ export const say = (text: string, options: SpeakOptions = {}): boolean => {
     if (voice) utterance.voice = voice
     utterance.rate = options.rate ?? 0.95
     utterance.pitch = options.pitch ?? 1.15
+    utterance.volume = Math.min(1, Math.max(0, voiceConfig.volume))
     window.speechSynthesis.speak(utterance)
     return true
   } catch (error) {

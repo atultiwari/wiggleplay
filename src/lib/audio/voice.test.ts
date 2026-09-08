@@ -31,3 +31,25 @@ describe('voice', () => {
     expect(speaker('c')).toBe(false)
   })
 })
+
+describe('voice config', () => {
+  it('can be muted and sets the utterance volume', async () => {
+    const { configureVoice, getVoiceConfig } = await import('./voice')
+    const speak = vi.fn()
+    vi.stubGlobal('speechSynthesis', { speak, cancel: vi.fn(), getVoices: () => [], addEventListener: vi.fn() })
+    vi.stubGlobal('SpeechSynthesisUtterance', class {
+      text: string
+      volume = 1
+      constructor(text: string) {
+        this.text = text
+      }
+    })
+    configureVoice({ enabled: false })
+    expect(say('quiet')).toBe(false)
+    configureVoice({ enabled: true, volume: 0.4 })
+    expect(getVoiceConfig()).toEqual({ enabled: true, volume: 0.4 })
+    expect(say('loud')).toBe(true)
+    expect(speak).toHaveBeenCalledWith(expect.objectContaining({ volume: 0.4 }))
+    vi.unstubAllGlobals()
+  })
+})

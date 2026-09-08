@@ -1,5 +1,5 @@
 import { makeLandmarks } from '../../test/hands'
-import { buildHandPoses } from './poses'
+import { adaptiveAlpha, buildHandPoses, SNAP_SPEED_PX_PER_SEC } from './poses'
 
 const base = { width: 1000, height: 500, mirrored: false, dtMs: 100, smoothing: 1, nextId: 1 }
 
@@ -32,11 +32,29 @@ describe('buildHandPoses', () => {
     expect(second.hands[0].id).toBe(2)
   })
 
-  it('applies smoothing between frames', () => {
+  it('smooths slow movements but follows fast ones almost raw', () => {
     const first = buildHandPoses({ ...base, previous: [], detected: [makeLandmarks(1)] })
     const moved = makeLandmarks(1, { x: 0.1, y: 0 })
-    const second = buildHandPoses({ ...base, smoothing: 0.5, previous: first.hands, detected: [moved], nextId: 2 })
-    expect(second.hands[0].tip.x).toBeCloseTo(430)
+    const slow = buildHandPoses({ ...base, dtMs: 20000, smoothing: 0.5, previous: first.hands, detected: [moved], nextId: 2 })
+    expect(slow.hands[0].tip.x).toBeCloseTo(430, 0)
+    const fast = buildHandPoses({ ...base, dtMs: 50, smoothing: 0.5, previous: first.hands, detected: [moved], nextId: 2 })
+    expect(fast.hands[0].tip.x).toBeCloseTo(480, 0)
+  })
+
+  it('predicts a little ahead along the velocity, capped', () => {
+    const first = buildHandPoses({ ...base, previous: [], detected: [makeLandmarks(1)] })
+    const moved = makeLandmarks(1, { x: 0.05, y: 0 })
+    const plain = buildHandPoses({ ...base, smoothing: 1, previous: first.hands, detected: [moved], nextId: 2 })
+    const predicted = buildHandPoses({ ...base, smoothing: 1, predictionSec: 0.05, previous: first.hands, detected: [moved], nextId: 2 })
+    expect(predicted.hands[0].tip.x).toBeGreaterThan(plain.hands[0].tip.x)
+    expect(predicted.hands[0].tip.x - plain.hands[0].tip.x).toBeLessThanOrEqual(80.001)
+    expect(predicted.hands[0].palm.x - plain.hands[0].palm.x).toBeCloseTo(predicted.hands[0].tip.x - plain.hands[0].tip.x)
+  })
+
+  it('exposes the adaptive alpha curve', () => {
+    expect(adaptiveAlpha(0.3, 0)).toBeCloseTo(0.3)
+    expect(adaptiveAlpha(0.3, SNAP_SPEED_PX_PER_SEC)).toBe(1)
+    expect(adaptiveAlpha(0.3, SNAP_SPEED_PX_PER_SEC / 2)).toBeCloseTo(0.65)
   })
 
   it('never mutates previous poses', () => {

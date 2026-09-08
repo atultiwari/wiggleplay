@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ART } from '../../assets/art'
 import { SITE } from '../../config/site'
+import { SettingsButton } from '../settings/SettingsButton'
 import './SiteHeader.css'
 
 export const SiteHeader = () => (
@@ -17,6 +18,7 @@ export const SiteHeader = () => (
       <Link to="/parents" className="site-header__link">
         For grown-ups
       </Link>
+      <SettingsButton className="site-header__link" />
     </nav>
   </header>
 )
