@@ -1,4 +1,6 @@
 import type * as THREE from 'three'
+import type { CameraSpec } from '../lab/viewer'
+import { MASCOT_FILL, NEUTRAL_FILL, type StageLightingOptions } from './stageLighting'
 
 export type ModelFactory = () => THREE.Group
 
@@ -6,6 +8,10 @@ export interface ModelEntry {
   readonly id: string
   readonly title: string
   readonly load: () => Promise<ModelFactory>
+  /** Per-model camera overrides for the lab viewer (e.g. the reference-matched framing). */
+  readonly views?: Readonly<Record<string, CameraSpec>>
+  /** Lighting declared in the model's sculpt spec (lightingFromPhoto). */
+  readonly lighting?: StageLightingOptions
 }
 
 /**
@@ -17,6 +23,27 @@ export const MODELS: readonly ModelEntry[] = [
     id: 'mascot',
     title: 'WigglePlay mascot',
     load: () => import('./mascot/createWigglePlayMascotModel').then((m) => () => m.createWigglePlayMascotModel()),
+    views: { match: { azimuth: 0, elevation: 0, distance: 1.64, target: [0, 0.526, 0] } },
+    lighting: MASCOT_FILL,
+  },
+  {
+    id: 'bus',
+    title: 'WigglePlay bus',
+    lighting: { ...NEUTRAL_FILL, keyDirection: [-0.35, 0.6, 1.0], keyIntensity: 1.5, toneMapping: 'neutral', exposure: 1.35 },
+    load: () => import('./bus/createWigglePlayBusModel').then((m) => () => m.createWigglePlayBusModel()),
+    views: {
+      match: { azimuth: 0, elevation: 0, distance: 1.736, target: [0, 0.27, 0] },
+      front: { azimuth: 0, elevation: 0, distance: 2.2, target: [0, 0.3, 0] },
+      hero: { azimuth: -30, elevation: 8, distance: 2.2, target: [0, 0.3, 0] },
+      right: { azimuth: 90, elevation: 0, distance: 2.2, target: [0, 0.3, 0] },
+      rear: { azimuth: 180, elevation: 0, distance: 2.2, target: [0, 0.3, 0] },
+      left: { azimuth: 270, elevation: 0, distance: 2.2, target: [0, 0.3, 0] },
+      'orbit-plus': { azimuth: 35, elevation: 6, distance: 2.2, target: [0, 0.3, 0] },
+      'orbit-minus': { azimuth: -35, elevation: 6, distance: 2.2, target: [0, 0.3, 0] },
+      'rear-quarter': { azimuth: 135, elevation: 6, distance: 2.2, target: [0, 0.3, 0] },
+      head: { azimuth: 0, elevation: 2, distance: 0.9, target: [0.25, 0.4, 0] },
+      'head-quarter': { azimuth: -30, elevation: 2, distance: 0.9, target: [0.25, 0.4, 0] },
+    },
   },
 ]
 

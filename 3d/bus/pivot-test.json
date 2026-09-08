@@ -1,0 +1,77 @@
+{
+  "pivot-wheels": {
+    "applied": [
+      "wheel-rear-near",
+      "wheel-front-near",
+      "wheel-rear-far",
+      "wheel-front-far"
+    ],
+    "missing": [],
+    "nodeCount": 36,
+    "rimPoints": {
+      "wheel-rear-near": [
+        0.0039,
+        0.4775,
+        0.19
+      ],
+      "wheel-front-near": [
+        0.4911,
+        0.4775,
+        0.19
+      ],
+      "wheel-rear-far": [
+        0.0039,
+        0.4775,
+        -0.19
+      ],
+      "wheel-front-far": [
+        0.4911,
+        0.4775,
+        -0.19
+      ]
+    },
+    "restRimPoints": {
+      "wheel-rear-near": [
+        0.1931,
+        0.0858,
+        0.19
+      ],
+      "wheel-front-near": [
+        0.6803,
+        0.0858,
+        0.19
+      ],
+      "wheel-rear-far": [
+        0.1931,
+        0.0858,
+        -0.19
+      ],
+      "wheel-front-far": [
+        0.6803,
+        0.0858,
+        -0.19
+      ]
+    }
+  },
+  "pivot-door": {
+    "applied": [
+      "door"
+    ],
+    "missing": [],
+    "nodeCount": 36,
+    "rimPoints": {
+      "door": [
+        0.1426,
+        0.2833,
+        0.688
+      ]
+    },
+    "restRimPoints": {
+      "door": [
+        0.4614,
+        0.2833,
+        0.222
+      ]
+    }
+  }
+}

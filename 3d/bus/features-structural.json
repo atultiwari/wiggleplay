@@ -1,0 +1,2 @@
+[{"id": "overall-silhouette", "score": 0.86, "tier": "critical", "notes": "Unchanged; tier-1 IoU 0.924 with trim added."},
+ {"id": "primary-structure", "score": 0.78, "tier": "critical", "notes": "Three rear panes, door opening and leaf with its glass, cab window with the face, orange stripe, bumper, grill and headlight all sit at their measured pixel positions; panes are still rectangles (the cab window is a trapezoid in the sticker) and the hood band sits too high."}]

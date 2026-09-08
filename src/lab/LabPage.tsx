@@ -32,14 +32,14 @@ export const LabPage = () => {
     canvas.height = size
     Promise.resolve()
       .then(() => {
-        viewer = createReviewViewer(canvas, { background, spin, ground, unlit })
+        viewer = createReviewViewer(canvas, { background, spin, ground, unlit, views: entry.views, lighting: entry.lighting })
         return entry.load()
       })
       .then((factory) => {
         if (cancelled || !viewer) return
         const model = factory()
         viewer.setModel(model)
-        viewer.setCamera(NAMED_VIEWS[view] ?? NAMED_VIEWS.front)
+        viewer.setCamera(entry.views?.[view] ?? NAMED_VIEWS[view] ?? NAMED_VIEWS.front)
         setStatus('ready')
       })
       .catch((error: unknown) => {

@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { applyToneMapping, createStageLighting, type StageLightingOptions } from '../models/stageLighting'
 
 /**
  * Deterministic review viewer for img2threejs reconstructions.
@@ -16,6 +17,7 @@ export interface CameraSpec {
 }
 
 export interface ViewerOptions {
+  readonly lighting?: StageLightingOptions
   readonly background?: string
   readonly spin?: boolean
   readonly ground?: boolean
@@ -43,6 +45,7 @@ declare global {
       exportParts: () => unknown
       pose: (rotations: Record<string, readonly [number, number, number]>) => unknown
       rigInfo: () => unknown
+      pivots: (rotations: Record<string, readonly [number, number, number]>) => unknown
     }
   }
 }
@@ -64,11 +67,10 @@ export const NAMED_VIEWS: Readonly<Record<string, CameraSpec>> = {
 
 const toRadians = (degrees: number): number => (degrees * Math.PI) / 180
 
-export const createReviewViewer = (canvas: HTMLCanvasElement, options: ViewerOptions = {}): ReviewViewer => {
+export const createReviewViewer = (canvas: HTMLCanvasElement, options: ViewerOptions & { readonly views?: Readonly<Record<string, CameraSpec>> } = {}): ReviewViewer => {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true })
   renderer.setPixelRatio(1)
-  renderer.toneMapping = THREE.ACESFilmicToneMapping
-  renderer.toneMappingExposure = 1.25
+  applyToneMapping(renderer, options.lighting)
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.shadowMap.enabled = true
   renderer.shadowMap.type = THREE.PCFSoftShadowMap
@@ -78,18 +80,8 @@ export const createReviewViewer = (canvas: HTMLCanvasElement, options: ViewerOpt
 
   const camera = new THREE.PerspectiveCamera(40, 1, 0.01, 100)
 
-  // Lighting per the spec's lightingFromPhoto: key upper-left-front, hemisphere fill, soft rim.
-  const key = new THREE.DirectionalLight('#ffffff', 1.4)
-  key.position.set(-0.6, 0.9, 0.8).multiplyScalar(4)
-  key.castShadow = true
-  key.shadow.mapSize.set(1024, 1024)
-  key.shadow.camera.left = key.shadow.camera.bottom = -1.5
-  key.shadow.camera.right = key.shadow.camera.top = 1.5
-  scene.add(key)
-  scene.add(new THREE.HemisphereLight('#f4f0ff', '#6a4fb8', 1.0))
-  const rim = new THREE.DirectionalLight('#e6d6ff', 0.5)
-  rim.position.set(0.5, 0.4, -1.0).multiplyScalar(4)
-  scene.add(rim)
+  // Lighting per the spec's lightingFromPhoto (shared with the games): key upper-left-front, hemisphere fill, soft rim.
+  createStageLighting(scene, { shadows: true, ...options.lighting })
 
   if (options.ground !== false) {
     const ground = new THREE.Mesh(new THREE.CircleGeometry(0.55, 48), new THREE.ShadowMaterial({ opacity: 0.35 }))
@@ -254,13 +246,44 @@ export const createReviewViewer = (canvas: HTMLCanvasElement, options: ViewerOpt
     return rig ? { bound: rig.bound === true, boneOrder: rig.boneOrder ?? [] } : null
   }
 
+  /** World position of a unit-offset point on each node, so a rotation shows up numerically even for round parts. */
+  const rimPointsOf = (nodes: Record<string, THREE.Object3D> | undefined, ids: string[]) =>
+    Object.fromEntries(
+      ids.map((id) => {
+        const node = nodes?.[id]
+        const point = node ? node.localToWorld(new THREE.Vector3(0.5, 0, 0)) : new THREE.Vector3()
+        return [id, [point.x, point.y, point.z].map((v) => Number(v.toFixed(4)))]
+      }),
+    )
+
+  /** Rotates component pivot nodes (radians) via root.userData.sculptRuntime.nodes; for props without a skeleton. */
+  const pivots = (rotations: Record<string, readonly [number, number, number]>) => {
+    const model = modelHolder.children[0]
+    const runtime = model?.userData.sculptRuntime as { nodes?: Record<string, THREE.Object3D> } | undefined
+    const applied: string[] = []
+    const missing: string[] = []
+    Object.entries(rotations).forEach(([id, [x, y, z]]) => {
+      const node = runtime?.nodes?.[id]
+      if (!node) {
+        missing.push(id)
+        return
+      }
+      node.rotation.set(x, y, z)
+      applied.push(id)
+    })
+    modelHolder.updateMatrixWorld(true)
+    frame()
+    return { applied, missing, nodeCount: Object.keys(runtime?.nodes ?? {}).length, rimPoints: rimPointsOf(runtime?.nodes, applied) }
+  }
+
   window.__IMG2THREEJS_CAPTURE__ = {
     setCamera,
-    setView: (name) => setCamera(NAMED_VIEWS[name] ?? NAMED_VIEWS.front),
+    setView: (name) => setCamera(options.views?.[name] ?? NAMED_VIEWS[name] ?? NAMED_VIEWS.front),
     exportMeshes,
     exportParts,
     pose,
     rigInfo,
+    pivots,
   }
 
   applyCamera()

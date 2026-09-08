@@ -1,0 +1,223 @@
+{
+  "model": "WigglePlay Bus",
+  "parts": [
+    {
+      "name": "root",
+      "kind": "part",
+      "module": "root",
+      "triangles": 192
+    },
+    {
+      "name": "body",
+      "kind": "part",
+      "module": "root",
+      "triangles": 316
+    },
+    {
+      "name": "window-rear",
+      "kind": "part",
+      "module": "body",
+      "triangles": 40
+    },
+    {
+      "name": "window-divider-1",
+      "kind": "part",
+      "module": "body",
+      "triangles": 192
+    },
+    {
+      "name": "window-divider-2",
+      "kind": "part",
+      "module": "body",
+      "triangles": 192
+    },
+    {
+      "name": "window-cab",
+      "kind": "part",
+      "module": "body",
+      "triangles": 44
+    },
+    {
+      "name": "eye-a",
+      "kind": "part",
+      "module": "window-cab",
+      "triangles": 1216
+    },
+    {
+      "name": "eye-b",
+      "kind": "part",
+      "module": "window-cab",
+      "triangles": 1216
+    },
+    {
+      "name": "catchlight-a",
+      "kind": "part",
+      "module": "window-cab",
+      "triangles": 1216
+    },
+    {
+      "name": "catchlight-b",
+      "kind": "part",
+      "module": "window-cab",
+      "triangles": 1216
+    },
+    {
+      "name": "cheek-a",
+      "kind": "part",
+      "module": "window-cab",
+      "triangles": 1216
+    },
+    {
+      "name": "cheek-b",
+      "kind": "part",
+      "module": "window-cab",
+      "triangles": 1216
+    },
+    {
+      "name": "smile",
+      "kind": "part",
+      "module": "window-cab",
+      "triangles": 24
+    },
+    {
+      "name": "door-opening",
+      "kind": "part",
+      "module": "body",
+      "triangles": 192
+    },
+    {
+      "name": "door",
+      "kind": "part",
+      "module": "body",
+      "triangles": 192
+    },
+    {
+      "name": "door-pane-1",
+      "kind": "part",
+      "module": "door",
+      "triangles": 192
+    },
+    {
+      "name": "door-pane-2",
+      "kind": "part",
+      "module": "door",
+      "triangles": 192
+    },
+    {
+      "name": "door-pane-3",
+      "kind": "part",
+      "module": "door",
+      "triangles": 192
+    },
+    {
+      "name": "door-pane-4",
+      "kind": "part",
+      "module": "door",
+      "triangles": 192
+    },
+    {
+      "name": "stripe-1",
+      "kind": "part",
+      "module": "body",
+      "triangles": 192
+    },
+    {
+      "name": "stripe-2",
+      "kind": "part",
+      "module": "body",
+      "triangles": 192
+    },
+    {
+      "name": "wheel-rear-near",
+      "kind": "part",
+      "module": "body",
+      "triangles": 224
+    },
+    {
+      "name": "hub-rear-near",
+      "kind": "part",
+      "module": "wheel-rear-near",
+      "triangles": 224
+    },
+    {
+      "name": "wheel-front-near",
+      "kind": "part",
+      "module": "body",
+      "triangles": 224
+    },
+    {
+      "name": "hub-front-near",
+      "kind": "part",
+      "module": "wheel-front-near",
+      "triangles": 224
+    },
+    {
+      "name": "wheel-rear-far",
+      "kind": "part",
+      "module": "body",
+      "triangles": 224
+    },
+    {
+      "name": "hub-rear-far",
+      "kind": "part",
+      "module": "wheel-rear-far",
+      "triangles": 224
+    },
+    {
+      "name": "wheel-front-far",
+      "kind": "part",
+      "module": "body",
+      "triangles": 224
+    },
+    {
+      "name": "hub-front-far",
+      "kind": "part",
+      "module": "wheel-front-far",
+      "triangles": 224
+    },
+    {
+      "name": "bumper-front",
+      "kind": "part",
+      "module": "body",
+      "triangles": 192
+    },
+    {
+      "name": "grill",
+      "kind": "part",
+      "module": "body",
+      "triangles": 192
+    },
+    {
+      "name": "grill-slat-1",
+      "kind": "part",
+      "module": "grill",
+      "triangles": 192
+    },
+    {
+      "name": "grill-slat-2",
+      "kind": "part",
+      "module": "grill",
+      "triangles": 192
+    },
+    {
+      "name": "grill-slat-3",
+      "kind": "part",
+      "module": "grill",
+      "triangles": 192
+    },
+    {
+      "name": "headlight",
+      "kind": "part",
+      "module": "body",
+      "triangles": 1216
+    },
+    {
+      "name": "rear-light",
+      "kind": "part",
+      "module": "body",
+      "triangles": 192
+    }
+  ],
+  "unnamedMeshes": 3,
+  "integralMeshes": 36
+}

@@ -1,0 +1,179 @@
+{
+  "sourceImage": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/refs/bus.png",
+  "zonesDir": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/bus/di",
+  "detailInventory": {
+    "scanMethod": "grid-3x3",
+    "targetMinDetails": 6,
+    "details": [
+      {
+        "id": "window-streaks",
+        "kind": "gloss",
+        "description": "lighter diagonal highlight streaks on every glass pane",
+        "region": {
+          "x": 0.1,
+          "y": 0.3,
+          "width": 0.45,
+          "height": 0.2,
+          "units": "normalized"
+        },
+        "scale": "micro",
+        "affects": [
+          "roughness"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "streaks"
+        }
+      },
+      {
+        "id": "orange-stripe",
+        "kind": "linework",
+        "description": "double painted orange line along the side",
+        "region": {
+          "x": 0.05,
+          "y": 0.5,
+          "width": 0.55,
+          "height": 0.05,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": [
+          "albedo"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "stripe-1"
+        }
+      },
+      {
+        "id": "grill-slats",
+        "kind": "ridge",
+        "description": "three horizontal slats on the orange grill",
+        "region": {
+          "x": 0.9,
+          "y": 0.55,
+          "width": 0.06,
+          "height": 0.1,
+          "units": "normalized"
+        },
+        "scale": "micro",
+        "affects": [
+          "geometry"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "slats"
+        }
+      },
+      {
+        "id": "headlight-gloss",
+        "kind": "gloss",
+        "description": "small glossy blue lamp on the hood corner",
+        "region": {
+          "x": 0.93,
+          "y": 0.55,
+          "width": 0.03,
+          "height": 0.04,
+          "units": "normalized"
+        },
+        "scale": "micro",
+        "affects": [
+          "roughness"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "headlight"
+        }
+      },
+      {
+        "id": "hub-caps",
+        "kind": "fastener",
+        "description": "yellow hub cap discs centred on both wheels",
+        "region": {
+          "x": 0.25,
+          "y": 0.65,
+          "width": 0.5,
+          "height": 0.15,
+          "units": "normalized"
+        },
+        "scale": "micro",
+        "affects": [
+          "geometry"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "hub-front-near"
+        }
+      },
+      {
+        "id": "rear-light",
+        "kind": "decal",
+        "description": "small orange light at the lower rear corner",
+        "region": {
+          "x": 0.01,
+          "y": 0.62,
+          "width": 0.04,
+          "height": 0.06,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": [
+          "albedo"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "rear-light"
+        }
+      },
+      {
+        "id": "face-decal",
+        "kind": "decal",
+        "description": "eyes with catchlights, cheeks and a smile on the cab window",
+        "region": {
+          "x": 0.62,
+          "y": 0.3,
+          "width": 0.2,
+          "height": 0.15,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": [
+          "albedo"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "eye-a"
+        }
+      },
+      {
+        "id": "tyre-shoulder",
+        "kind": "ridge",
+        "description": "darker ring at the tyre shoulders",
+        "region": {
+          "x": 0.25,
+          "y": 0.65,
+          "width": 0.5,
+          "height": 0.15,
+          "units": "normalized"
+        },
+        "scale": "micro",
+        "affects": [
+          "geometry"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "tread-rim"
+        }
+      }
+    ]
+  },
+  "authoringInstruction": "Open each zone crop under zonesDir and replace every detail stub's kind, description, scale, affects, mapsTo, and confidence with what is actually observed. Add more detail entries per zone if a single zone contains multiple distinct marks; do not leave stubs unfilled or unlinked (mapsTo must reference a real component.localFeatures or material.localOverrides entry)."
+}
