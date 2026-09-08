@@ -8,7 +8,7 @@
 import { chromium } from 'playwright-core'
 
 const BASE_URL = process.env.BASE_URL ?? 'http://localhost:5173'
-const GAMES = (process.env.GAMES ? process.env.GAMES.split(',') : ['air-paint', 'catch-stars', 'wave-pop', 'fruit-slice', 'cat-tickle', 'fly-high', 'bus-driver', 'beep-meow-whoosh', 'wiggle-mirror'])
+const GAMES = (process.env.GAMES ? process.env.GAMES.split(',') : ['air-paint', 'catch-stars', 'wave-pop', 'fruit-slice', 'cat-tickle', 'fly-high', 'bus-driver', 'beep-meow-whoosh', 'wiggle-mirror', 'toy-town'])
 const PLAYING_TIMEOUT_MS = 60_000
 
 const run = async () => {

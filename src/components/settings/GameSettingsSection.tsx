@@ -10,6 +10,7 @@ import {
   GAME_SETTINGS_KEYS,
   SLICE_TOLERANCES,
   WAVE_POP_RANGES,
+  TOY_TOWN_RANGES,
   WIGGLE_MIRROR_RANGES,
   type GameSettingsKey,
   type SliceTolerance,
@@ -148,6 +149,19 @@ const WiggleMirrorFields = () => {
   )
 }
 
+const ToyTownFields = () => {
+  const { settings, updateGame } = useSettings()
+  const v = settings.toyTown
+  return (
+    <>
+      <SliderField id="tt-size" label="Toy size" value={v.propSize} range={TOY_TOWN_RANGES.propSize} format={formatTimes} onChange={(propSize) => updateGame('toyTown', { propSize })} />
+      <SliderField id="tt-speed" label="Bus and plane speed" value={v.speed} range={TOY_TOWN_RANGES.speed} format={formatTimes} onChange={(speed) => updateGame('toyTown', { speed })} />
+      <ToggleField id="tt-prompts" label="Ask “Where is the…?”" checked={v.prompts} onChange={(prompts) => updateGame('toyTown', { prompts })} hint="The voice asks for a toy every few seconds and cheers when the child finds it." />
+      <ToggleField id="tt-cursor" label="Show the touch glow" checked={v.showCursor} onChange={(showCursor) => updateGame('toyTown', { showCursor })} hint="A soft glow follows the tracked hand or body so the child sees what they are touching." />
+    </>
+  )
+}
+
 const FIELDS: Readonly<Record<GameSettingsKey, () => ReturnType<typeof WavePopFields>>> = {
   wavePop: WavePopFields,
   fruitSlice: FruitSliceFields,
@@ -158,6 +172,7 @@ const FIELDS: Readonly<Record<GameSettingsKey, () => ReturnType<typeof WavePopFi
   busDriver: BusDriverFields,
   beepMeow: BeepMeowFields,
   wiggleMirror: WiggleMirrorFields,
+  toyTown: ToyTownFields,
 }
 
 export const GameSettingsSection = ({ settingsKey, title }: { readonly settingsKey: GameSettingsKey; readonly title?: string }) => {

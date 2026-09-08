@@ -26,6 +26,7 @@ on-device hand tracking, so a small child can play by simply waving at the scree
 | 🚌 **Bus Driver** | Drive the bus left and right to pick up cats, a puppy and a bunny waiting at the stop. | Left/right, counting, animal names |
 | 🚍 **Beep Meow Whoosh** | Planes, buses and cats cross the screen. Touch them to hear their sounds and names, then find the one we ask for. | First words, listening, sounds |
 | 🪞 **Wiggle Mirror** | A 3D WigglePlay monster copies the child's body live: wave, lean, step, lift both hands for a hooray. | Body awareness, imitation, gross motor |
+| 🏘️ **3D Toy Town** | A little 3D town in the child's room: the bus drives, the aeroplane flies, the cat watches. Touch a toy with any body part to make it beep, whoosh or meow, and find the one the voice asks for. | First words, listening, reaching |
 
 More games (Simon Says mirror, Tap the Farm, Animal Call, Shake the Tree…) are listed as
 "coming soon" in the catalogue. The complete idea list lives in [docs/IDEAS.md](docs/IDEAS.md).
@@ -70,21 +71,35 @@ the gear for one second (the parent gate). Everything is saved on the device.
 
 ## The 3D layer (img2threejs)
 
-The mascot in Wiggle Mirror is not a downloaded model. It was rebuilt from the sticker art as
-**code-only procedural Three.js** with the [img2threejs](https://github.com/img2threejs/img2threejs)
-skill: a measured sculpt spec (`3d/mascot/object-sculpt-spec.json`) drives a generated TypeScript
-factory (`src/models/mascot/createWigglePlayMascotModel.ts`) with a 13-bone skeleton, sockets and
-colliders. Every build pass was gated by screenshots against the reference (silhouette IoU 0.89,
-turntable, self-intersection, part coverage) and the review trail lives in the spec's
-`reviewHistory`. The rig is driven live from MediaPipe pose landmarks
-(`src/games/wiggle-mirror/logic.ts`).
+None of the 3D models are downloaded assets. The mascot, the bus, the aeroplane and the cat were
+each rebuilt from their sticker art as **code-only procedural Three.js** with the
+[img2threejs](https://github.com/img2threejs/img2threejs) skill: a measured sculpt spec
+(`3d/<model>/object-sculpt-spec.json`, authored by `3d/<model>/author-spec.py` from pixel
+measurements of the reference) drives a generated TypeScript factory in `src/models/<model>/` with
+sockets, colliders and animation pivots. Every build pass was gated by screenshots against the
+reference (silhouette IoU: mascot 0.89, bus 0.94, plane 0.90, cat 0.90; plus turntable,
+self-intersection and part-coverage gates) and the review trail lives in each spec's
+`reviewHistory`.
+
+- **Mascot** — 13-bone skeleton driven live from MediaPipe pose landmarks (Wiggle Mirror).
+- **Bus** — extruded measured side profile, spinning wheel pivots and a hinged door that swings
+  open with its panes.
+- **Aeroplane** — lathe fuselage on the measured axis with a drooping nose cap; the far wing sits
+  where the sticker cheats it, and the whole plane banks and pitches through the fuselage node.
+- **Cat** — head and body revolved from the reference's row-by-row widths; the head turns with
+  its whole face, the tail wags about its root, ears and forelegs hinge.
+
+3D Toy Town puts the three props in one scene (`src/games/toy-town/`): the pure logic in
+`logic.ts` moves the bus and plane, detects touches with a toddler-generous radius and runs the
+"Where is the…?" prompts, and the component maps the tracked pointer onto the projected props.
 
 Tooling that supports it:
 
 - `/#/lab/<model>` — deterministic review viewer (named camera views, unlit and shadow-free modes,
   mesh/part/pose export hooks for the gates).
 - `3d/tools/run-pass.sh <model> <pass>` — regenerates a pass, captures the review batch with the
-  installed Chrome and runs every deterministic gate.
+  installed Chrome (on a dark neutral background so white parts register) and runs every
+  deterministic gate; `3d/tools/record-pass.sh` records the review and advances the state.
 - `3d/<model>/tool-notes.md` — two small local patches to the img2threejs clone (textureless
   materials in the material gate, a presence fallback in the colour gate), both candidates for
   upstream pull requests.
@@ -93,7 +108,7 @@ Tooling that supports it:
 
 - [Vite](https://vite.dev) + [React 19](https://react.dev) + TypeScript
 - [MediaPipe Tasks Vision](https://ai.google.dev/edge/mediapipe/solutions/vision) hand landmarker and pose landmarker (on-device, WebGL/WASM)
-- [Three.js](https://threejs.org) for the procedural 3D mascot, generated with img2threejs
+- [Three.js](https://threejs.org) for the procedural 3D mascot and props, generated with img2threejs
 - HTML canvas for rendering, Web Audio for procedural sound effects, Web Speech for the voice
 - [Vitest](https://vitest.dev) + Testing Library for tests, [oxlint](https://oxc.rs) for linting
 - GitHub Actions → GitHub Pages for hosting
@@ -177,7 +192,7 @@ grown-up controls, loud happy sounds, on-device privacy — follows from that. C
 1. **Shared kit** ✅ big-button engine, character voice, reward effects, progress log
 2. **Camera games** ✅ Air Painting, Catch the Stars, Wave to Pop, Fruit Slice
 3. **Whole-body play + themed games** ✅ pose tracking, Tickle the Cat, Fly High, Bus Driver, Beep Meow Whoosh
-4. **3D layer** ✅ procedural mascot puppet (img2threejs) + Wiggle Mirror; next: bus, aeroplane and cat as animated 3D props for a body-controlled Toy Town
+4. **3D layer** ✅ procedural mascot puppet (img2threejs) + Wiggle Mirror; ✅ bus, aeroplane and cat as animated 3D props + 3D Toy Town; next: a 3D Fly High / Bus Driver using the props and more toys
 5. **Next:** Simon Says mirror, Tap the Farm, tap-along rhymes
 6. Voice games, tilt & shake games, bilingual voice (English + home language)
 7. Adaptive layer: skill graph per child, AI-picked next activity, parent summary

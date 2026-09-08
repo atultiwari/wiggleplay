@@ -84,6 +84,13 @@ export interface WiggleMirrorSettings {
   readonly showSkeleton: boolean
 }
 
+export interface ToyTownSettings {
+  readonly propSize: number
+  readonly speed: number
+  readonly prompts: boolean
+  readonly showCursor: boolean
+}
+
 export interface Settings {
   readonly global: GlobalSettings
   readonly wavePop: WavePopSettings
@@ -95,6 +102,7 @@ export interface Settings {
   readonly busDriver: BusDriverSettings
   readonly beepMeow: BeepMeowSettings
   readonly wiggleMirror: WiggleMirrorSettings
+  readonly toyTown: ToyTownSettings
 }
 
 export type GameSettingsKey = Exclude<keyof Settings, 'global'>
@@ -165,6 +173,11 @@ export const WIGGLE_MIRROR_RANGES = {
   puppetSize: { min: 0.6, max: 1.6, step: 0.1 },
 } as const satisfies Record<string, NumberRange>
 
+export const TOY_TOWN_RANGES = {
+  propSize: { min: 0.6, max: 1.6, step: 0.1 },
+  speed: { min: 0.3, max: 2, step: 0.1 },
+} as const satisfies Record<string, NumberRange>
+
 export const BEEP_MEOW_RANGES = {
   maxThings: { min: 1, max: 10, step: 1 },
   speed: { min: 0.3, max: 3, step: 0.1 },
@@ -194,6 +207,7 @@ export const DEFAULT_SETTINGS: Settings = {
   busDriver: { passengerIntervalSec: 2, busSize: 1 },
   beepMeow: { maxThings: 5, speed: 1, thingSize: 1, askQuestions: true },
   wiggleMirror: { puppetSize: 1, reactions: true, showSkeleton: false },
+  toyTown: { propSize: 1, speed: 1, prompts: true, showCursor: true },
 }
 
 /** Maps a game id from the catalogue to its settings slice. */
@@ -207,6 +221,7 @@ export const GAME_SETTINGS_KEYS: Readonly<Record<string, GameSettingsKey>> = {
   'bus-driver': 'busDriver',
   'beep-meow-whoosh': 'beepMeow',
   'wiggle-mirror': 'wiggleMirror',
+  'toy-town': 'toyTown',
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
@@ -337,6 +352,17 @@ const sanitizeWiggleMirror = (raw: unknown): WiggleMirrorSettings => {
   }
 }
 
+const sanitizeToyTown = (raw: unknown): ToyTownSettings => {
+  const r = isRecord(raw) ? raw : {}
+  const d = DEFAULT_SETTINGS.toyTown
+  return {
+    propSize: num(r.propSize, d.propSize, TOY_TOWN_RANGES.propSize),
+    speed: num(r.speed, d.speed, TOY_TOWN_RANGES.speed),
+    prompts: bool(r.prompts, d.prompts),
+    showCursor: bool(r.showCursor, d.showCursor),
+  }
+}
+
 /** Never trust stored data: every field is validated and clamped, unknown fields are dropped. */
 export const sanitizeSettings = (raw: unknown): Settings => {
   const r = isRecord(raw) ? raw : {}
@@ -351,5 +377,6 @@ export const sanitizeSettings = (raw: unknown): Settings => {
     busDriver: sanitizeBusDriver(r.busDriver),
     beepMeow: sanitizeBeepMeow(r.beepMeow),
     wiggleMirror: sanitizeWiggleMirror(r.wiggleMirror),
+    toyTown: sanitizeToyTown(r.toyTown),
   }
 }

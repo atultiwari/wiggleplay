@@ -18,4 +18,5 @@ export const GAME_COMPONENTS: Readonly<Record<string, LazyGame>> = {
   'bus-driver': lazy(() => import('./bus-driver/BusDriverGame')),
   'beep-meow-whoosh': lazy(() => import('./beep-meow-whoosh/BeepMeowGame')),
   'wiggle-mirror': lazy(() => import('./wiggle-mirror/WiggleMirrorGame')),
+  'toy-town': lazy(() => import('./toy-town/ToyTownGame')),
 }
