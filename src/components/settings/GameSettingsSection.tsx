@@ -1,7 +1,11 @@
 import { GAMES } from '../../config/games'
 import {
   AIR_PAINT_RANGES,
+  BEEP_MEOW_RANGES,
+  BUS_DRIVER_RANGES,
+  CAT_TICKLE_RANGES,
   CATCH_STARS_RANGES,
+  FLY_HIGH_RANGES,
   FRUIT_SLICE_RANGES,
   GAME_SETTINGS_KEYS,
   SLICE_TOLERANCES,
@@ -82,11 +86,64 @@ const AirPaintFields = () => {
   )
 }
 
+const CatTickleFields = () => {
+  const { settings, updateGame } = useSettings()
+  const v = settings.catTickle
+  return (
+    <>
+      <SliderField id="ct-max" label="Cats at once" value={v.maxCats} range={CAT_TICKLE_RANGES.maxCats} onChange={(maxCats) => updateGame('catTickle', { maxCats })} />
+      <SliderField id="ct-interval" label="New cat every" value={v.appearIntervalSec} range={CAT_TICKLE_RANGES.appearIntervalSec} format={formatSeconds} onChange={(appearIntervalSec) => updateGame('catTickle', { appearIntervalSec })} />
+      <SliderField id="ct-size" label="Cat size" value={v.catSize} range={CAT_TICKLE_RANGES.catSize} format={formatTimes} onChange={(catSize) => updateGame('catTickle', { catSize })} />
+      <SliderField id="ct-stay" label="Cat waits for" value={v.stayForSec} range={CAT_TICKLE_RANGES.stayForSec} format={formatSeconds} onChange={(stayForSec) => updateGame('catTickle', { stayForSec })} />
+    </>
+  )
+}
+
+const FlyHighFields = () => {
+  const { settings, updateGame } = useSettings()
+  const v = settings.flyHigh
+  return (
+    <>
+      <SliderField id="fh-interval" label="New balloon every" value={v.balloonIntervalSec} range={FLY_HIGH_RANGES.balloonIntervalSec} format={formatSeconds} onChange={(balloonIntervalSec) => updateGame('flyHigh', { balloonIntervalSec })} />
+      <SliderField id="fh-speed" label="Flying speed" value={v.speed} range={FLY_HIGH_RANGES.speed} format={formatTimes} onChange={(speed) => updateGame('flyHigh', { speed })} />
+      <SliderField id="fh-size" label="Aeroplane size" value={v.planeSize} range={FLY_HIGH_RANGES.planeSize} format={formatTimes} onChange={(planeSize) => updateGame('flyHigh', { planeSize })} />
+    </>
+  )
+}
+
+const BusDriverFields = () => {
+  const { settings, updateGame } = useSettings()
+  const v = settings.busDriver
+  return (
+    <>
+      <SliderField id="bd-interval" label="New passenger every" value={v.passengerIntervalSec} range={BUS_DRIVER_RANGES.passengerIntervalSec} format={formatSeconds} onChange={(passengerIntervalSec) => updateGame('busDriver', { passengerIntervalSec })} />
+      <SliderField id="bd-size" label="Bus size" value={v.busSize} range={BUS_DRIVER_RANGES.busSize} format={formatTimes} onChange={(busSize) => updateGame('busDriver', { busSize })} />
+    </>
+  )
+}
+
+const BeepMeowFields = () => {
+  const { settings, updateGame } = useSettings()
+  const v = settings.beepMeow
+  return (
+    <>
+      <SliderField id="bm-max" label="Things on screen" value={v.maxThings} range={BEEP_MEOW_RANGES.maxThings} onChange={(maxThings) => updateGame('beepMeow', { maxThings })} />
+      <SliderField id="bm-speed" label="Speed" value={v.speed} range={BEEP_MEOW_RANGES.speed} format={formatTimes} onChange={(speed) => updateGame('beepMeow', { speed })} />
+      <SliderField id="bm-size" label="Size" value={v.thingSize} range={BEEP_MEOW_RANGES.thingSize} format={formatTimes} onChange={(thingSize) => updateGame('beepMeow', { thingSize })} />
+      <ToggleField id="bm-ask" label="Ask “Where is the…?” questions" checked={v.askQuestions} onChange={(askQuestions) => updateGame('beepMeow', { askQuestions })} hint="Gentle listening practice. There is no wrong answer." />
+    </>
+  )
+}
+
 const FIELDS: Readonly<Record<GameSettingsKey, () => ReturnType<typeof WavePopFields>>> = {
   wavePop: WavePopFields,
   fruitSlice: FruitSliceFields,
   catchStars: CatchStarsFields,
   airPaint: AirPaintFields,
+  catTickle: CatTickleFields,
+  flyHigh: FlyHighFields,
+  busDriver: BusDriverFields,
+  beepMeow: BeepMeowFields,
 }
 
 export const GameSettingsSection = ({ settingsKey, title }: { readonly settingsKey: GameSettingsKey; readonly title?: string }) => {

@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { GameShell } from '../../components/game/GameShell'
 import { Hud } from '../../components/game/Hud'
-import { drawHandCursor } from '../../components/game/drawHand'
+import { drawPointerCursor } from '../../components/game/drawPointer'
 import type { GameStage } from '../../components/game/types'
 import type { GameMeta } from '../../config/games'
 import { PENTATONIC, playNote, playSparkle } from '../../lib/audio/sfx'
@@ -12,7 +12,8 @@ import { useGameLoop } from '../../lib/game/useGameLoop'
 import { drawParticles, spawnBurst, stepParticles, type Particle } from '../../lib/game/particles'
 import { useSettingsRef } from '../../lib/settings/context'
 import { recordEvent } from '../../lib/storage/progress'
-import { isFist } from '../../lib/hands/features'
+import { FIST_THRESHOLD } from '../../lib/hands/features'
+import { primaryPointer } from '../../lib/tracking/pointer'
 import {
   advanceHue,
   brushColor,
@@ -109,8 +110,7 @@ const AirPaintStage = ({ stage }: { readonly stage: GameStage }) => {
     if (!ctx) return
     const { width, height } = stage.size
     const layout = paletteLayout(width)
-    const hands = stage.handsRef.current
-    const hand = hands[0]
+    const hand = primaryPointer(stage.pointersRef.current, ['hand', 'head', 'foot', 'body'])
     const previous = frameRef.current
     const { airPaint, global } = settingsRef.current
     const dwellMs = airPaint.dwellMs
@@ -139,7 +139,8 @@ const AirPaintStage = ({ stage }: { readonly stage: GameStage }) => {
       }
 
       const onPalette = target !== null
-      const penDown = !onPalette && !(airPaint.fistLifts && isFist(hand.points))
+      const isFist = hand.kind === 'hand' && hand.openness < FIST_THRESHOLD
+      const penDown = !onPalette && !(airPaint.fistLifts && isFist)
       if (penDown) {
         const moved = lastTipRef.current ? Math.hypot(hand.tip.x - lastTipRef.current.x, hand.tip.y - lastTipRef.current.y) : 0
         paint = extendStroke(paint, hand.tip, airPaint.brushSize)
@@ -169,14 +170,14 @@ const AirPaintStage = ({ stage }: { readonly stage: GameStage }) => {
     layout.forEach((swatch) =>
       drawSwatch(ctx, swatch, paint.hue, swatch.id === paint.colorId, dwell.targetId === swatch.id ? dwellProgress(dwell, dwellMs) : 0),
     )
-    if (hand && global.showHandCursor) drawHandCursor(ctx, hand, brushColor(paint))
+    if (hand && global.showHandCursor) drawPointerCursor(ctx, hand, brushColor(paint))
   }, stage.size.width > 0)
 
   return <Hud badges={[{ id: 'color', text: `🎨 ${colorName}`, accent: true }]} />
 }
 
 const AirPaintGame = ({ game }: { readonly game: GameMeta }) => (
-  <GameShell game={game} cameraOpacity={0.35}>
+  <GameShell game={game}>
     {(stage) => <AirPaintStage stage={stage} />}
   </GameShell>
 )

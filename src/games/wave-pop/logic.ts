@@ -1,4 +1,4 @@
-import type { HandPose } from '../../types/hand'
+import type { Pointer as HandPose } from '../../types/pointer'
 import { circleContainsPoint } from '../../lib/game/collision'
 import { spawnBurst, stepParticles, type Particle } from '../../lib/game/particles'
 import { pickOne, randomBetween, type Rng } from '../../lib/game/random'

@@ -102,7 +102,7 @@ const FruitSliceStage = ({ stage }: { readonly stage: GameStage }) => {
     const ctx = prepareCanvas(canvas, stage.size)
     if (!ctx) return
     const { width, height } = stage.size
-    const hands = stage.handsRef.current
+    const hands = stage.pointersRef.current
 
     if (stage.active) {
       const config = configFromSettings(settingsRef.current.fruitSlice)
@@ -141,7 +141,7 @@ const FruitSliceStage = ({ stage }: { readonly stage: GameStage }) => {
 }
 
 const FruitSliceGame = ({ game }: { readonly game: GameMeta }) => (
-  <GameShell game={game} cameraOpacity={0.55}>
+  <GameShell game={game}>
     {(stage) => <FruitSliceStage stage={stage} />}
   </GameShell>
 )

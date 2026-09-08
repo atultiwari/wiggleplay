@@ -18,6 +18,9 @@ export const SiteHeader = () => (
       <Link to="/parents" className="site-header__link">
         For grown-ups
       </Link>
+      <Link to="/about" className="site-header__link">
+        About
+      </Link>
       <SettingsButton className="site-header__link" />
     </nav>
   </header>
@@ -30,7 +33,8 @@ export const SiteFooter = () => (
       <a href={SITE.repo} rel="noreferrer" target="_blank">
         View on GitHub
       </a>
-      . Made with love for tiny wigglers.
+      . Created by {SITE.author}, a parent, in a kid-friendly manner.{' '}
+      <Link to="/about">About {SITE.name}</Link>
     </p>
   </footer>
 )

@@ -66,6 +66,10 @@ Every idea below follows the same ground rules.
 | 20 | Emotion mirror | Child makes a happy/sad/surprised face; a cartoon animal copies it. | Emotional vocabulary |
 | 21 | Show me something red | Child holds up any object; camera confirms the colour. Works for shapes and finger counting. | Colours, shapes, numbers |
 | 22 | Toy show and tell | Child holds up a toy; character names it in English and home language. | Vocabulary, bilingual words |
+| 22a | **Tickle the Cat** ✅ | Cats pop up around the screen; touch one with any body part to make it meow and say its colour. | Animal sounds, colours, cause & effect |
+| 22b | **Fly High** ✅ | Move up/down to fly an aeroplane into balloons, counted to ten. | Up/down, counting, colours |
+| 22c | **Bus Driver** ✅ | Move left/right to drive a bus and pick up waiting animals. | Left/right, counting, animal names |
+| 22d | **Beep Meow Whoosh** ✅ | Planes, buses and cats cross the screen; touch to hear sounds and names; "Where is the bus?" prompts. | First words, listening |
 
 ### B2. Voice and microphone
 
@@ -95,6 +99,14 @@ Every idea below follows the same ground rules.
 | 34 | Room scavenger hunt | "Find something blue in the room." Child fetches it; camera confirms. | Colours, movement, memory |
 
 ---
+
+## Cross-cutting: interaction modes (whole-body play)
+
+Every camera game reads abstract **pointers** rather than hands, so one setting changes how all games are played:
+- 🧍 **Whole body** (default): pose tracking; hands, head, feet and torso all touch things. For the youngest children the score never matters, only that every wiggle does something.
+- 🖐️ **Wave a hand**: hand tracking with the palm as cursor, no pointing needed.
+- ☝️ **Point a finger**: fingertip cursor, fist lifts the paint brush.
+- 🙂 **Head only**: nose as cursor.
 
 ## Cross-cutting: AI adaptive layer
 

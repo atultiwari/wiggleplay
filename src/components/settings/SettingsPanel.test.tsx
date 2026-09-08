@@ -30,8 +30,17 @@ describe('SettingsPanel', () => {
     expect(screen.queryByText('🫧 Wave to Pop')).toBeNull()
   })
 
+  it('changes the interaction mode', async () => {
+    renderPanel()
+    await userEvent.click(screen.getByRole('button', { name: '☝️ Point a finger' }))
+    expect(screen.getByRole('button', { name: '☝️ Point a finger' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByText(/Precise fingertip control/)).toBeInTheDocument()
+  })
+
   it('shows every game section on the hub', () => {
     renderPanel()
+    expect(screen.getByText('🐱 Tickle the Cat')).toBeInTheDocument()
+    expect(screen.getByText('🚌 Bus Driver')).toBeInTheDocument()
     expect(screen.getByText('🫧 Wave to Pop')).toBeInTheDocument()
     expect(screen.getByText('🍉 Fruit Slice')).toBeInTheDocument()
     expect(screen.getByText('⭐ Catch the Stars')).toBeInTheDocument()

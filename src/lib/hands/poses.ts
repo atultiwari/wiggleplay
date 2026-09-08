@@ -1,10 +1,10 @@
-import type { HandPose } from '../../types/hand'
+import type { Pointer } from '../../types/pointer'
 import { add, clamp, distance, lerp, scale, sub, ZERO, type Point } from '../math/vec'
 import { LANDMARK, openness, palmCenter, toScreenPoints } from './features'
 import { smoothPoints } from './smoothing'
 
 export interface PoseBuildInput {
-  readonly previous: readonly HandPose[]
+  readonly previous: readonly Pointer[]
   /** Normalised landmark sets straight from the detector. */
   readonly detected: readonly (readonly Point[])[]
   readonly width: number
@@ -18,11 +18,13 @@ export interface PoseBuildInput {
   readonly smoothing: number
   /** Seconds of motion to extrapolate, hiding camera latency. 0 disables. */
   readonly predictionSec?: number
+  /** 'tip' = index fingertip is the cursor, 'palm' = palm centre (more forgiving). */
+  readonly cursor?: 'tip' | 'palm'
   readonly nextId: number
 }
 
 export interface PoseBuildResult {
-  readonly hands: readonly HandPose[]
+  readonly hands: readonly Pointer[]
   readonly nextId: number
 }
 
@@ -38,9 +40,9 @@ export const adaptiveAlpha = (minAlpha: number, speedPxPerSec: number): number =
 
 const nearestUnused = (
   palm: Point,
-  candidates: readonly HandPose[],
+  candidates: readonly Pointer[],
   used: ReadonlySet<number>,
-): HandPose | undefined =>
+): Pointer | undefined =>
   candidates
     .filter((c) => !used.has(c.id))
     .map((c) => ({ c, d: distance(c.palm, palm) }))
@@ -55,7 +57,7 @@ const predictionOffset = (velocity: Point, predictionSec: number): Point => {
 }
 
 /**
- * Turns raw detections into stable, smoothed HandPose objects with velocity.
+ * Turns raw detections into stable, smoothed Pointer objects with velocity.
  * Pure: never mutates `previous`.
  */
 export const buildHandPoses = (input: PoseBuildInput): PoseBuildResult => {
@@ -82,7 +84,8 @@ export const buildHandPoses = (input: PoseBuildInput): PoseBuildResult => {
 
     return {
       id,
-      tip: points[LANDMARK.INDEX_TIP],
+      kind: 'hand' as const,
+      tip: input.cursor === 'palm' ? palm : points[LANDMARK.INDEX_TIP],
       palm,
       velocity,
       openness: openness(points),

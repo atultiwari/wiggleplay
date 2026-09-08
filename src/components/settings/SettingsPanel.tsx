@@ -9,6 +9,7 @@ import {
   type HandsTracked,
 } from '../../lib/settings/schema'
 import { useSettings } from '../../lib/settings/context'
+import { INTERACTION_MODES, modeInfo } from '../../lib/tracking/modes'
 import { ChoiceField, SliderField, ToggleField } from './fields'
 import { formatMinutes, formatPercent } from './format'
 import { GameSettingsSection } from './GameSettingsSection'
@@ -30,8 +31,6 @@ export const SettingsPanel = ({ gameId, onClose }: SettingsPanelProps) => {
   const gameKeys: readonly GameSettingsKey[] = currentGameKey
     ? [currentGameKey]
     : (Object.values(GAME_SETTINGS_KEYS) as GameSettingsKey[])
-  const usesGameCamera = g.cameraVisibility < 0
-
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose()
@@ -52,6 +51,20 @@ export const SettingsPanel = ({ gameId, onClose }: SettingsPanelProps) => {
         </header>
 
         <div className="settings__body">
+          <section className="settings__section" aria-label="How your child plays">
+            <div className="settings__section-head">
+              <h3>🧒 How your child plays</h3>
+            </div>
+            <ChoiceField
+              label="Interaction"
+              value={g.interaction}
+              options={INTERACTION_MODES.map((m) => ({ value: m.id, label: `${m.emoji} ${m.label}` }))}
+              onChange={(interaction) => updateGlobal({ interaction })}
+              hint={modeInfo(g.interaction).description}
+            />
+            <p className="field__hint">Applies to every game. Whole body is the easiest for toddlers: there is no wrong way to move.</p>
+          </section>
+
           {currentGameKey && <GameSettingsSection settingsKey={currentGameKey} title="🎮 This game" />}
 
           <section className="settings__section" aria-label="Sound">
@@ -104,23 +117,17 @@ export const SettingsPanel = ({ gameId, onClose }: SettingsPanelProps) => {
               value={g.handsTracked}
               options={HANDS_OPTIONS.map((value) => ({ value, label: HANDS_LABELS[String(value)] }))}
               onChange={(handsTracked) => updateGlobal({ handsTracked })}
-              hint="Auto uses what each game needs. One hand is fastest on slow laptops."
+              hint="Hand modes only. Auto uses what each game needs; one hand is fastest on slow laptops."
             />
-            <ToggleField id="g-cursor" label="Show hand cursor" checked={g.showHandCursor} onChange={(showHandCursor) => updateGlobal({ showHandCursor })} />
-            <ToggleField
-              id="g-cam-auto"
-              label="Camera picture: use each game's default"
-              checked={usesGameCamera}
-              onChange={(useDefault) => updateGlobal({ cameraVisibility: useDefault ? -1 : 0.5 })}
-            />
+            <ToggleField id="g-cursor" label="Show cursor on the tracked part" checked={g.showHandCursor} onChange={(showHandCursor) => updateGlobal({ showHandCursor })} />
             <SliderField
               id="g-cam-vis"
-              label="Camera picture visibility"
-              value={usesGameCamera ? 0.5 : g.cameraVisibility}
+              label="How visible you are behind the game"
+              value={g.cameraVisibility}
               range={GLOBAL_RANGES.cameraVisibility}
               format={formatPercent}
-              disabled={usesGameCamera}
               onChange={(cameraVisibility) => updateGlobal({ cameraVisibility })}
+              hint="0% hides the camera picture, 100% shows it fully. Default 50%."
             />
             <ToggleField id="g-fps" label="Show tracking speed (FPS)" checked={g.showFps} onChange={(showFps) => updateGlobal({ showFps })} />
           </section>

@@ -5,9 +5,10 @@ import { playCheer, unlockAudio } from '../../lib/audio/sfx'
 import { primeVoices, say, stopSpeaking } from '../../lib/audio/voice'
 import { useCamera } from '../../lib/camera/useCamera'
 import { useElementSize } from '../../lib/game/canvas'
-import { useHandTracking } from '../../lib/hands/useHandTracking'
 import { useSettings } from '../../lib/settings/context'
 import { lerp } from '../../lib/math/vec'
+import { modeInfo } from '../../lib/tracking/modes'
+import { useTracking } from '../../lib/tracking/useTracking'
 import { SettingsPanel } from '../settings/SettingsPanel'
 import { HoldButton } from './HoldButton'
 import { BreakOverlay, IntroOverlay, LoadingOverlay } from './Overlays'
@@ -18,12 +19,10 @@ type Phase = 'intro' | 'starting' | 'playing' | 'break'
 
 export interface GameShellProps {
   readonly game: GameMeta
-  /** How visible the camera feed is behind the game, 0..1. */
-  readonly cameraOpacity?: number
   readonly children: GameRenderer
 }
 
-const NO_HANDS_HINT_MS = 2500
+const NO_POINTER_HINT_MS = 2500
 const HINT_POLL_MS = 400
 /** Responsiveness 0..1 maps to this minimum smoothing share. */
 const SMOOTHING_RANGE = [0.22, 0.92] as const
@@ -40,13 +39,14 @@ const toggleFullscreen = async (): Promise<void> => {
 }
 
 /**
- * Owns the camera, hand tracking, session phases, settings and the parent gate.
- * Games only receive a canvas plus the latest hands.
+ * Owns the camera, tracking, session phases, settings and the parent gate.
+ * Games only receive a canvas plus the latest pointers.
  */
-export const GameShell = ({ game, cameraOpacity = 1, children }: GameShellProps) => {
+export const GameShell = ({ game, children }: GameShellProps) => {
   const navigate = useNavigate()
-  const { settings } = useSettings()
+  const { settings, updateGlobal } = useSettings()
   const global = settings.global
+  const mode = modeInfo(global.interaction)
   const stageRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -59,11 +59,12 @@ export const GameShell = ({ game, cameraOpacity = 1, children }: GameShellProps)
   const devicesEnabled = requestedPhase !== 'intro'
   const camera = useCamera(videoRef, devicesEnabled, global.cameraQuality)
   const numHands = global.handsTracked === 'auto' ? game.hands : global.handsTracked
-  const tracking = useHandTracking({
+  const tracking = useTracking({
     videoRef,
     enabled: devicesEnabled && camera.status === 'ready',
     width: size.width,
     height: size.height,
+    mode: mode.id,
     numHands,
     smoothing: lerp(SMOOTHING_RANGE[0], SMOOTHING_RANGE[1], global.responsiveness),
     predictionSec: lerp(PREDICTION_RANGE[0], PREDICTION_RANGE[1], global.responsiveness),
@@ -75,10 +76,10 @@ export const GameShell = ({ game, cameraOpacity = 1, children }: GameShellProps)
   useEffect(() => {
     if (phase === 'playing' && !announcedRef.current) {
       announcedRef.current = true
-      say(game.howTo)
+      say(`${mode.tip} ${game.howTo}`)
     }
     if (phase === 'intro') announcedRef.current = false
-  }, [phase, game.howTo])
+  }, [phase, game.howTo, mode.tip])
 
   useEffect(() => {
     if (!active) return
@@ -94,14 +95,14 @@ export const GameShell = ({ game, cameraOpacity = 1, children }: GameShellProps)
     if (!active) return
     let lastSeen = performance.now()
     const poll = setInterval(() => {
-      if (tracking.handsRef.current.length > 0) lastSeen = performance.now()
-      setShowHint(performance.now() - lastSeen > NO_HANDS_HINT_MS)
+      if (tracking.pointersRef.current.length > 0) lastSeen = performance.now()
+      setShowHint(performance.now() - lastSeen > NO_POINTER_HINT_MS)
     }, HINT_POLL_MS)
     return () => {
       clearInterval(poll)
       setShowHint(false)
     }
-  }, [active, tracking.handsRef])
+  }, [active, tracking.pointersRef])
 
   const start = async () => {
     await unlockAudio()
@@ -116,16 +117,16 @@ export const GameShell = ({ game, cameraOpacity = 1, children }: GameShellProps)
 
   const retry = () => setRequestedPhase('intro')
 
-  const stage: GameStage = { canvasRef, handsRef: tracking.handsRef, size, active }
-  const videoOpacity = global.cameraVisibility >= 0 ? global.cameraVisibility : cameraOpacity
+  const stage: GameStage = { canvasRef, pointersRef: tracking.pointersRef, size, active }
+  const hintText = mode.model === 'pose' ? '🧍 Step back so I can see you!' : '👋 Show me your hand!'
 
   return (
     <div className="shell" style={{ '--accent': game.accent } as CSSProperties}>
       <div ref={stageRef} className="shell__stage">
-        <video ref={videoRef} className="shell__video" style={{ opacity: videoOpacity }} playsInline muted autoPlay />
+        <video ref={videoRef} className="shell__video" style={{ opacity: global.cameraVisibility }} playsInline muted autoPlay />
         <canvas ref={canvasRef} className="shell__canvas" aria-label={`${game.title} play area`} />
         {children(stage)}
-        {showHint && active && <div className="shell__hint">👋 Show me your hand!</div>}
+        {showHint && active && <div className="shell__hint">{hintText}</div>}
       </div>
 
       <div className="shell__topbar">
@@ -141,11 +142,19 @@ export const GameShell = ({ game, cameraOpacity = 1, children }: GameShellProps)
 
       {global.showFps && devicesEnabled && (
         <div className="shell__fps" aria-live="off">
-          {tracking.fps} fps · {numHands === 1 ? '1 hand' : '2 hands'} · {global.cameraQuality} camera
+          {tracking.fps} fps · {mode.emoji} {mode.label} · {global.cameraQuality} camera
         </div>
       )}
 
-      {phase === 'intro' && <IntroOverlay game={game} onStart={start} onExit={exit} />}
+      {phase === 'intro' && (
+        <IntroOverlay
+          game={game}
+          mode={mode.id}
+          onModeChange={(interaction) => updateGlobal({ interaction })}
+          onStart={start}
+          onExit={exit}
+        />
+      )}
       {phase === 'starting' && (
         <LoadingOverlay
           camera={camera}

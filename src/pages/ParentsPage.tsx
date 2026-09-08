@@ -17,15 +17,28 @@ export const ParentsPage = () => (
         <h2>How the camera games work</h2>
         <ul>
           <li>The camera runs entirely inside the browser on your device. No video or images are ever uploaded.</li>
-          <li>Hand tracking uses an on-device model (MediaPipe). Once loaded, the games work offline.</li>
+          <li>Body and hand tracking use on-device models (MediaPipe). Once loaded, the games work offline.</li>
           <li>Nothing is recorded. Closing the tab stops the camera immediately.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Choosing how your child plays</h2>
+        <p>
+          Open ⚙️ Settings (or pick on a game's start screen) and choose an interaction mode. It applies to every game.
+        </p>
+        <ul>
+          <li><strong>🧍 Whole body</strong> (default): hands, head, feet and tummy all count. Best for the youngest, who cannot point yet. Stand about two metres back so the camera sees the whole child.</li>
+          <li><strong>🖐️ Wave a hand</strong>: any hand movement works, no pointing needed. Good at a table.</li>
+          <li><strong>☝️ Point a finger</strong>: precise fingertip control for older children.</li>
+          <li><strong>🙂 Head only</strong>: move the head to play. Handy when sitting or for limited mobility.</li>
         </ul>
       </section>
 
       <section>
         <h2>Set-up tips</h2>
         <ul>
-          <li>Put the tablet or laptop at your child's chest height, about one to two metres away.</li>
+          <li>Put the tablet or laptop at your child's chest height, about one to two metres away (further for whole-body play).</li>
           <li>Good light on your child, not behind them. A window behind the child confuses the camera.</li>
           <li>Show them once: hold a hand up, wave, and let them copy you. Then let them lead.</li>
           <li>Chrome, Edge or Safari on a recent device works best. Older phones may feel slow.</li>

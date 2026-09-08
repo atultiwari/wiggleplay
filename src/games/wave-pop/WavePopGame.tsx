@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { GameShell } from '../../components/game/GameShell'
 import { Hud } from '../../components/game/Hud'
-import { drawHandCursor } from '../../components/game/drawHand'
+import { drawPointerCursor } from '../../components/game/drawPointer'
 import type { GameStage } from '../../components/game/types'
 import type { GameMeta } from '../../config/games'
 import { playCheer, playPop } from '../../lib/audio/sfx'
@@ -48,7 +48,7 @@ const WavePopStage = ({ stage }: { readonly stage: GameStage }) => {
     const ctx = prepareCanvas(canvas, stage.size)
     if (!ctx) return
     const { width, height } = stage.size
-    const hands = stage.handsRef.current
+    const hands = stage.pointersRef.current
 
     if (stage.active) {
       const config = configFromSettings(settingsRef.current.wavePop)
@@ -71,14 +71,14 @@ const WavePopStage = ({ stage }: { readonly stage: GameStage }) => {
     ctx.clearRect(0, 0, width, height)
     state.bubbles.forEach((b) => drawBubble(ctx, b, state.timeSec))
     drawParticles(ctx, state.particles)
-    if (settingsRef.current.global.showHandCursor) hands.forEach((hand) => drawHandCursor(ctx, hand, '#5cc8ff'))
+    if (settingsRef.current.global.showHandCursor) hands.forEach((hand) => drawPointerCursor(ctx, hand, '#5cc8ff'))
   }, stage.size.width > 0)
 
   return <Hud badges={[{ id: 'popped', text: `🫧 ${popped}`, accent: true }]} />
 }
 
 const WavePopGame = ({ game }: { readonly game: GameMeta }) => (
-  <GameShell game={game} cameraOpacity={1}>
+  <GameShell game={game}>
     {(stage) => <WavePopStage stage={stage} />}
   </GameShell>
 )

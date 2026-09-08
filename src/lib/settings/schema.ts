@@ -1,11 +1,14 @@
 import { SESSION } from '../../config/site'
 import { clamp } from '../math/vec'
+import { INTERACTION_MODE_IDS, type InteractionMode } from '../tracking/modes'
 
 export type CameraQuality = 'low' | 'medium' | 'high'
 export type HandsTracked = 'auto' | 1 | 2
 export type SliceTolerance = 'fine' | 'normal' | 'generous'
 
 export interface GlobalSettings {
+  /** How the child interacts: whole body, a hand, a fingertip or the head. */
+  readonly interaction: InteractionMode
   /** Master multiplier for sound effects, 0..3 (300 %). */
   readonly effectsVolume: number
   readonly voiceEnabled: boolean
@@ -16,7 +19,7 @@ export interface GlobalSettings {
   readonly cameraQuality: CameraQuality
   readonly handsTracked: HandsTracked
   readonly showHandCursor: boolean
-  /** -1 keeps each game's own default, otherwise 0..1. */
+  /** How visible the child is behind the game, 0..1. */
   readonly cameraVisibility: number
   readonly sessionMinutes: number
   readonly showFps: boolean
@@ -50,12 +53,41 @@ export interface AirPaintSettings {
   readonly fistLifts: boolean
 }
 
+export interface CatTickleSettings {
+  readonly maxCats: number
+  readonly appearIntervalSec: number
+  readonly catSize: number
+  readonly stayForSec: number
+}
+
+export interface FlyHighSettings {
+  readonly balloonIntervalSec: number
+  readonly speed: number
+  readonly planeSize: number
+}
+
+export interface BusDriverSettings {
+  readonly passengerIntervalSec: number
+  readonly busSize: number
+}
+
+export interface BeepMeowSettings {
+  readonly maxThings: number
+  readonly speed: number
+  readonly thingSize: number
+  readonly askQuestions: boolean
+}
+
 export interface Settings {
   readonly global: GlobalSettings
   readonly wavePop: WavePopSettings
   readonly fruitSlice: FruitSliceSettings
   readonly catchStars: CatchStarsSettings
   readonly airPaint: AirPaintSettings
+  readonly catTickle: CatTickleSettings
+  readonly flyHigh: FlyHighSettings
+  readonly busDriver: BusDriverSettings
+  readonly beepMeow: BeepMeowSettings
 }
 
 export type GameSettingsKey = Exclude<keyof Settings, 'global'>
@@ -104,8 +136,33 @@ export const AIR_PAINT_RANGES = {
   dwellMs: { min: 300, max: 2500, step: 100 },
 } as const satisfies Record<string, NumberRange>
 
+export const CAT_TICKLE_RANGES = {
+  maxCats: { min: 1, max: 8, step: 1 },
+  appearIntervalSec: { min: 0.5, max: 5, step: 0.1 },
+  catSize: { min: 0.5, max: 2, step: 0.1 },
+  stayForSec: { min: 1, max: 10, step: 0.5 },
+} as const satisfies Record<string, NumberRange>
+
+export const FLY_HIGH_RANGES = {
+  balloonIntervalSec: { min: 0.3, max: 4, step: 0.1 },
+  speed: { min: 0.3, max: 3, step: 0.1 },
+  planeSize: { min: 0.5, max: 2, step: 0.1 },
+} as const satisfies Record<string, NumberRange>
+
+export const BUS_DRIVER_RANGES = {
+  passengerIntervalSec: { min: 0.5, max: 6, step: 0.1 },
+  busSize: { min: 0.6, max: 2, step: 0.1 },
+} as const satisfies Record<string, NumberRange>
+
+export const BEEP_MEOW_RANGES = {
+  maxThings: { min: 1, max: 10, step: 1 },
+  speed: { min: 0.3, max: 3, step: 0.1 },
+  thingSize: { min: 0.5, max: 2, step: 0.1 },
+} as const satisfies Record<string, NumberRange>
+
 export const DEFAULT_SETTINGS: Settings = {
   global: {
+    interaction: 'body',
     effectsVolume: 2,
     voiceEnabled: true,
     voiceVolume: 1,
@@ -113,7 +170,7 @@ export const DEFAULT_SETTINGS: Settings = {
     cameraQuality: 'medium',
     handsTracked: 'auto',
     showHandCursor: true,
-    cameraVisibility: -1,
+    cameraVisibility: 0.5,
     sessionMinutes: SESSION.suggestedMinutes,
     showFps: false,
   },
@@ -121,6 +178,10 @@ export const DEFAULT_SETTINGS: Settings = {
   fruitSlice: { maxFruits: 4, spawnIntervalSec: 1.5, speed: 1, fruitSize: 1, tolerance: 'normal' },
   catchStars: { fallSpeed: 1, spawnIntervalSec: 1.5, basketWidth: 1, starSize: 1 },
   airPaint: { brushSize: 22, dwellMs: 700, fistLifts: true },
+  catTickle: { maxCats: 3, appearIntervalSec: 1.5, catSize: 1, stayForSec: 4 },
+  flyHigh: { balloonIntervalSec: 1.4, speed: 1, planeSize: 1 },
+  busDriver: { passengerIntervalSec: 2, busSize: 1 },
+  beepMeow: { maxThings: 5, speed: 1, thingSize: 1, askQuestions: true },
 }
 
 /** Maps a game id from the catalogue to its settings slice. */
@@ -129,6 +190,10 @@ export const GAME_SETTINGS_KEYS: Readonly<Record<string, GameSettingsKey>> = {
   'fruit-slice': 'fruitSlice',
   'catch-stars': 'catchStars',
   'air-paint': 'airPaint',
+  'cat-tickle': 'catTickle',
+  'fly-high': 'flyHigh',
+  'bus-driver': 'busDriver',
+  'beep-meow-whoosh': 'beepMeow',
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
@@ -144,9 +209,13 @@ const oneOf = <T>(value: unknown, options: readonly T[], fallback: T): T =>
 const sanitizeGlobal = (raw: unknown): GlobalSettings => {
   const r = isRecord(raw) ? raw : {}
   const d = DEFAULT_SETTINGS.global
+  // Older saves used -1 for "game default"; that now means the 50 % default.
   const visibility =
-    r.cameraVisibility === -1 ? -1 : num(r.cameraVisibility, d.cameraVisibility, GLOBAL_RANGES.cameraVisibility)
+    typeof r.cameraVisibility === 'number' && r.cameraVisibility < 0
+      ? d.cameraVisibility
+      : num(r.cameraVisibility, d.cameraVisibility, GLOBAL_RANGES.cameraVisibility)
   return {
+    interaction: oneOf(r.interaction, INTERACTION_MODE_IDS, d.interaction),
     effectsVolume: num(r.effectsVolume, d.effectsVolume, GLOBAL_RANGES.effectsVolume),
     voiceEnabled: bool(r.voiceEnabled, d.voiceEnabled),
     voiceVolume: num(r.voiceVolume, d.voiceVolume, GLOBAL_RANGES.voiceVolume),
@@ -204,6 +273,47 @@ const sanitizeAirPaint = (raw: unknown): AirPaintSettings => {
   }
 }
 
+const sanitizeCatTickle = (raw: unknown): CatTickleSettings => {
+  const r = isRecord(raw) ? raw : {}
+  const d = DEFAULT_SETTINGS.catTickle
+  return {
+    maxCats: Math.round(num(r.maxCats, d.maxCats, CAT_TICKLE_RANGES.maxCats)),
+    appearIntervalSec: num(r.appearIntervalSec, d.appearIntervalSec, CAT_TICKLE_RANGES.appearIntervalSec),
+    catSize: num(r.catSize, d.catSize, CAT_TICKLE_RANGES.catSize),
+    stayForSec: num(r.stayForSec, d.stayForSec, CAT_TICKLE_RANGES.stayForSec),
+  }
+}
+
+const sanitizeFlyHigh = (raw: unknown): FlyHighSettings => {
+  const r = isRecord(raw) ? raw : {}
+  const d = DEFAULT_SETTINGS.flyHigh
+  return {
+    balloonIntervalSec: num(r.balloonIntervalSec, d.balloonIntervalSec, FLY_HIGH_RANGES.balloonIntervalSec),
+    speed: num(r.speed, d.speed, FLY_HIGH_RANGES.speed),
+    planeSize: num(r.planeSize, d.planeSize, FLY_HIGH_RANGES.planeSize),
+  }
+}
+
+const sanitizeBusDriver = (raw: unknown): BusDriverSettings => {
+  const r = isRecord(raw) ? raw : {}
+  const d = DEFAULT_SETTINGS.busDriver
+  return {
+    passengerIntervalSec: num(r.passengerIntervalSec, d.passengerIntervalSec, BUS_DRIVER_RANGES.passengerIntervalSec),
+    busSize: num(r.busSize, d.busSize, BUS_DRIVER_RANGES.busSize),
+  }
+}
+
+const sanitizeBeepMeow = (raw: unknown): BeepMeowSettings => {
+  const r = isRecord(raw) ? raw : {}
+  const d = DEFAULT_SETTINGS.beepMeow
+  return {
+    maxThings: Math.round(num(r.maxThings, d.maxThings, BEEP_MEOW_RANGES.maxThings)),
+    speed: num(r.speed, d.speed, BEEP_MEOW_RANGES.speed),
+    thingSize: num(r.thingSize, d.thingSize, BEEP_MEOW_RANGES.thingSize),
+    askQuestions: bool(r.askQuestions, d.askQuestions),
+  }
+}
+
 /** Never trust stored data: every field is validated and clamped, unknown fields are dropped. */
 export const sanitizeSettings = (raw: unknown): Settings => {
   const r = isRecord(raw) ? raw : {}
@@ -213,5 +323,9 @@ export const sanitizeSettings = (raw: unknown): Settings => {
     fruitSlice: sanitizeFruitSlice(r.fruitSlice),
     catchStars: sanitizeCatchStars(r.catchStars),
     airPaint: sanitizeAirPaint(r.airPaint),
+    catTickle: sanitizeCatTickle(r.catTickle),
+    flyHigh: sanitizeFlyHigh(r.flyHigh),
+    busDriver: sanitizeBusDriver(r.busDriver),
+    beepMeow: sanitizeBeepMeow(r.beepMeow),
   }
 }

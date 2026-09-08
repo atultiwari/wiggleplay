@@ -144,6 +144,30 @@ export const playCheer = (): void =>
     )
   })
 
+/** Cat meow: a wobbly rising-then-falling tone. */
+export const playMeow = (): void =>
+  withContext((ctx) => {
+    playTone(ctx, { from: 520, to: 880, duration: 0.18, type: 'sawtooth', gain: 0.14 })
+    playTone(ctx, { from: 880, to: 480, duration: 0.3, type: 'sawtooth', gain: 0.16, delay: 0.16 })
+    playTone(ctx, { from: 1040, to: 640, duration: 0.3, type: 'sine', gain: 0.12, delay: 0.16 })
+  })
+
+/** Bus horn: two short beeps. */
+export const playHonk = (): void =>
+  withContext((ctx) => {
+    ;[0, 0.22].forEach((delay) => {
+      playTone(ctx, { from: 330, duration: 0.16, type: 'square', gain: 0.22, delay })
+      playTone(ctx, { from: 415, duration: 0.16, type: 'square', gain: 0.18, delay })
+    })
+  })
+
+/** Aeroplane whoosh: a rising, airy sweep. */
+export const playWhoosh = (): void =>
+  withContext((ctx) => {
+    playNoise(ctx, 0.5, 900, 0.45)
+    playTone(ctx, { from: 180, to: 720, duration: 0.45, type: 'triangle', gain: 0.12 })
+  })
+
 /** Painting note: a soft tone whose pitch follows the brush. */
 export const playNote = (frequency: number, duration = 0.12): void =>
   withContext((ctx) => playTone(ctx, { from: frequency, duration, type: 'sine', gain: 0.14 }))

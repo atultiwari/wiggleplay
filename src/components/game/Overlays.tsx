@@ -1,17 +1,20 @@
 import { ART } from '../../assets/art'
 import type { GameMeta } from '../../config/games'
 import type { CameraState } from '../../lib/camera/useCamera'
-import type { TrackerStatus } from '../../lib/hands/useHandTracking'
+import { INTERACTION_MODES, modeInfo, type InteractionMode } from '../../lib/tracking/modes'
+import type { TrackerStatus } from '../../lib/tracking/useTracking'
 import { HoldButton } from './HoldButton'
 import './Overlays.css'
 
 interface IntroOverlayProps {
   readonly game: GameMeta
+  readonly mode: InteractionMode
+  readonly onModeChange: (mode: InteractionMode) => void
   readonly onStart: () => void
   readonly onExit: () => void
 }
 
-export const IntroOverlay = ({ game, onStart, onExit }: IntroOverlayProps) => (
+export const IntroOverlay = ({ game, mode, onModeChange, onStart, onExit }: IntroOverlayProps) => (
   <div className="overlay" role="dialog" aria-labelledby="intro-title">
     <img className="overlay__mascot" src={ART.mascot} alt="" width={160} height={160} />
     <h1 id="intro-title" className="overlay__title">
@@ -21,7 +24,23 @@ export const IntroOverlay = ({ game, onStart, onExit }: IntroOverlayProps) => (
     <button type="button" className="btn btn--big" onClick={onStart} autoFocus>
       ▶ Play
     </button>
-    <p className="overlay__note">Grown-ups: the camera stays on this device. Nothing is uploaded.</p>
+    <div className="overlay__modes" role="group" aria-label="How your child plays">
+      <span className="overlay__modes-label">Play with:</span>
+      {INTERACTION_MODES.map((m) => (
+        <button
+          key={m.id}
+          type="button"
+          className={`chip ${m.id === mode ? 'chip--on' : ''}`}
+          aria-pressed={m.id === mode}
+          onClick={() => onModeChange(m.id)}
+        >
+          {m.emoji} {m.label}
+        </button>
+      ))}
+    </div>
+    <p className="overlay__note">
+      {modeInfo(mode).description} Grown-ups: the camera stays on this device. Nothing is uploaded.
+    </p>
     <HoldButton label="Hold to go home" icon="🏠" onHold={onExit} className="overlay__exit" />
   </div>
 )
@@ -36,7 +55,7 @@ interface LoadingOverlayProps {
 
 const loadingMessage = (camera: CameraState, trackerStatus: TrackerStatus): string => {
   if (camera.status === 'requesting') return 'Asking for the camera…'
-  if (trackerStatus === 'loading') return 'Waking up the hand magic…'
+  if (trackerStatus === 'loading') return 'Waking up the wiggle magic…'
   return 'Almost there…'
 }
 

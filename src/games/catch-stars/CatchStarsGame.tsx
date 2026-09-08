@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ART } from '../../assets/art'
 import { GameShell } from '../../components/game/GameShell'
 import { Hud } from '../../components/game/Hud'
-import { drawHandCursor } from '../../components/game/drawHand'
+import { drawPointerCursor } from '../../components/game/drawPointer'
 import type { GameStage } from '../../components/game/types'
 import type { GameMeta } from '../../config/games'
 import { loadImageMap } from '../../lib/assets/images'
@@ -13,6 +13,7 @@ import { drawParticles } from '../../lib/game/particles'
 import { useGameLoop } from '../../lib/game/useGameLoop'
 import { useSettingsRef } from '../../lib/settings/context'
 import { recordEvent } from '../../lib/storage/progress'
+import { primaryPointer } from '../../lib/tracking/pointer'
 import { BASKET, basketTop, configFromSettings, createCatchState, stepCatch, type CatchConfig, type CatchState } from './logic'
 
 const NUMBER_WORDS = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
@@ -92,7 +93,7 @@ const CatchStarsStage = ({ stage }: { readonly stage: GameStage }) => {
     const ctx = prepareCanvas(canvas, stage.size)
     if (!ctx) return
     const { width, height } = stage.size
-    const hand = stage.handsRef.current[0]
+    const hand = primaryPointer(stage.pointersRef.current, ['body', 'hand', 'head', 'foot'])
     const config = configFromSettings(settingsRef.current.catchStars)
 
     if (stage.active) {
@@ -125,7 +126,7 @@ const CatchStarsStage = ({ stage }: { readonly stage: GameStage }) => {
     drawStars(ctx, state, images.star)
     drawBasket(ctx, state, config, height, images.mascot)
     drawParticles(ctx, state.particles)
-    if (hand && settingsRef.current.global.showHandCursor) drawHandCursor(ctx, hand, '#ffd60a')
+    if (hand && settingsRef.current.global.showHandCursor) drawPointerCursor(ctx, hand, '#ffd60a')
   }, stage.size.width > 0)
 
   return (
@@ -139,7 +140,7 @@ const CatchStarsStage = ({ stage }: { readonly stage: GameStage }) => {
 }
 
 const CatchStarsGame = ({ game }: { readonly game: GameMeta }) => (
-  <GameShell game={game} cameraOpacity={0.5}>
+  <GameShell game={game}>
     {(stage) => <CatchStarsStage stage={stage} />}
   </GameShell>
 )

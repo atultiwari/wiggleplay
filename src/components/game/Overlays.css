@@ -82,3 +82,19 @@
     transform: rotate(6deg);
   }
 }
+
+.overlay__modes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.overlay__modes-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-muted);
+  margin-right: 0.25rem;
+}
