@@ -1,0 +1,259 @@
+{
+  "model": "WigglePlay cat",
+  "parts": [
+    {
+      "name": "root",
+      "kind": "part",
+      "module": "root",
+      "triangles": 192
+    },
+    {
+      "name": "body",
+      "kind": "part",
+      "module": "root",
+      "triangles": 4864
+    },
+    {
+      "name": "head",
+      "kind": "part",
+      "module": "body",
+      "triangles": 4608
+    },
+    {
+      "name": "ear-r",
+      "kind": "part",
+      "module": "head",
+      "triangles": 224
+    },
+    {
+      "name": "ear-inner-r",
+      "kind": "part",
+      "module": "ear-r",
+      "triangles": 1216
+    },
+    {
+      "name": "ear-l",
+      "kind": "part",
+      "module": "head",
+      "triangles": 224
+    },
+    {
+      "name": "ear-inner-l",
+      "kind": "part",
+      "module": "ear-l",
+      "triangles": 1216
+    },
+    {
+      "name": "eye-r",
+      "kind": "part",
+      "module": "head",
+      "triangles": 1216
+    },
+    {
+      "name": "eye-l",
+      "kind": "part",
+      "module": "head",
+      "triangles": 1216
+    },
+    {
+      "name": "catchlight-a",
+      "kind": "part",
+      "module": "head",
+      "triangles": 1216
+    },
+    {
+      "name": "catchlight-b",
+      "kind": "part",
+      "module": "head",
+      "triangles": 1216
+    },
+    {
+      "name": "catchlight-c",
+      "kind": "part",
+      "module": "head",
+      "triangles": 1216
+    },
+    {
+      "name": "catchlight-d",
+      "kind": "part",
+      "module": "head",
+      "triangles": 1216
+    },
+    {
+      "name": "nose",
+      "kind": "part",
+      "module": "head",
+      "triangles": 1216
+    },
+    {
+      "name": "mouth-open",
+      "kind": "part",
+      "module": "head",
+      "triangles": 1216
+    },
+    {
+      "name": "tongue",
+      "kind": "part",
+      "module": "head",
+      "triangles": 1216
+    },
+    {
+      "name": "cheek-a",
+      "kind": "part",
+      "module": "head",
+      "triangles": 1216
+    },
+    {
+      "name": "cheek-b",
+      "kind": "part",
+      "module": "head",
+      "triangles": 1216
+    },
+    {
+      "name": "smile",
+      "kind": "part",
+      "module": "head",
+      "triangles": 48
+    },
+    {
+      "name": "brow-r",
+      "kind": "part",
+      "module": "head",
+      "triangles": 16
+    },
+    {
+      "name": "brow-l",
+      "kind": "part",
+      "module": "head",
+      "triangles": 16
+    },
+    {
+      "name": "stripe-forehead-c",
+      "kind": "part",
+      "module": "head",
+      "triangles": 48
+    },
+    {
+      "name": "stripe-forehead-a",
+      "kind": "part",
+      "module": "head",
+      "triangles": 48
+    },
+    {
+      "name": "stripe-forehead-b",
+      "kind": "part",
+      "module": "head",
+      "triangles": 48
+    },
+    {
+      "name": "stripe-head-a",
+      "kind": "part",
+      "module": "head",
+      "triangles": 48
+    },
+    {
+      "name": "stripe-head-b",
+      "kind": "part",
+      "module": "head",
+      "triangles": 48
+    },
+    {
+      "name": "stripe-shoulder-a",
+      "kind": "part",
+      "module": "body",
+      "triangles": 48
+    },
+    {
+      "name": "stripe-shoulder-b",
+      "kind": "part",
+      "module": "body",
+      "triangles": 48
+    },
+    {
+      "name": "stripe-flank-a",
+      "kind": "part",
+      "module": "body",
+      "triangles": 48
+    },
+    {
+      "name": "stripe-flank-b",
+      "kind": "part",
+      "module": "body",
+      "triangles": 48
+    },
+    {
+      "name": "stripe-low-a",
+      "kind": "part",
+      "module": "body",
+      "triangles": 48
+    },
+    {
+      "name": "stripe-low-b",
+      "kind": "part",
+      "module": "body",
+      "triangles": 48
+    },
+    {
+      "name": "foreleg-r",
+      "kind": "part",
+      "module": "body",
+      "triangles": 1216
+    },
+    {
+      "name": "paw-r",
+      "kind": "part",
+      "module": "foreleg-r",
+      "triangles": 1216
+    },
+    {
+      "name": "foreleg-l",
+      "kind": "part",
+      "module": "body",
+      "triangles": 1216
+    },
+    {
+      "name": "paw-l",
+      "kind": "part",
+      "module": "foreleg-l",
+      "triangles": 1216
+    },
+    {
+      "name": "hind-paw-r",
+      "kind": "part",
+      "module": "body",
+      "triangles": 1216
+    },
+    {
+      "name": "hind-paw-l",
+      "kind": "part",
+      "module": "body",
+      "triangles": 1216
+    },
+    {
+      "name": "tail",
+      "kind": "part",
+      "module": "body",
+      "triangles": 192
+    },
+    {
+      "name": "cream-tip",
+      "kind": "part",
+      "module": "tail",
+      "triangles": 1216
+    },
+    {
+      "name": "ring-a",
+      "kind": "part",
+      "module": "tail",
+      "triangles": 1216
+    },
+    {
+      "name": "ring-b",
+      "kind": "part",
+      "module": "tail",
+      "triangles": 1216
+    }
+  ],
+  "unnamedMeshes": 5,
+  "integralMeshes": 42
+}

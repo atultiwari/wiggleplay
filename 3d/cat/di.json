@@ -1,0 +1,158 @@
+{
+  "sourceImage": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/refs/cat-orange.png",
+  "zonesDir": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/cat/di",
+  "detailInventory": {
+    "scanMethod": "grid-3x3",
+    "targetMinDetails": 6,
+    "details": [
+      {
+        "id": "forehead-stripes",
+        "kind": "linework",
+        "description": "three darker stripes on the forehead",
+        "region": {
+          "x": 0.32,
+          "y": 0.1,
+          "width": 0.2,
+          "height": 0.13,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": [
+          "albedo"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "stripe-forehead-c"
+        }
+      },
+      {
+        "id": "side-stripes",
+        "kind": "linework",
+        "description": "darker stripes on the head sides, shoulders and flanks",
+        "region": {
+          "x": 0.08,
+          "y": 0.28,
+          "width": 0.85,
+          "height": 0.65,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": [
+          "albedo"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "stripe-flank-a"
+        }
+      },
+      {
+        "id": "tail-rings",
+        "kind": "linework",
+        "description": "two darker rings on the tail",
+        "region": {
+          "x": 0.78,
+          "y": 0.75,
+          "width": 0.15,
+          "height": 0.13,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": [
+          "albedo"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "ring-a"
+        }
+      },
+      {
+        "id": "face-decal",
+        "kind": "decal",
+        "description": "big brown eyes with catchlights, brows, nose, open smile with tongue, cheeks",
+        "region": {
+          "x": 0.2,
+          "y": 0.2,
+          "width": 0.44,
+          "height": 0.28,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": [
+          "albedo"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "eye-l"
+        }
+      },
+      {
+        "id": "muzzle-patch",
+        "kind": "decal",
+        "description": "cream muzzle and chin with a peach shade below",
+        "region": {
+          "x": 0.12,
+          "y": 0.32,
+          "width": 0.6,
+          "height": 0.23,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": [
+          "albedo"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "muzzle"
+        }
+      },
+      {
+        "id": "belly-patch",
+        "kind": "decal",
+        "description": "cream chest patch and peach lower belly",
+        "region": {
+          "x": 0.22,
+          "y": 0.59,
+          "width": 0.42,
+          "height": 0.34,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": [
+          "albedo"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "belly"
+        }
+      },
+      {
+        "id": "inner-ears",
+        "kind": "decal",
+        "description": "pink inner ears",
+        "region": {
+          "x": 0.15,
+          "y": 0.03,
+          "width": 0.55,
+          "height": 0.1,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": [
+          "albedo"
+        ],
+        "evidenceRef": "full-object",
+        "confidence": 0.85,
+        "mapsTo": {
+          "ref": "ear-inner-l"
+        }
+      }
+    ]
+  },
+  "authoringInstruction": "Open each zone crop under zonesDir and replace every detail stub's kind, description, scale, affects, mapsTo, and confidence with what is actually observed. Add more detail entries per zone if a single zone contains multiple distinct marks; do not leave stubs unfilled or unlinked (mapsTo must reference a real component.localFeatures or material.localOverrides entry)."
+}

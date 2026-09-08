@@ -1,0 +1,14 @@
+{
+  "admitted": true,
+  "reasons": [],
+  "provenance": {
+    "viewpoint": "reference",
+    "sourcePath": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/refs/cat-orange-clean.png",
+    "width": 512,
+    "height": 512,
+    "foregroundCoverage": 0.584,
+    "largestComponentFraction": 1.0,
+    "pHash": 18300379223270400140,
+    "duplicateOfHash": null
+  }
+}

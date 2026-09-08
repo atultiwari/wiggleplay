@@ -12,7 +12,8 @@ case "$FACTORY" in /*) ;; *) FACTORY="$W/$FACTORY" ;; esac
 REF=$W/3d/refs/$MODEL.png; [ -f $W/3d/refs/$MODEL-clean.png ] && REF=$W/3d/refs/$MODEL-clean.png
 cd $S
 echo "== strict validation"; python3 forge/stage2_spec/validate_sculpt_spec.py $M/object-sculpt-spec.json --strict-quality 2>&1 | tee $M/strict-validation.txt | tail -1
-echo "== generate $PASS"; python3 forge/stage3_build/generate_threejs_factory.py $M/object-sculpt-spec.json --out $FACTORY --pass-id $PASS --force 2>&1 | tail -1
+echo "== generate $PASS"; GEN_OUT=$(python3 forge/stage3_build/generate_threejs_factory.py $M/object-sculpt-spec.json --out $FACTORY --pass-id $PASS --force 2>&1); echo "$GEN_OUT" | tail -1
+if echo "$GEN_OUT" | grep -q '"status": "BLOCKED"'; then echo "GENERATOR BLOCKED:"; echo "$GEN_OUT" | grep -m 3 "strict quality failure\|cause" ; exit 1; fi
 # Stamp the factory and wait until the dev server actually serves the new build (Vite's watcher can lag
 # behind a 100 kB rewrite; capturing a stale module produced misleading gate numbers once).
 STAMP="gen-$(date +%s)-$RANDOM"

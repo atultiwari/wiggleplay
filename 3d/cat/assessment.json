@@ -1,0 +1,408 @@
+{
+  "targetName": "WigglePlay cat",
+  "sourceImage": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/refs/cat-orange.png",
+  "preSpecAssessment": {
+    "objectClass": {
+      "primaryType": "unassessed",
+      "primaryDomain": "unassessed",
+      "formLanguage": [],
+      "structureKind": [],
+      "motionPotential": [],
+      "materialFamilies": [],
+      "notes": "Fill from direct visual inspection before writing the final spec. Do not use fixed domain profiles. Set primaryDomain to object, character, or hybrid."
+    },
+    "complexity": {
+      "tier": "moderate",
+      "scores": {
+        "silhouetteComplexity": 0,
+        "componentCount": 0,
+        "hierarchyDepth": 0,
+        "repetitionDensity": 0,
+        "materialLayerCount": 0,
+        "localDetailDensity": 0,
+        "occlusionRisk": 0,
+        "actionReadinessNeed": 0
+      },
+      "estimatedCounts": {
+        "macroComponents": 1,
+        "mesoComponents": 0,
+        "microFeatureGroups": 0,
+        "materialLayers": 1,
+        "repetitionSystems": 0
+      },
+      "reasoning": [
+        "Assess 'WigglePlay cat' from the image before finalizing componentTree/materials."
+      ]
+    },
+    "specDepthDecision": {
+      "requiredDepth": "moderate",
+      "minimumComponentLevels": [
+        "macro",
+        "meso"
+      ],
+      "needsRepetitionSystems": false,
+      "needsMaterialLocalOverrides": false,
+      "needsMultipleReviewViews": true,
+      "needsActionReadyHierarchy": true,
+      "rationale": "Choose simple/moderate/complex/ultra-complex from observed structure, not from a hardcoded domain."
+    },
+    "unknownsToResolveBeforeImplementation": [],
+    "detailInventory": {
+      "scanMethod": "grid-3x3",
+      "targetMinDetails": 6,
+      "details": [
+        {
+          "id": "forehead-stripes",
+          "kind": "linework",
+          "description": "three darker stripes on the forehead",
+          "region": {
+            "x": 0.32,
+            "y": 0.1,
+            "width": 0.2,
+            "height": 0.13,
+            "units": "normalized"
+          },
+          "scale": "meso",
+          "affects": [
+            "albedo"
+          ],
+          "evidenceRef": "full-object",
+          "confidence": 0.85,
+          "mapsTo": {
+            "ref": "stripe-forehead-c"
+          }
+        },
+        {
+          "id": "side-stripes",
+          "kind": "linework",
+          "description": "darker stripes on the head sides, shoulders and flanks",
+          "region": {
+            "x": 0.08,
+            "y": 0.28,
+            "width": 0.85,
+            "height": 0.65,
+            "units": "normalized"
+          },
+          "scale": "meso",
+          "affects": [
+            "albedo"
+          ],
+          "evidenceRef": "full-object",
+          "confidence": 0.85,
+          "mapsTo": {
+            "ref": "stripe-flank-a"
+          }
+        },
+        {
+          "id": "tail-rings",
+          "kind": "linework",
+          "description": "two darker rings on the tail",
+          "region": {
+            "x": 0.78,
+            "y": 0.75,
+            "width": 0.15,
+            "height": 0.13,
+            "units": "normalized"
+          },
+          "scale": "meso",
+          "affects": [
+            "albedo"
+          ],
+          "evidenceRef": "full-object",
+          "confidence": 0.85,
+          "mapsTo": {
+            "ref": "ring-a"
+          }
+        },
+        {
+          "id": "face-decal",
+          "kind": "decal",
+          "description": "big brown eyes with catchlights, brows, nose, open smile with tongue, cheeks",
+          "region": {
+            "x": 0.2,
+            "y": 0.2,
+            "width": 0.44,
+            "height": 0.28,
+            "units": "normalized"
+          },
+          "scale": "meso",
+          "affects": [
+            "albedo"
+          ],
+          "evidenceRef": "full-object",
+          "confidence": 0.85,
+          "mapsTo": {
+            "ref": "eye-l"
+          }
+        },
+        {
+          "id": "muzzle-patch",
+          "kind": "decal",
+          "description": "cream muzzle and chin with a peach shade below",
+          "region": {
+            "x": 0.12,
+            "y": 0.32,
+            "width": 0.6,
+            "height": 0.23,
+            "units": "normalized"
+          },
+          "scale": "meso",
+          "affects": [
+            "albedo"
+          ],
+          "evidenceRef": "full-object",
+          "confidence": 0.85,
+          "mapsTo": {
+            "ref": "muzzle"
+          }
+        },
+        {
+          "id": "belly-patch",
+          "kind": "decal",
+          "description": "cream chest patch and peach lower belly",
+          "region": {
+            "x": 0.22,
+            "y": 0.59,
+            "width": 0.42,
+            "height": 0.34,
+            "units": "normalized"
+          },
+          "scale": "meso",
+          "affects": [
+            "albedo"
+          ],
+          "evidenceRef": "full-object",
+          "confidence": 0.85,
+          "mapsTo": {
+            "ref": "belly"
+          }
+        },
+        {
+          "id": "inner-ears",
+          "kind": "decal",
+          "description": "pink inner ears",
+          "region": {
+            "x": 0.15,
+            "y": 0.03,
+            "width": 0.55,
+            "height": 0.1,
+            "units": "normalized"
+          },
+          "scale": "meso",
+          "affects": [
+            "albedo"
+          ],
+          "evidenceRef": "full-object",
+          "confidence": 0.85,
+          "mapsTo": {
+            "ref": "ear-inner-l"
+          }
+        }
+      ]
+    },
+    "anatomy": {
+      "applies": false,
+      "styleHeads": 0.0,
+      "proportions": {
+        "headUnit": 0.0,
+        "torso": 0.0,
+        "legs": 0.0,
+        "shoulderWidth": 0.0,
+        "hipWidth": 0.0
+      },
+      "pose": {
+        "type": "unassessed",
+        "jointAngles": {}
+      },
+      "faceLandmarks": {
+        "eyeLine": 0.0,
+        "eyeSpacing": 0.0,
+        "noseBase": 0.0,
+        "mouthLine": 0.0,
+        "hairline": 0.0
+      },
+      "features": [],
+      "confidence": 0.0,
+      "note": "Only meaningful when objectClass.primaryDomain is character or hybrid. Set applies=true and fill from forge/stage1_intake/extract_landmarks.py. See grimoire/character/reconstruction.md and grimoire/character/likeness_maximization.md."
+    },
+    "sourceImage": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/refs/cat-orange.png"
+  },
+  "qualityContract": {
+    "qualityBar": "moderate",
+    "definitionOfDone": [
+      "The rendered model matches the reference silhouette, primary proportions, visible component hierarchy, material response, and most recognizable local features for the selected fidelity tier."
+    ],
+    "minimumSpecDepth": {
+      "macroComponents": 2,
+      "mesoComponents": 3,
+      "microFeatureGroups": 2,
+      "materialLayers": 2,
+      "repetitionSystems": 0,
+      "reviewViewpoints": 3
+    },
+    "featureGroups": [
+      {
+        "id": "overall-silhouette",
+        "name": "Overall silhouette and proportions",
+        "required": true,
+        "qualityCriteria": [
+          "Bounding shape, dominant curves, negative spaces, and scale relationships are explicitly described."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "model reads as a generic placeholder instead of the reference object",
+          "major proportions are guessed without evidence"
+        ]
+      },
+      {
+        "id": "primary-structure",
+        "name": "Primary structure and hierarchy",
+        "required": true,
+        "qualityCriteria": [
+          "Major parts, joints, seams, contact points, and parent-child relationships are named before code generation."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "large visible parts are merged into one mesh",
+          "component hierarchy is too shallow for the observed complexity"
+        ]
+      },
+      {
+        "id": "attachment-joint-correctness",
+        "name": "Attachment and joint correctness",
+        "required": true,
+        "qualityCriteria": [
+          "Every visible child appendage, branch, limb, handle, connector, tube, cable, horn, wing, leg, or hinged part has an attachment contract with parent socket, localStart/localEnd, contact type, embed/overlap, and gap tolerance."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "child part root floats away from the parent",
+          "branch/limb/tube is centered in space instead of pivoting from its root",
+          "parent-child transform mixes world and local coordinates"
+        ]
+      },
+      {
+        "id": "surface-material-response",
+        "name": "Surface material response",
+        "required": true,
+        "qualityCriteria": [
+          "Albedo zones, roughness, normal/bump/displacement intent, cavity dirt, edge wear, and local overrides are specified where visible.",
+          "Important materials define independent albedo, roughness, height/normal, and AO responses instead of reusing one texture for unrelated PBR channels.",
+          "Surface response is decomposed into macro, meso, and micro frequency bands with scale and amplitude tied to object scale."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "surface looks like flat plastic",
+          "local material variation is missing or not tied to image evidence"
+        ]
+      },
+      {
+        "id": "reference-lookdev",
+        "name": "Reference color, material, and lighting response",
+        "required": true,
+        "qualityCriteria": [
+          "Material-pass names the reference-derived albedo palette, roughness variation, tactile normal/bump/displacement response, and local masks.",
+          "When a source image is available, run reference PBR extraction and require confidence >= 0.7 before treating maps as implementation-ready.",
+          "Lighting-pass names key/fill/rim or environment light, exposure, tone mapping, background, and contact shadow behavior.",
+          "Neutral, grazing-angle, and reference-matched renders prove that surface relief survives relighting and is not painted into albedo."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "model has acceptable shape but reads as flat shaded or plastic",
+          "colors are a generic average instead of reference-observed local color zones",
+          "lighting is evenly ambient and cannot reproduce the source value range"
+        ]
+      }
+    ],
+    "visualDeltaChecks": [
+      "silhouette and negative-space delta",
+      "component hierarchy depth delta",
+      "repetition density and distribution delta",
+      "material albedo/roughness/normal response delta",
+      "local feature placement and scale delta"
+    ],
+    "antiShallowSpecRules": [
+      "Do not proceed to code if qualityContract.qualityBar is unassessed.",
+      "Do not proceed to code if the spec only contains a root component for a moderate or complex object.",
+      "Do not proceed to code if required featureGroups are not represented by componentTree, materials, or repetitionSystems.",
+      "Do not proceed to code if visible local features are described only in prose and not attached to components/materials/evidenceRefs.",
+      "Do not proceed past structural-pass if attached child parts lack attachment.parentSocket, localStart, localEnd, embedDepth/overlap, and gapTolerance.",
+      "Do not pass material look-dev when albedo is reused as roughness, height, normal, or AO.",
+      "Do not pass material look-dev without macro, meso, and micro surface frequency bands for close-up materials.",
+      "Do not pass reference-fidelity material look-dev from a source image without usable referencePbr maps or an explicit documented limitation.",
+      "Do not patch a spec with extracted PBR maps when extraction confidence is below the target threshold unless the user explicitly accepts lower fidelity.",
+      "Do not place adjacent separate-geometry parts below 0.02 world-unit seam overlap (source: grimoire/build/geometry_patterns.md).",
+      "Do not satisfy raised or recessed relief, fasteners, or grip structure with a map alone when the feature affects form; use geometry or displacement (source: grimoire/build/geometry_patterns.md)."
+    ]
+  },
+  "authoringInstruction": "Fill observed object class, complexity reasoning, featureGroups, visualDeltaChecks, and unknowns before generating or implementing ObjectSculptSpec.",
+  "localSpecSearch": {
+    "collection": "core_3d",
+    "query": "WigglePlay cat",
+    "index": {
+      "status": "hit",
+      "reason": "current",
+      "fingerprint": "62f2831e1d52eeb6dbb94a87c44fa25b1f4926626a7b1f8c2bcadc63e04e9471"
+    },
+    "matches": [
+      {
+        "record_id": "core.shader-mapping-csg-boolean-operations-for-sub-mesh-composition",
+        "file_path": "docs/raw/img2threejs-skill-dataset.json",
+        "heading": null,
+        "key_path": "categories.rendering_shader_mapping[3]",
+        "score": 3.970370038002,
+        "snippets": [
+          "... sub-meshes procedurally instead of hand-modeling every variant. H\u00ecnh h\u1ecdc r\u1eafn c\u1ea5u tr\u00fac (h\u1ee3p/tr\u1eeb/giao) \u0111\u1ec3 k\u1ebft h\u1ee3p ho\u1eb7c c\u1eaft c\u00e1c sub-mesh v\u0169 kh\u00ed/dao theo th\u1ee7 t\u1ee5c thay v\u00ec m\u00f4 h\u00ecnh h\u00f3a th\u1ee7 c\u00f4ng t\u1eebng bi\u1ebfn th\u1ec3. Recognition cues: Needed for ..."
+        ],
+        "source_refs": [
+          {
+            "path": "docs/raw/img2threejs-skill-dataset.json",
+            "heading": null,
+            "key_path": "categories.rendering_shader_mapping[3]"
+          }
+        ],
+        "evidence_refs": [
+          {
+            "kind": "source",
+            "ref": "docs/raw/img2threejs-skill-dataset.json",
+            "note": "img2threejs NotebookLM research distillation"
+          }
+        ]
+      },
+      {
+        "record_id": "core.shader-mapping-capsulegeometry-rounded-edge-components",
+        "file_path": "docs/raw/img2threejs-skill-dataset.json",
+        "heading": null,
+        "key_path": "categories.rendering_shader_mapping[6]",
+        "score": 3.32087796132,
+        "snippets": [
+          "... part with distinctly rounded (not flat-cut) ends, e.g. a knife spine or a safety lever D\u1ea5u hi\u1ec7u nh\u1eadn di\u1ec7n: B\u1ed9 ph\u1eadn d\u1ea1ng thanh c\u00f3 \u0111\u1ea7u bo tr\u00f2n r\u00f5 r\u1ec7t (kh\u00f4ng c\u1eaft ph\u1eb3ng), vd. s\u1ed1ng dao ho\u1eb7c c\u1ea7n an to\u00e0n Three.js target: CapsuleGeometry(radius, length)"
+        ],
+        "source_refs": [
+          {
+            "path": "docs/raw/img2threejs-skill-dataset.json",
+            "heading": null,
+            "key_path": "categories.rendering_shader_mapping[6]"
+          }
+        ],
+        "evidence_refs": [
+          {
+            "kind": "source",
+            "ref": "docs/raw/img2threejs-skill-dataset.json",
+            "note": "img2threejs NotebookLM research distillation"
+          }
+        ]
+      }
+    ]
+  }
+}
