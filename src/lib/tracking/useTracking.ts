@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type RefObject } from 'react'
 import type { Pointer } from '../../types/pointer'
 import { HandTracker } from '../hands/HandTracker'
 import { buildHandPoses } from '../hands/poses'
-import { PoseTracker } from '../pose/PoseTracker'
+import { PoseTracker, type PoseLandmark } from '../pose/PoseTracker'
 import { ALL_POINTER_KINDS, buildPosePointers } from '../pose/posePointers'
 import { modeInfo, type InteractionMode } from './modes'
 
@@ -26,6 +26,8 @@ export interface TrackingOptions {
 export interface TrackingState {
   /** Always the latest pointers; read inside the game loop, never triggers re-render. */
   readonly pointersRef: RefObject<readonly Pointer[]>
+  /** Latest raw pose landmarks (normalised, un-mirrored) when a pose model runs; null otherwise. */
+  readonly poseRef: RefObject<readonly PoseLandmark[] | null>
   readonly status: TrackerStatus
   readonly error: string | null
   readonly fps: number
@@ -36,8 +38,13 @@ export const WASM_BASE_PATH = `${BASE}mediapipe/wasm`
 export const HAND_MODEL_PATH = `${BASE}models/hand_landmarker.task`
 export const POSE_MODEL_PATH = `${BASE}models/pose_landmarker_lite.task`
 
+interface Detection {
+  readonly pointers: readonly Pointer[]
+  readonly pose: readonly PoseLandmark[] | null
+}
+
 interface Detector {
-  readonly detect: (video: HTMLVideoElement, now: number, previous: readonly Pointer[], live: LiveOptions) => readonly Pointer[]
+  readonly detect: (video: HTMLVideoElement, now: number, previous: readonly Pointer[], live: LiveOptions) => Detection
   readonly close: () => void
 }
 
@@ -68,7 +75,7 @@ const createDetector = async (mode: InteractionMode, numHands: number, mirrored:
           include,
         })
         lastAt = now
-        return pointers
+        return { pointers, pose: landmarks ?? null }
       },
       close: () => tracker.close(),
     }
@@ -93,7 +100,7 @@ const createDetector = async (mode: InteractionMode, numHands: number, mirrored:
       })
       nextId = result.nextId
       lastAt = now
-      return result.hands
+      return { pointers: result.hands, pose: null }
     },
     close: () => tracker.close(),
   }
@@ -103,6 +110,7 @@ const createDetector = async (mode: InteractionMode, numHands: number, mirrored:
 export const useTracking = (options: TrackingOptions): TrackingState => {
   const { videoRef, enabled, width, height, mode, mirrored = true, numHands = 2, smoothing = 0.6, predictionSec = 0 } = options
   const pointersRef = useRef<readonly Pointer[]>([])
+  const poseRef = useRef<readonly PoseLandmark[] | null>(null)
   const liveRef = useRef<LiveOptions>({ width, height, smoothing, predictionSec })
   const [outcome, setOutcome] = useState<Exclude<TrackerStatus, 'loading'>>('idle')
   const [error, setError] = useState<string | null>(null)
@@ -128,7 +136,9 @@ export const useTracking = (options: TrackingOptions): TrackingState => {
       if (video && video.readyState >= 2 && video.currentTime !== lastVideoTime) {
         lastVideoTime = video.currentTime
         try {
-          pointersRef.current = detector.detect(video, now, pointersRef.current, liveRef.current)
+          const detection = detector.detect(video, now, pointersRef.current, liveRef.current)
+          pointersRef.current = detection.pointers
+          poseRef.current = detection.pose
           frameCount += 1
           if (now - fpsWindowStart >= 1000) {
             setFps(Math.round((frameCount * 1000) / (now - fpsWindowStart)))
@@ -164,6 +174,7 @@ export const useTracking = (options: TrackingOptions): TrackingState => {
       cancelAnimationFrame(frameHandle)
       detector?.close()
       pointersRef.current = []
+      poseRef.current = null
       setOutcome('idle')
       setError(null)
       setFps(0)
@@ -171,5 +182,5 @@ export const useTracking = (options: TrackingOptions): TrackingState => {
   }, [enabled, mode, mirrored, numHands, videoRef])
 
   const status: TrackerStatus = enabled && outcome === 'idle' ? 'loading' : outcome
-  return { pointersRef, status, error, fps }
+  return { pointersRef, poseRef, status, error, fps }
 }

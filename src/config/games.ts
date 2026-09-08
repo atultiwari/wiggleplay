@@ -27,6 +27,8 @@ export interface GameMeta {
   readonly status: GameStatus
   /** How many hands the game makes use of; tracking fewer hands is faster. */
   readonly hands: 1 | 2
+  /** The game needs full-body landmarks and always runs the pose model, whatever the interaction setting. */
+  readonly requiresPose?: boolean
 }
 
 export const CATEGORIES: Readonly<Record<GameCategory, { label: string; emoji: string; blurb: string }>> = {
@@ -111,6 +113,21 @@ export const GAMES: readonly GameMeta[] = [
     accent: '#7ae582',
     status: 'ready',
     hands: 2,
+  },
+  {
+    id: 'wiggle-mirror',
+    title: 'Wiggle Mirror',
+    blurb: 'The WigglePlay monster copies you! Wave, wiggle, jump and it does the same. Lift both hands for a hooray.',
+    howTo: 'Stand back so I can see you. The monster copies everything you do. Put both hands up high for a hooray!',
+    category: 'camera',
+    ageBands: ['2-3', '3-4', '4-5'],
+    interests: ['movement', 'music'],
+    skills: ['Body awareness', 'Imitation', 'Gross motor'],
+    emoji: '🪞',
+    accent: '#b58cf0',
+    status: 'ready',
+    hands: 2,
+    requiresPose: true,
   },
   {
     id: 'cat-tickle',

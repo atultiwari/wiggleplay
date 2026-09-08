@@ -1,0 +1,16 @@
+.lab {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #ffffff;
+}
+
+.lab__canvas {
+  display: block;
+}
+
+.lab__message {
+  padding: 1rem;
+  font-family: monospace;
+}

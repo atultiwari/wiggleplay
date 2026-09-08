@@ -10,6 +10,7 @@ import {
   GAME_SETTINGS_KEYS,
   SLICE_TOLERANCES,
   WAVE_POP_RANGES,
+  WIGGLE_MIRROR_RANGES,
   type GameSettingsKey,
   type SliceTolerance,
 } from '../../lib/settings/schema'
@@ -135,6 +136,18 @@ const BeepMeowFields = () => {
   )
 }
 
+const WiggleMirrorFields = () => {
+  const { settings, updateGame } = useSettings()
+  const v = settings.wiggleMirror
+  return (
+    <>
+      <SliderField id="wm-size" label="Monster size" value={v.puppetSize} range={WIGGLE_MIRROR_RANGES.puppetSize} format={formatTimes} onChange={(puppetSize) => updateGame('wiggleMirror', { puppetSize })} />
+      <ToggleField id="wm-react" label="Hooray and jump reactions" checked={v.reactions} onChange={(reactions) => updateGame('wiggleMirror', { reactions })} hint="Confetti and cheers when both hands go up or the child jumps." />
+      <ToggleField id="wm-skel" label="Show tracking skeleton" checked={v.showSkeleton} onChange={(showSkeleton) => updateGame('wiggleMirror', { showSkeleton })} hint="Draws the detected body over the camera picture (handy for set-up)." />
+    </>
+  )
+}
+
 const FIELDS: Readonly<Record<GameSettingsKey, () => ReturnType<typeof WavePopFields>>> = {
   wavePop: WavePopFields,
   fruitSlice: FruitSliceFields,
@@ -144,6 +157,7 @@ const FIELDS: Readonly<Record<GameSettingsKey, () => ReturnType<typeof WavePopFi
   flyHigh: FlyHighFields,
   busDriver: BusDriverFields,
   beepMeow: BeepMeowFields,
+  wiggleMirror: WiggleMirrorFields,
 }
 
 export const GameSettingsSection = ({ settingsKey, title }: { readonly settingsKey: GameSettingsKey; readonly title?: string }) => {

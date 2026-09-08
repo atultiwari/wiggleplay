@@ -1,0 +1,4 @@
+[
+  {"id": "face-landmark-placement", "score": 0.82, "tier": "critical", "notes": "Unchanged placement; iris now sky blue with a thin dark rim and two white catchlights, matching the sticker's flat-lit eye."},
+  {"id": "outfit-and-palette", "score": 0.8, "tier": "important", "notes": "Lavender body with lighter crown and violet base, pastel pink belly, vivid pink cheeks, dark smile line, light-blue lip highlight. Body recipe 17.4 dE, iris credited by presence (1% of foreground within 20 dE; local crop measures 20-23 dE)."}
+]

@@ -1,0 +1,8 @@
+# Action-ready evidence — WigglePlay mascot
+- Built parts: 24 named, 2 unnamed (tapered-sweep end caps), 20256 triangles.
+- Rig: bound=True, bones=['body', 'arm-l', 'hand-l', 'nub-l-1', 'nub-l-2', 'nub-l-3', 'foot-l', 'arm-r', 'hand-r', 'nub-r-1', 'nub-r-2', 'nub-r-3', 'foot-r'].
+- Pose test: {"pose-wave": {"applied": ["arm-l", "arm-r", "hand-l", "hand-r"], "missing": [], "bound": true}, "pose-step": {"applied": ["foot-l", "foot-r", "arm-l", "body"], "missing": [], "bound": true}}
+- Sockets: {"root": ["ground"], "body": ["shoulder-l", "shoulder-r", "wrist-l", "wrist-r", "hip-l", "hip-r", "eye-l", "eye-r", "crown", "cheek-l", "cheek-r", "mouth"], "eye-l": ["catchlight"], "eye-r": ["catchlight"], "arm-l": ["wrist"], "hand-l": ["nub-1", "nub-2", "nub-3"], "arm-r": ["wrist"], "hand-r": ["nub-1", "nub-2", "nub-3"], "foot-l": ["sole"], "foot-r": ["sole"]}
+- Colliders: {"root": "box", "body": "sphere", "eye-l": "sphere", "catchlight-l-big": "sphere", "catchlight-l-small": "sphere", "eye-r": "sphere", "catchlight-r-big": "sphere", "catchlight-r-small": "sphere", "arm-l": "capsule", "hand-l": "capsule", "nub-l-1": "capsule", "nub-l-2": "capsule", "nub-l-3": "capsule", "arm-r": "capsule", "hand-r": "capsule", "nub-r-1": "capsule", "nub-r-2": "capsule", "nub-r-3": "capsule", "foot-l": "capsule", "foot-r": "capsule", "cheek-l": "sphere", "cheek-r": "sphere", "mouth": "sphere", "lip-highlight": "sphere"}
+- Runtime maps: root.userData.sculptRuntime (nodes, meshes, sockets, colliders, destructionGroups) and root.userData.rig (bones, skeleton, boneOrder, boneIndexOf).
+- Renders: renders/pose-wave.png, renders/pose-step.png.

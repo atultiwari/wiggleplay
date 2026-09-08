@@ -25,6 +25,7 @@ on-device hand tracking, so a small child can play by simply waving at the scree
 | ✈️ **Fly High** | Move up and down to fly the aeroplane through clouds and into balloons, counted aloud to ten. | Up/down, counting, colours |
 | 🚌 **Bus Driver** | Drive the bus left and right to pick up cats, a puppy and a bunny waiting at the stop. | Left/right, counting, animal names |
 | 🚍 **Beep Meow Whoosh** | Planes, buses and cats cross the screen. Touch them to hear their sounds and names, then find the one we ask for. | First words, listening, sounds |
+| 🪞 **Wiggle Mirror** | A 3D WigglePlay monster copies the child's body live: wave, lean, step, lift both hands for a hooray. | Body awareness, imitation, gross motor |
 
 More games (Simon Says mirror, Tap the Farm, Animal Call, Shake the Tree…) are listed as
 "coming soon" in the catalogue. The complete idea list lives in [docs/IDEAS.md](docs/IDEAS.md).
@@ -67,10 +68,32 @@ the gear for one second (the parent gate). Everything is saved on the device.
 3. Switch on **Show tracking speed** to see the FPS. Under ~20 fps, close other tabs, plug the laptop in, and make sure the browser is using the GPU (`chrome://gpu`).
 4. Use Chrome or Edge. Safari and Firefox run the model on the CPU and are noticeably slower.
 
+## The 3D layer (img2threejs)
+
+The mascot in Wiggle Mirror is not a downloaded model. It was rebuilt from the sticker art as
+**code-only procedural Three.js** with the [img2threejs](https://github.com/img2threejs/img2threejs)
+skill: a measured sculpt spec (`3d/mascot/object-sculpt-spec.json`) drives a generated TypeScript
+factory (`src/models/mascot/createWigglePlayMascotModel.ts`) with a 13-bone skeleton, sockets and
+colliders. Every build pass was gated by screenshots against the reference (silhouette IoU 0.89,
+turntable, self-intersection, part coverage) and the review trail lives in the spec's
+`reviewHistory`. The rig is driven live from MediaPipe pose landmarks
+(`src/games/wiggle-mirror/logic.ts`).
+
+Tooling that supports it:
+
+- `/#/lab/<model>` — deterministic review viewer (named camera views, unlit and shadow-free modes,
+  mesh/part/pose export hooks for the gates).
+- `3d/tools/run-pass.sh <model> <pass>` — regenerates a pass, captures the review batch with the
+  installed Chrome and runs every deterministic gate.
+- `3d/<model>/tool-notes.md` — two small local patches to the img2threejs clone (textureless
+  materials in the material gate, a presence fallback in the colour gate), both candidates for
+  upstream pull requests.
+
 ## Tech stack
 
 - [Vite](https://vite.dev) + [React 19](https://react.dev) + TypeScript
 - [MediaPipe Tasks Vision](https://ai.google.dev/edge/mediapipe/solutions/vision) hand landmarker and pose landmarker (on-device, WebGL/WASM)
+- [Three.js](https://threejs.org) for the procedural 3D mascot, generated with img2threejs
 - HTML canvas for rendering, Web Audio for procedural sound effects, Web Speech for the voice
 - [Vitest](https://vitest.dev) + Testing Library for tests, [oxlint](https://oxc.rs) for linting
 - GitHub Actions → GitHub Pages for hosting
@@ -120,6 +143,8 @@ src/
     settings/    settings drawer, sliders/toggles, per-game sections
     catalogue/   game cards and filters for the hub page
     layout/      header and footer
+  models/        procedural Three.js factories (generated + refined) and the shared stage lighting
+  lab/           deterministic model viewer used for img2threejs review captures
   games/
     <game>/logic.ts      pure, fully tested game state functions
     <game>/<Game>.tsx    canvas rendering + audio wiring
@@ -152,10 +177,11 @@ grown-up controls, loud happy sounds, on-device privacy — follows from that. C
 1. **Shared kit** ✅ big-button engine, character voice, reward effects, progress log
 2. **Camera games** ✅ Air Painting, Catch the Stars, Wave to Pop, Fruit Slice
 3. **Whole-body play + themed games** ✅ pose tracking, Tickle the Cat, Fly High, Bus Driver, Beep Meow Whoosh
-4. **Next:** Simon Says mirror, Tap the Farm, tap-along rhymes
-5. Voice games, tilt & shake games, bilingual voice (English + home language)
-6. Adaptive layer: skill graph per child, AI-picked next activity, parent summary
-7. More age bands (3–4, 4–5) and interest-based playlists
+4. **3D layer** ✅ procedural mascot puppet (img2threejs) + Wiggle Mirror; next: bus, aeroplane and cat as animated 3D props for a body-controlled Toy Town
+5. **Next:** Simon Says mirror, Tap the Farm, tap-along rhymes
+6. Voice games, tilt & shake games, bilingual voice (English + home language)
+7. Adaptive layer: skill graph per child, AI-picked next activity, parent summary
+8. More age bands (3–4, 4–5) and interest-based playlists
 
 See [docs/IDEAS.md](docs/IDEAS.md) for the full list.
 

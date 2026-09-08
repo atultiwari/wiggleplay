@@ -70,6 +70,8 @@ Every idea below follows the same ground rules.
 | 22b | **Fly High** ✅ | Move up/down to fly an aeroplane into balloons, counted to ten. | Up/down, counting, colours |
 | 22c | **Bus Driver** ✅ | Move left/right to drive a bus and pick up waiting animals. | Left/right, counting, animal names |
 | 22d | **Beep Meow Whoosh** ✅ | Planes, buses and cats cross the screen; touch to hear sounds and names; "Where is the bus?" prompts. | First words, listening |
+| 22e | **Wiggle Mirror** ✅ | A procedural 3D mascot (img2threejs) copies the child's whole body live; hooray and jump reactions. | Body awareness, imitation |
+| 22f | 3D Toy Town | Bus, aeroplane and cat rebuilt as animated 3D props in one scene the child moves through with their body. | Vehicles, spatial play |
 
 ### B2. Voice and microphone
 

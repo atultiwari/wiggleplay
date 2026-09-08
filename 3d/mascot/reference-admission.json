@@ -1,0 +1,14 @@
+{
+  "admitted": true,
+  "reasons": [],
+  "provenance": {
+    "viewpoint": "reference",
+    "sourcePath": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/refs/mascot.png",
+    "width": 512,
+    "height": 512,
+    "foregroundCoverage": 0.5215,
+    "largestComponentFraction": 1.0,
+    "pHash": 12297829382473034410,
+    "duplicateOfHash": null
+  }
+}

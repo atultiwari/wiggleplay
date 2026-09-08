@@ -1,0 +1,211 @@
+{
+  "sourceImage": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/refs/mascot.png",
+  "overlayImage": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/mascot/landmarks.png",
+  "overlayLegend": {
+    "C": "center symmetry axis",
+    "1..N": "head-unit horizontal ticks (blue, dashed)",
+    "H": "hairline guide (default fraction of the first head-unit band)",
+    "E": "eye line guide",
+    "N": "nose base guide",
+    "M": "mouth line guide",
+    "S": "shoulder line guide (default fraction, adjust to observed pose)",
+    "P": "hip line guide (default fraction, adjust to observed pose)",
+    "grayDashed": "rule-of-thirds compositional grid"
+  },
+  "anatomy": {
+    "styleHeads": 1.0,
+    "proportions": {
+      "headUnit": 0.75,
+      "torso": 0.0,
+      "legs": 0.12,
+      "shoulderWidth": 0.86,
+      "hipWidth": 0.34
+    },
+    "pose": {
+      "type": "symmetric hooray: both arms raised up-and-outward, feet planted, frontal",
+      "jointAngles": {
+        "neck": [
+          0,
+          0,
+          0
+        ],
+        "leftShoulder": [
+          0,
+          0,
+          130
+        ],
+        "rightShoulder": [
+          0,
+          0,
+          -130
+        ],
+        "leftElbow": [
+          0,
+          0,
+          15
+        ],
+        "rightElbow": [
+          0,
+          0,
+          -15
+        ],
+        "leftWrist": [
+          0,
+          0,
+          0
+        ],
+        "rightWrist": [
+          0,
+          0,
+          0
+        ],
+        "leftHip": [
+          0,
+          0,
+          8
+        ],
+        "rightHip": [
+          0,
+          0,
+          -8
+        ],
+        "leftKnee": [
+          0,
+          0,
+          0
+        ],
+        "rightKnee": [
+          0,
+          0,
+          0
+        ],
+        "leftAnkle": [
+          0,
+          0,
+          0
+        ],
+        "rightAnkle": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "faceLandmarks": {
+      "hairline": 0.0,
+      "eyeLine": 0.27,
+      "eyeSpacing": 0.44,
+      "noseBase": 0.4,
+      "mouthLine": 0.49,
+      "earTop": null,
+      "earBottom": null
+    },
+    "features": [
+      {
+        "id": "eye-l",
+        "center": [
+          0.36,
+          0.29
+        ],
+        "radius": 0.07,
+        "note": "normalised to image; glossy blue iris with two 4-point star catchlights"
+      },
+      {
+        "id": "eye-r",
+        "center": [
+          0.64,
+          0.29
+        ],
+        "radius": 0.07
+      },
+      {
+        "id": "cheek-l",
+        "center": [
+          0.27,
+          0.4
+        ],
+        "size": [
+          0.12,
+          0.066
+        ]
+      },
+      {
+        "id": "cheek-r",
+        "center": [
+          0.71,
+          0.4
+        ],
+        "size": [
+          0.12,
+          0.066
+        ]
+      },
+      {
+        "id": "mouth",
+        "from": [
+          0.36,
+          0.44
+        ],
+        "apex": [
+          0.5,
+          0.46
+        ],
+        "to": [
+          0.655,
+          0.44
+        ]
+      },
+      {
+        "id": "belly-patch",
+        "center": [
+          0.5,
+          0.65
+        ],
+        "size": [
+          0.39,
+          0.29
+        ]
+      },
+      {
+        "id": "arm-root-l",
+        "center": [
+          0.19,
+          0.42
+        ]
+      },
+      {
+        "id": "hand-l",
+        "center": [
+          0.11,
+          0.33
+        ],
+        "note": "3 finger nubs pointing up-outward"
+      },
+      {
+        "id": "foot-l",
+        "center": [
+          0.37,
+          0.88
+        ],
+        "size": [
+          0.14,
+          0.09
+        ]
+      },
+      {
+        "id": "foot-r",
+        "center": [
+          0.63,
+          0.88
+        ],
+        "size": [
+          0.14,
+          0.09
+        ]
+      }
+    ],
+    "confidence": 0.85
+  },
+  "authoringInstruction": "Open overlayImage and read the reference against its head-unit ticks, thirds grid, face-line guides, shoulder/hip lines, and center axis. Replace every null/placeholder value in anatomy with normalized coordinates or joint angles actually observed; the drawn guide lines are generic starting positions, not measurements.",
+  "measurementNotes": "Read off the 512px reference against the overlay: crown y=45, body base y=430, feet bottom y=475, body x 90..420, eyes (185,150)/(330,150) r=36, cheeks (140,205)/(365,205), mouth apex (255,235), belly (255,335). Depth axis not observable (single front view)."
+}

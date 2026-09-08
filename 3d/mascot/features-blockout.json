@@ -1,0 +1,4 @@
+[
+  {"id": "anatomy-proportion", "score": 0.83, "tier": "critical", "notes": "Lathe egg measured row-by-row from the reference outline: crown, eye-line and base widths match within 3 px at 512; feet centred at +/-0.245 like the reference; eyes 0.109 W. Tier-1 IoU 0.890, aspect delta 0.013, scale delta 0.024."},
+  {"id": "pose-silhouette", "score": 0.80, "tier": "critical", "notes": "Arms root at 0.43 H and rise ~35 deg above horizontal to big mitten hands reaching x = +/-0.58; nubs present; feet planted under the base. Hands read blocky at the standard tessellation (form, not pose)."}
+]

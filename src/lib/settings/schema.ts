@@ -78,6 +78,12 @@ export interface BeepMeowSettings {
   readonly askQuestions: boolean
 }
 
+export interface WiggleMirrorSettings {
+  readonly puppetSize: number
+  readonly reactions: boolean
+  readonly showSkeleton: boolean
+}
+
 export interface Settings {
   readonly global: GlobalSettings
   readonly wavePop: WavePopSettings
@@ -88,6 +94,7 @@ export interface Settings {
   readonly flyHigh: FlyHighSettings
   readonly busDriver: BusDriverSettings
   readonly beepMeow: BeepMeowSettings
+  readonly wiggleMirror: WiggleMirrorSettings
 }
 
 export type GameSettingsKey = Exclude<keyof Settings, 'global'>
@@ -154,6 +161,10 @@ export const BUS_DRIVER_RANGES = {
   busSize: { min: 0.6, max: 2, step: 0.1 },
 } as const satisfies Record<string, NumberRange>
 
+export const WIGGLE_MIRROR_RANGES = {
+  puppetSize: { min: 0.6, max: 1.6, step: 0.1 },
+} as const satisfies Record<string, NumberRange>
+
 export const BEEP_MEOW_RANGES = {
   maxThings: { min: 1, max: 10, step: 1 },
   speed: { min: 0.3, max: 3, step: 0.1 },
@@ -182,6 +193,7 @@ export const DEFAULT_SETTINGS: Settings = {
   flyHigh: { balloonIntervalSec: 1.4, speed: 1, planeSize: 1 },
   busDriver: { passengerIntervalSec: 2, busSize: 1 },
   beepMeow: { maxThings: 5, speed: 1, thingSize: 1, askQuestions: true },
+  wiggleMirror: { puppetSize: 1, reactions: true, showSkeleton: false },
 }
 
 /** Maps a game id from the catalogue to its settings slice. */
@@ -194,6 +206,7 @@ export const GAME_SETTINGS_KEYS: Readonly<Record<string, GameSettingsKey>> = {
   'fly-high': 'flyHigh',
   'bus-driver': 'busDriver',
   'beep-meow-whoosh': 'beepMeow',
+  'wiggle-mirror': 'wiggleMirror',
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
@@ -314,6 +327,16 @@ const sanitizeBeepMeow = (raw: unknown): BeepMeowSettings => {
   }
 }
 
+const sanitizeWiggleMirror = (raw: unknown): WiggleMirrorSettings => {
+  const r = isRecord(raw) ? raw : {}
+  const d = DEFAULT_SETTINGS.wiggleMirror
+  return {
+    puppetSize: num(r.puppetSize, d.puppetSize, WIGGLE_MIRROR_RANGES.puppetSize),
+    reactions: bool(r.reactions, d.reactions),
+    showSkeleton: bool(r.showSkeleton, d.showSkeleton),
+  }
+}
+
 /** Never trust stored data: every field is validated and clamped, unknown fields are dropped. */
 export const sanitizeSettings = (raw: unknown): Settings => {
   const r = isRecord(raw) ? raw : {}
@@ -327,5 +350,6 @@ export const sanitizeSettings = (raw: unknown): Settings => {
     flyHigh: sanitizeFlyHigh(r.flyHigh),
     busDriver: sanitizeBusDriver(r.busDriver),
     beepMeow: sanitizeBeepMeow(r.beepMeow),
+    wiggleMirror: sanitizeWiggleMirror(r.wiggleMirror),
   }
 }

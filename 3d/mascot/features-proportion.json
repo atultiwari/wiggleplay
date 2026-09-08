@@ -1,0 +1,4 @@
+[
+  {"id": "anatomy-proportion", "score": 0.84, "tier": "critical", "notes": "Eyes at 0.27 H and 0.44 W apart, cheeks at 0.42 H, smile apex at 0.49 H with corners rising 0.07, belly centre at 0.75 H with rx 0.233 / ry 0.174: all within 2 px of the reference at 512. Tier-1 IoU 0.890."},
+  {"id": "pose-silhouette", "score": 0.80, "tier": "critical", "notes": "Hooray pose unchanged; hands still read faceted (form), feet planted."}
+]

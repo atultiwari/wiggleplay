@@ -46,7 +46,7 @@ export const GameShell = ({ game, children }: GameShellProps) => {
   const navigate = useNavigate()
   const { settings, updateGlobal } = useSettings()
   const global = settings.global
-  const mode = modeInfo(global.interaction)
+  const mode = modeInfo(game.requiresPose ? 'body' : global.interaction)
   const stageRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -117,7 +117,7 @@ export const GameShell = ({ game, children }: GameShellProps) => {
 
   const retry = () => setRequestedPhase('intro')
 
-  const stage: GameStage = { canvasRef, pointersRef: tracking.pointersRef, size, active }
+  const stage: GameStage = { canvasRef, pointersRef: tracking.pointersRef, poseRef: tracking.poseRef, size, active }
   const hintText = mode.model === 'pose' ? '🧍 Step back so I can see you!' : '👋 Show me your hand!'
 
   return (

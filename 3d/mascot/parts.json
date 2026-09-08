@@ -1,0 +1,151 @@
+{
+  "model": "WigglePlay Mascot",
+  "parts": [
+    {
+      "name": "root",
+      "kind": "part",
+      "module": "root",
+      "triangles": 192
+    },
+    {
+      "name": "eye-l",
+      "kind": "part",
+      "module": "body",
+      "triangles": 1216
+    },
+    {
+      "name": "catchlight-l-big",
+      "kind": "part",
+      "module": "eye-l",
+      "triangles": 1216
+    },
+    {
+      "name": "catchlight-l-small",
+      "kind": "part",
+      "module": "eye-l",
+      "triangles": 1216
+    },
+    {
+      "name": "eye-r",
+      "kind": "part",
+      "module": "body",
+      "triangles": 1216
+    },
+    {
+      "name": "catchlight-r-big",
+      "kind": "part",
+      "module": "eye-r",
+      "triangles": 1216
+    },
+    {
+      "name": "catchlight-r-small",
+      "kind": "part",
+      "module": "eye-r",
+      "triangles": 1216
+    },
+    {
+      "name": "cheek-l",
+      "kind": "part",
+      "module": "body",
+      "triangles": 1216
+    },
+    {
+      "name": "cheek-r",
+      "kind": "part",
+      "module": "body",
+      "triangles": 1216
+    },
+    {
+      "name": "mouth",
+      "kind": "part",
+      "module": "body",
+      "triangles": 112
+    },
+    {
+      "name": "lip-highlight",
+      "kind": "part",
+      "module": "body",
+      "triangles": 1216
+    },
+    {
+      "name": "body",
+      "kind": "part",
+      "module": "root",
+      "triangles": 6320
+    },
+    {
+      "name": "arm-l",
+      "kind": "part",
+      "module": "body",
+      "triangles": 224
+    },
+    {
+      "name": "hand-l",
+      "kind": "part",
+      "module": "body",
+      "triangles": 224
+    },
+    {
+      "name": "nub-l-1",
+      "kind": "part",
+      "module": "hand-l",
+      "triangles": 224
+    },
+    {
+      "name": "nub-l-2",
+      "kind": "part",
+      "module": "hand-l",
+      "triangles": 224
+    },
+    {
+      "name": "nub-l-3",
+      "kind": "part",
+      "module": "hand-l",
+      "triangles": 224
+    },
+    {
+      "name": "foot-l",
+      "kind": "part",
+      "module": "body",
+      "triangles": 224
+    },
+    {
+      "name": "arm-r",
+      "kind": "part",
+      "module": "body",
+      "triangles": 224
+    },
+    {
+      "name": "hand-r",
+      "kind": "part",
+      "module": "body",
+      "triangles": 224
+    },
+    {
+      "name": "nub-r-1",
+      "kind": "part",
+      "module": "hand-r",
+      "triangles": 224
+    },
+    {
+      "name": "nub-r-2",
+      "kind": "part",
+      "module": "hand-r",
+      "triangles": 224
+    },
+    {
+      "name": "nub-r-3",
+      "kind": "part",
+      "module": "hand-r",
+      "triangles": 224
+    },
+    {
+      "name": "foot-r",
+      "kind": "part",
+      "module": "body",
+      "triangles": 224
+    }
+  ],
+  "unnamedMeshes": 2,
+  "integralMeshes": 24
+}

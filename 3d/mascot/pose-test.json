@@ -1,0 +1,42 @@
+{
+  "rig": {
+    "bound": true,
+    "boneOrder": [
+      "body",
+      "arm-l",
+      "hand-l",
+      "nub-l-1",
+      "nub-l-2",
+      "nub-l-3",
+      "foot-l",
+      "arm-r",
+      "hand-r",
+      "nub-r-1",
+      "nub-r-2",
+      "nub-r-3",
+      "foot-r"
+    ]
+  },
+  "poses": {
+    "pose-wave": {
+      "applied": [
+        "arm-l",
+        "arm-r",
+        "hand-l",
+        "hand-r"
+      ],
+      "missing": [],
+      "bound": true
+    },
+    "pose-step": {
+      "applied": [
+        "foot-l",
+        "foot-r",
+        "arm-l",
+        "body"
+      ],
+      "missing": [],
+      "bound": true
+    }
+  }
+}

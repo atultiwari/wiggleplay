@@ -1,0 +1,589 @@
+{
+  "targetName": "WigglePlay Mascot",
+  "sourceImage": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/mascot/../refs/mascot.png",
+  "preSpecAssessment": {
+    "objectClass": {
+      "primaryType": "chibi blob monster mascot (kawaii sticker character)",
+      "primaryDomain": "character",
+      "formLanguage": [
+        "organic",
+        "character-like",
+        "amorphous"
+      ],
+      "structureKind": [
+        "single body",
+        "articulated assembly"
+      ],
+      "motionPotential": [
+        "articulated",
+        "whole-object transform"
+      ],
+      "materialFamilies": [
+        "plastic",
+        "skin-like",
+        "glass-like"
+      ],
+      "notes": "Neck-less egg body is the head; stub arms and feet are the only appendages. Stylized match requested; no projection."
+    },
+    "complexity": {
+      "tier": "moderate",
+      "scores": {
+        "silhouetteComplexity": 1,
+        "componentCount": 2,
+        "hierarchyDepth": 1,
+        "repetitionDensity": 1,
+        "materialLayerCount": 2,
+        "localDetailDensity": 1,
+        "occlusionRisk": 1,
+        "actionReadinessNeed": 3
+      },
+      "estimatedCounts": {
+        "macroComponents": 5,
+        "mesoComponents": 8,
+        "microFeatureGroups": 4,
+        "materialLayers": 5,
+        "repetitionSystems": 1
+      },
+      "reasoning": [
+        "Five macro parts (body, two arms, two feet), eight meso parts (two hands, two eyes, two cheeks, mouth, belly patch).",
+        "Repetition: finger nubs (3 per hand) and star catchlights (2 per eye).",
+        "Action readiness is high: the rig must be driven live from pose landmarks (shoulders, elbows, wrists, hips, ankles, head)."
+      ]
+    },
+    "specDepthDecision": {
+      "requiredDepth": "moderate",
+      "minimumComponentLevels": [
+        "macro",
+        "meso",
+        "micro"
+      ],
+      "needsRepetitionSystems": true,
+      "needsMaterialLocalOverrides": true,
+      "needsMultipleReviewViews": true,
+      "needsActionReadyHierarchy": true,
+      "rationale": "Identity lives in the face markings and the egg silhouette; a rig with named joints is the deliverable."
+    },
+    "unknownsToResolveBeforeImplementation": [
+      "Body depth (front view only): assume 0.9 x width, verify on the 90-degree profile capture.",
+      "Rear of body: assume featureless gradient continuation.",
+      "Whether the dark 2D outline should be rendered in 3D: ship as an optional inverted-hull outline, default on at low thickness."
+    ],
+    "detailInventory": {
+      "scanMethod": "grid-3x3",
+      "targetMinDetails": 6,
+      "note": "",
+      "details": [
+        {
+          "id": "star-catchlights",
+          "kind": "emissive",
+          "description": "Two 4-point white star catchlights per eye (large upper-lateral ~20px, small lower-medial ~9px), pure white, unlit",
+          "region": {
+            "x": 0.3,
+            "y": 0.22,
+            "width": 0.4,
+            "height": 0.14,
+            "units": "normalized"
+          },
+          "scale": "micro",
+          "affects": "emissive",
+          "mapsTo": {
+            "type": "component.localFeatures",
+            "ref": "catchlights"
+          },
+          "evidenceRef": "di/zone-r0c1.png",
+          "confidence": 0.95
+        },
+        {
+          "id": "eye-gloss",
+          "kind": "gloss",
+          "description": "Whole eye surface is a low-roughness gloss sphere with a dark navy outline ring ~4px",
+          "region": {
+            "x": 0.3,
+            "y": 0.2,
+            "width": 0.4,
+            "height": 0.18,
+            "units": "normalized"
+          },
+          "scale": "meso",
+          "affects": "roughness",
+          "mapsTo": {
+            "type": "material.localOverrides",
+            "ref": "roughness"
+          },
+          "evidenceRef": "di/zone-r0c1.png",
+          "confidence": 0.95
+        },
+        {
+          "id": "iris-gradient",
+          "kind": "decal",
+          "description": "Iris radial gradient light blue centre (#5fb4ff) to deep blue rim (#2160d6) filling the eye",
+          "region": {
+            "x": 0.3,
+            "y": 0.22,
+            "width": 0.4,
+            "height": 0.14,
+            "units": "normalized"
+          },
+          "scale": "meso",
+          "affects": "albedo",
+          "mapsTo": {
+            "type": "material.localOverrides",
+            "ref": "iris-gradient"
+          },
+          "evidenceRef": "di/zone-r0c1.png",
+          "confidence": 0.9
+        },
+        {
+          "id": "cheek-blush",
+          "kind": "decal",
+          "description": "Flat vivid pink oval blush ~60x34px lateral-below each eye, soft edge",
+          "region": {
+            "x": 0.2,
+            "y": 0.36,
+            "width": 0.6,
+            "height": 0.09,
+            "units": "normalized"
+          },
+          "scale": "meso",
+          "affects": "albedo",
+          "mapsTo": {
+            "type": "material.localOverrides",
+            "ref": "cheek-l"
+          },
+          "evidenceRef": "di/zone-r1c0.png",
+          "confidence": 0.95
+        },
+        {
+          "id": "mouth-stroke",
+          "kind": "linework",
+          "description": "Painted dark smile arc (stroke ~5px) from x185 to x335, apex y235, corners lifted; light-blue lower-lip highlight below the arc",
+          "region": {
+            "x": 0.34,
+            "y": 0.42,
+            "width": 0.32,
+            "height": 0.08,
+            "units": "normalized"
+          },
+          "scale": "meso",
+          "affects": "albedo",
+          "mapsTo": {
+            "type": "material.localOverrides",
+            "ref": "mouth"
+          },
+          "evidenceRef": "di/zone-r1c1.png",
+          "confidence": 0.9
+        },
+        {
+          "id": "belly-patch",
+          "kind": "decal",
+          "description": "Lighter pink oval belly patch centre (255,335) rx100 ry75 with soft boundary fading into the body gradient",
+          "region": {
+            "x": 0.3,
+            "y": 0.5,
+            "width": 0.4,
+            "height": 0.3,
+            "units": "normalized"
+          },
+          "scale": "macro",
+          "affects": "albedo",
+          "mapsTo": {
+            "type": "material.localOverrides",
+            "ref": "belly"
+          },
+          "evidenceRef": "di/zone-r2c1.png",
+          "confidence": 0.95
+        },
+        {
+          "id": "body-gradient",
+          "kind": "decal",
+          "description": "Vertical albedo gradient light lavender crown (#c9a8ff) to violet base (#8f6fe0); painted rim light along the crown edge",
+          "region": {
+            "x": 0.17,
+            "y": 0.08,
+            "width": 0.66,
+            "height": 0.8,
+            "units": "normalized"
+          },
+          "scale": "macro",
+          "affects": "albedo",
+          "mapsTo": {
+            "type": "material.localOverrides",
+            "ref": "gradient"
+          },
+          "evidenceRef": "di/zone-r1c1.png",
+          "confidence": 0.9
+        },
+        {
+          "id": "finger-nubs",
+          "kind": "ridge",
+          "description": "Three short rounded finger nubs on each mitten hand, pointing up and outward, each ~14px long",
+          "region": {
+            "x": 0.03,
+            "y": 0.28,
+            "width": 0.16,
+            "height": 0.16,
+            "units": "normalized"
+          },
+          "scale": "micro",
+          "affects": "geometry",
+          "mapsTo": {
+            "type": "component.localFeatures",
+            "ref": "fingerNubs"
+          },
+          "evidenceRef": "di/zone-r0c0.png",
+          "confidence": 0.85
+        },
+        {
+          "id": "toon-outline",
+          "kind": "contour",
+          "description": "Uniform dark outline stroke (~6px, #1a1330) around every silhouette edge and around eyes and mouth; a 2D sticker convention rendered as an optional inverted-hull outline",
+          "region": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 1.0,
+            "height": 1.0,
+            "units": "normalized"
+          },
+          "scale": "micro",
+          "affects": "contour",
+          "mapsTo": {
+            "type": "material.localOverrides",
+            "ref": "outline"
+          },
+          "evidenceRef": "di/zone-r2c0.png",
+          "confidence": 0.9
+        }
+      ]
+    },
+    "anatomy": {
+      "styleHeads": 1.0,
+      "proportions": {
+        "headUnit": 0.75,
+        "torso": 0.0,
+        "legs": 0.12,
+        "shoulderWidth": 0.86,
+        "hipWidth": 0.34
+      },
+      "pose": {
+        "type": "symmetric hooray: both arms raised up-and-outward, feet planted, frontal",
+        "jointAngles": {
+          "neck": [
+            0,
+            0,
+            0
+          ],
+          "leftShoulder": [
+            0,
+            0,
+            130
+          ],
+          "rightShoulder": [
+            0,
+            0,
+            -130
+          ],
+          "leftElbow": [
+            0,
+            0,
+            15
+          ],
+          "rightElbow": [
+            0,
+            0,
+            -15
+          ],
+          "leftWrist": [
+            0,
+            0,
+            0
+          ],
+          "rightWrist": [
+            0,
+            0,
+            0
+          ],
+          "leftHip": [
+            0,
+            0,
+            8
+          ],
+          "rightHip": [
+            0,
+            0,
+            -8
+          ],
+          "leftKnee": [
+            0,
+            0,
+            0
+          ],
+          "rightKnee": [
+            0,
+            0,
+            0
+          ],
+          "leftAnkle": [
+            0,
+            0,
+            0
+          ],
+          "rightAnkle": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "faceLandmarks": {
+        "hairline": 0.0,
+        "eyeLine": 0.27,
+        "eyeSpacing": 0.44,
+        "noseBase": 0.4,
+        "mouthLine": 0.49,
+        "earTop": 0.0,
+        "earBottom": 0.0
+      },
+      "features": [
+        {
+          "id": "eye-l",
+          "center": [
+            0.36,
+            0.29
+          ],
+          "radius": 0.07,
+          "note": "normalised to image; glossy blue iris with two 4-point star catchlights"
+        },
+        {
+          "id": "eye-r",
+          "center": [
+            0.64,
+            0.29
+          ],
+          "radius": 0.07
+        },
+        {
+          "id": "cheek-l",
+          "center": [
+            0.27,
+            0.4
+          ],
+          "size": [
+            0.12,
+            0.066
+          ]
+        },
+        {
+          "id": "cheek-r",
+          "center": [
+            0.71,
+            0.4
+          ],
+          "size": [
+            0.12,
+            0.066
+          ]
+        },
+        {
+          "id": "mouth",
+          "from": [
+            0.36,
+            0.44
+          ],
+          "apex": [
+            0.5,
+            0.46
+          ],
+          "to": [
+            0.655,
+            0.44
+          ]
+        },
+        {
+          "id": "belly-patch",
+          "center": [
+            0.5,
+            0.65
+          ],
+          "size": [
+            0.39,
+            0.29
+          ]
+        },
+        {
+          "id": "arm-root-l",
+          "center": [
+            0.19,
+            0.42
+          ]
+        },
+        {
+          "id": "hand-l",
+          "center": [
+            0.11,
+            0.33
+          ],
+          "note": "3 finger nubs pointing up-outward"
+        },
+        {
+          "id": "foot-l",
+          "center": [
+            0.37,
+            0.88
+          ],
+          "size": [
+            0.14,
+            0.09
+          ]
+        },
+        {
+          "id": "foot-r",
+          "center": [
+            0.63,
+            0.88
+          ],
+          "size": [
+            0.14,
+            0.09
+          ]
+        }
+      ],
+      "confidence": 0.85,
+      "applies": true,
+      "note": "Filled from anatomy.json measured against landmarks.png; head-unit = whole body (chibi blob)."
+    },
+    "sourceImage": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/mascot/../refs/mascot.png"
+  },
+  "qualityContract": {
+    "qualityBar": "moderate",
+    "definitionOfDone": [
+      "Front render reads as the same character: neck-less egg silhouette taller than wide with flattened base, two stub arms raised in a hooray pose with 3-nub mitten hands, two stub feet.",
+      "Face: two oversized glossy blue eyes set high and wide with white 4-point star catchlights, vivid pink oval cheeks, wide closed smile with lifted corners.",
+      "Lavender-to-violet vertical body gradient with a lighter pink belly patch; eye gloss distinct from satin body.",
+      "Rig: named joints root/spine/head/shoulder-l,r/elbow-l,r/wrist-l,r/hip-l,r/ankle-l,r exposed in sculptRuntime and bound so arms and feet can be posed from MediaPipe landmarks without tearing.",
+      "Holds from the profile and rear captures as a continuous egg volume with attached limbs (no floating parts)."
+    ],
+    "minimumSpecDepth": {
+      "macroComponents": 5,
+      "mesoComponents": 8,
+      "microFeatureGroups": 3,
+      "materialLayers": 4,
+      "repetitionSystems": 1,
+      "reviewViewpoints": 4
+    },
+    "featureGroups": [
+      {
+        "id": "overall-silhouette",
+        "name": "Overall silhouette and proportions",
+        "required": true,
+        "qualityCriteria": [
+          "Bounding shape, dominant curves, negative spaces, and scale relationships are explicitly described."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "model reads as a generic placeholder instead of the reference object",
+          "major proportions are guessed without evidence"
+        ]
+      },
+      {
+        "id": "primary-structure",
+        "name": "Primary structure and hierarchy",
+        "required": true,
+        "qualityCriteria": [
+          "Major parts, joints, seams, contact points, and parent-child relationships are named before code generation."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "large visible parts are merged into one mesh",
+          "component hierarchy is too shallow for the observed complexity"
+        ]
+      },
+      {
+        "id": "attachment-joint-correctness",
+        "name": "Attachment and joint correctness",
+        "required": true,
+        "qualityCriteria": [
+          "Every visible child appendage, branch, limb, handle, connector, tube, cable, horn, wing, leg, or hinged part has an attachment contract with parent socket, localStart/localEnd, contact type, embed/overlap, and gap tolerance."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "child part root floats away from the parent",
+          "branch/limb/tube is centered in space instead of pivoting from its root",
+          "parent-child transform mixes world and local coordinates"
+        ]
+      },
+      {
+        "id": "surface-material-response",
+        "name": "Surface material response",
+        "required": true,
+        "qualityCriteria": [
+          "Albedo zones, roughness, normal/bump/displacement intent, cavity dirt, edge wear, and local overrides are specified where visible.",
+          "Important materials define independent albedo, roughness, height/normal, and AO responses instead of reusing one texture for unrelated PBR channels.",
+          "Surface response is decomposed into macro, meso, and micro frequency bands with scale and amplitude tied to object scale."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "surface looks like flat plastic",
+          "local material variation is missing or not tied to image evidence"
+        ]
+      },
+      {
+        "id": "reference-lookdev",
+        "name": "Reference color, material, and lighting response",
+        "required": true,
+        "qualityCriteria": [
+          "Material-pass names the reference-derived albedo palette, roughness variation, tactile normal/bump/displacement response, and local masks.",
+          "When a source image is available, run reference PBR extraction and require confidence >= 0.7 before treating maps as implementation-ready.",
+          "Lighting-pass names key/fill/rim or environment light, exposure, tone mapping, background, and contact shadow behavior.",
+          "Neutral, grazing-angle, and reference-matched renders prove that surface relief survives relighting and is not painted into albedo."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "model has acceptable shape but reads as flat shaded or plastic",
+          "colors are a generic average instead of reference-observed local color zones",
+          "lighting is evenly ambient and cannot reproduce the source value range"
+        ]
+      }
+    ],
+    "visualDeltaChecks": [
+      "silhouette and negative-space delta",
+      "component hierarchy depth delta",
+      "repetition density and distribution delta",
+      "material albedo/roughness/normal response delta",
+      "local feature placement and scale delta"
+    ],
+    "antiShallowSpecRules": [
+      "Do not proceed to code if qualityContract.qualityBar is unassessed.",
+      "Do not proceed to code if the spec only contains a root component for a moderate or complex object.",
+      "Do not proceed to code if required featureGroups are not represented by componentTree, materials, or repetitionSystems.",
+      "Do not proceed to code if visible local features are described only in prose and not attached to components/materials/evidenceRefs.",
+      "Do not proceed past structural-pass if attached child parts lack attachment.parentSocket, localStart, localEnd, embedDepth/overlap, and gapTolerance.",
+      "Do not pass material look-dev when albedo is reused as roughness, height, normal, or AO.",
+      "Do not pass material look-dev without macro, meso, and micro surface frequency bands for close-up materials.",
+      "Do not pass reference-fidelity material look-dev from a source image without usable referencePbr maps or an explicit documented limitation.",
+      "Do not patch a spec with extracted PBR maps when extraction confidence is below the target threshold unless the user explicitly accepts lower fidelity.",
+      "Do not place adjacent separate-geometry parts below 0.02 world-unit seam overlap (source: grimoire/build/geometry_patterns.md).",
+      "Do not satisfy raised or recessed relief, fasteners, or grip structure with a map alone when the feature affects form; use geometry or displacement (source: grimoire/build/geometry_patterns.md)."
+    ]
+  },
+  "authoringInstruction": "Fill observed object class, complexity reasoning, featureGroups, visualDeltaChecks, and unknowns before generating or implementing ObjectSculptSpec.",
+  "localSpecSearch": {
+    "collection": "core_3d",
+    "query": "WigglePlay Mascot",
+    "index": {
+      "status": "hit",
+      "reason": "current",
+      "fingerprint": "62f2831e1d52eeb6dbb94a87c44fa25b1f4926626a7b1f8c2bcadc63e04e9471"
+    },
+    "matches": []
+  }
+}

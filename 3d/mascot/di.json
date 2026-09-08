@@ -1,0 +1,199 @@
+{
+  "sourceImage": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/refs/mascot.png",
+  "zonesDir": "/Users/atultiwari/Downloads/Projects/KidsProject/wiggleplay/3d/mascot/di",
+  "detailInventory": {
+    "scanMethod": "grid-3x3",
+    "targetMinDetails": 6,
+    "details": [
+      {
+        "id": "star-catchlights",
+        "kind": "emissive",
+        "description": "Two 4-point white star catchlights per eye (large upper-lateral ~20px, small lower-medial ~9px), pure white, unlit",
+        "region": {
+          "x": 0.3,
+          "y": 0.22,
+          "width": 0.4,
+          "height": 0.14,
+          "units": "normalized"
+        },
+        "scale": "micro",
+        "affects": "emissive",
+        "mapsTo": {
+          "type": "component.localFeatures",
+          "ref": "catchlights"
+        },
+        "evidenceRef": "di/zone-r0c1.png",
+        "confidence": 0.95
+      },
+      {
+        "id": "eye-gloss",
+        "kind": "gloss",
+        "description": "Whole eye surface is a low-roughness gloss sphere with a dark navy outline ring ~4px",
+        "region": {
+          "x": 0.3,
+          "y": 0.2,
+          "width": 0.4,
+          "height": 0.18,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": "roughness",
+        "mapsTo": {
+          "type": "material.localOverrides",
+          "ref": "roughness"
+        },
+        "evidenceRef": "di/zone-r0c1.png",
+        "confidence": 0.95
+      },
+      {
+        "id": "iris-gradient",
+        "kind": "decal",
+        "description": "Iris radial gradient light blue centre (#5fb4ff) to deep blue rim (#2160d6) filling the eye",
+        "region": {
+          "x": 0.3,
+          "y": 0.22,
+          "width": 0.4,
+          "height": 0.14,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": "albedo",
+        "mapsTo": {
+          "type": "material.localOverrides",
+          "ref": "iris-gradient"
+        },
+        "evidenceRef": "di/zone-r0c1.png",
+        "confidence": 0.9
+      },
+      {
+        "id": "cheek-blush",
+        "kind": "decal",
+        "description": "Flat vivid pink oval blush ~60x34px lateral-below each eye, soft edge",
+        "region": {
+          "x": 0.2,
+          "y": 0.36,
+          "width": 0.6,
+          "height": 0.09,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": "albedo",
+        "mapsTo": {
+          "type": "material.localOverrides",
+          "ref": "cheek-l"
+        },
+        "evidenceRef": "di/zone-r1c0.png",
+        "confidence": 0.95
+      },
+      {
+        "id": "mouth-stroke",
+        "kind": "linework",
+        "description": "Painted dark smile arc (stroke ~5px) from x185 to x335, apex y235, corners lifted; light-blue lower-lip highlight below the arc",
+        "region": {
+          "x": 0.34,
+          "y": 0.42,
+          "width": 0.32,
+          "height": 0.08,
+          "units": "normalized"
+        },
+        "scale": "meso",
+        "affects": "albedo",
+        "mapsTo": {
+          "type": "material.localOverrides",
+          "ref": "mouth"
+        },
+        "evidenceRef": "di/zone-r1c1.png",
+        "confidence": 0.9
+      },
+      {
+        "id": "belly-patch",
+        "kind": "decal",
+        "description": "Lighter pink oval belly patch centre (255,335) rx100 ry75 with soft boundary fading into the body gradient",
+        "region": {
+          "x": 0.3,
+          "y": 0.5,
+          "width": 0.4,
+          "height": 0.3,
+          "units": "normalized"
+        },
+        "scale": "macro",
+        "affects": "albedo",
+        "mapsTo": {
+          "type": "material.localOverrides",
+          "ref": "belly"
+        },
+        "evidenceRef": "di/zone-r2c1.png",
+        "confidence": 0.95
+      },
+      {
+        "id": "body-gradient",
+        "kind": "decal",
+        "description": "Vertical albedo gradient light lavender crown (#c9a8ff) to violet base (#8f6fe0); painted rim light along the crown edge",
+        "region": {
+          "x": 0.17,
+          "y": 0.08,
+          "width": 0.66,
+          "height": 0.8,
+          "units": "normalized"
+        },
+        "scale": "macro",
+        "affects": "albedo",
+        "mapsTo": {
+          "type": "material.localOverrides",
+          "ref": "gradient"
+        },
+        "evidenceRef": "di/zone-r1c1.png",
+        "confidence": 0.9
+      },
+      {
+        "id": "finger-nubs",
+        "kind": "ridge",
+        "description": "Three short rounded finger nubs on each mitten hand, pointing up and outward, each ~14px long",
+        "region": {
+          "x": 0.03,
+          "y": 0.28,
+          "width": 0.16,
+          "height": 0.16,
+          "units": "normalized"
+        },
+        "scale": "micro",
+        "affects": "geometry",
+        "mapsTo": {
+          "type": "component.localFeatures",
+          "ref": "fingerNubs"
+        },
+        "evidenceRef": "di/zone-r0c0.png",
+        "confidence": 0.85
+      },
+      {
+        "id": "toon-outline",
+        "kind": "contour",
+        "description": "Uniform dark outline stroke (~6px, #1a1330) around every silhouette edge and around eyes and mouth; a 2D sticker convention rendered as an optional inverted-hull outline",
+        "region": {
+          "x": 0.0,
+          "y": 0.0,
+          "width": 1.0,
+          "height": 1.0,
+          "units": "normalized"
+        },
+        "scale": "micro",
+        "affects": "contour",
+        "mapsTo": {
+          "type": "material.localOverrides",
+          "ref": "outline"
+        },
+        "evidenceRef": "di/zone-r2c0.png",
+        "confidence": 0.9
+      }
+    ],
+    "zoneNotes": {
+      "r0c0/r0c2": "hands with finger nubs, arm tips",
+      "r0c1": "crown, eyes, catchlights",
+      "r1c0/r1c2": "arm roots, cheeks, body lateral gradient",
+      "r1c1": "mouth, face centre",
+      "r2c0/r2c2": "feet, outline",
+      "r2c1": "belly patch"
+    }
+  },
+  "authoringInstruction": "Open each zone crop under zonesDir and replace every detail stub's kind, description, scale, affects, mapsTo, and confidence with what is actually observed. Add more detail entries per zone if a single zone contains multiple distinct marks; do not leave stubs unfilled or unlinked (mapsTo must reference a real component.localFeatures or material.localOverrides entry)."
+}

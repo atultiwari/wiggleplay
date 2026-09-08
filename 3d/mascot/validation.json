@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "errors": [],
+  "warnings": [],
+  "summary": {
+    "targetName": "WigglePlay Mascot",
+    "suitability": "conditional",
+    "components": 20,
+    "materials": 4
+  }
+}
