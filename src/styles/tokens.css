@@ -1,0 +1,24 @@
+:root {
+  --font-display: 'Fredoka', 'Nunito', 'Segoe UI Rounded', 'Arial Rounded MT Bold', system-ui, sans-serif;
+  --font-body: 'Nunito', 'Fredoka', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --color-bg: #fff7ef;
+  --color-surface: #ffffff;
+  --color-text: #2b2350;
+  --color-muted: #6b6488;
+  --color-primary: #7c5cff;
+  --color-primary-dark: #5b3fe0;
+  --color-accent: #ffc531;
+  --color-pink: #ff7ab6;
+  --color-sky: #5cc8ff;
+  --color-mint: #7ae582;
+  --color-border: #ece4ff;
+
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-pill: 999px;
+  --shadow-soft: 0 10px 30px rgba(84, 56, 180, 0.12);
+  --shadow-pop: 0 14px 0 rgba(0, 0, 0, 0.08);
+
+  --tap-target: 64px;
+}

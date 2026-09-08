@@ -1,0 +1,55 @@
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  padding: 1rem clamp(1rem, 4vw, 2.5rem);
+}
+
+.site-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+}
+
+.site-header__name {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
+.site-header__tagline {
+  display: none;
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+@media (min-width: 640px) {
+  .site-header__tagline {
+    display: inline;
+  }
+}
+
+.site-header__nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.site-header__link {
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-decoration: none;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.site-footer {
+  padding: 2rem clamp(1rem, 4vw, 2.5rem) 3rem;
+  text-align: center;
+  color: var(--color-muted);
+}

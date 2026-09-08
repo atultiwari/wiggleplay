@@ -1,0 +1,40 @@
+.filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.chips__legend {
+  float: left;
+  margin-right: 0.5rem;
+  padding: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.chip {
+  min-height: 40px;
+  padding: 0 0.9rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  box-shadow: 0 3px 0 var(--color-border);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.chip--on {
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 3px 0 var(--color-primary-dark);
+}

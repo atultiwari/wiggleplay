@@ -1,0 +1,47 @@
+.hold-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 56px;
+  padding: 0 1rem 0 0.5rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-weight: 700;
+  box-shadow: var(--shadow-soft);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hold-btn__ring {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: conic-gradient(var(--color-primary) calc(var(--progress) * 360deg), var(--color-border) 0);
+}
+
+.hold-btn__ring::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.hold-btn__icon {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  width: 44px;
+  transform: translateY(-50%);
+  text-align: center;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.hold-btn__label {
+  font-size: 0.95rem;
+}
