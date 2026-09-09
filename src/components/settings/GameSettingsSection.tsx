@@ -10,6 +10,10 @@ import {
   GAME_SETTINGS_KEYS,
   SLICE_TOLERANCES,
   WAVE_POP_RANGES,
+  ANIMAL_CALL_RANGES,
+  SHAKE_TREE_RANGES,
+  SIMON_SAYS_RANGES,
+  TAP_FARM_RANGES,
   TOY_TOWN_RANGES,
   WIGGLE_MIRROR_RANGES,
   type GameSettingsKey,
@@ -17,7 +21,7 @@ import {
 } from '../../lib/settings/schema'
 import { useSettings } from '../../lib/settings/context'
 import { ChoiceField, SliderField, ToggleField } from './fields'
-import { formatPixels, formatSeconds, formatTimes } from './format'
+import { formatPercent, formatPixels, formatSeconds, formatTimes } from './format'
 
 const TOLERANCE_LABELS: Readonly<Record<SliceTolerance, string>> = {
   fine: 'Fine',
@@ -162,6 +166,52 @@ const ToyTownFields = () => {
   )
 }
 
+const SimonSaysFields = () => {
+  const { settings, updateGame } = useSettings()
+  const v = settings.simonSays
+  return (
+    <>
+      <SliderField id="ss-gap" label="Pause between moves" value={v.gapSec} range={SIMON_SAYS_RANGES.gapSec} format={formatSeconds} onChange={(gapSec) => updateGame('simonSays', { gapSec })} />
+      <ToggleField id="ss-hard" label="Harder moves (jump, one foot)" checked={v.harderMoves} onChange={(harderMoves) => updateGame('simonSays', { harderMoves })} hint="Adds jumping and standing on one foot for 3+ year olds." />
+      <ToggleField id="ss-skel" label="Show tracking skeleton" checked={v.showSkeleton} onChange={(showSkeleton) => updateGame('simonSays', { showSkeleton })} hint="Draws the detected body over the camera picture (handy for set-up)." />
+    </>
+  )
+}
+
+const TapFarmFields = () => {
+  const { settings, updateGame } = useSettings()
+  const v = settings.tapFarm
+  return (
+    <>
+      <SliderField id="tf-count" label="Animals on the farm" value={v.animalCount} range={TAP_FARM_RANGES.animalCount} onChange={(animalCount) => updateGame('tapFarm', { animalCount })} />
+      <SliderField id="tf-size" label="Animal size" value={v.animalSize} range={TAP_FARM_RANGES.animalSize} format={formatTimes} onChange={(animalSize) => updateGame('tapFarm', { animalSize })} />
+      <ToggleField id="tf-ask" label="Ask “Where is the…?”" checked={v.askQuestions} onChange={(askQuestions) => updateGame('tapFarm', { askQuestions })} hint="The voice asks for an animal every few seconds and cheers when the child taps it." />
+    </>
+  )
+}
+
+const AnimalCallFields = () => {
+  const { settings, updateGame } = useSettings()
+  const v = settings.animalCall
+  return (
+    <>
+      <SliderField id="ac-loud" label="How loud to be" value={v.loudness} range={ANIMAL_CALL_RANGES.loudness} format={formatPercent} onChange={(loudness) => updateGame('animalCall', { loudness })} hint="Lower is easier: quiet rooms and shy children can go low." />
+      <ToggleField id="ac-meter" label="Show the loudness meter" checked={v.showMeter} onChange={(showMeter) => updateGame('animalCall', { showMeter })} />
+    </>
+  )
+}
+
+const ShakeTreeFields = () => {
+  const { settings, updateGame } = useSettings()
+  const v = settings.shakeTree
+  return (
+    <>
+      <SliderField id="st-apples" label="Apples on the tree" value={v.appleCount} range={SHAKE_TREE_RANGES.appleCount} onChange={(appleCount) => updateGame('shakeTree', { appleCount })} />
+      <SliderField id="st-shake" label="How hard to shake" value={v.shakeStrength} range={SHAKE_TREE_RANGES.shakeStrength} format={formatPercent} onChange={(shakeStrength) => updateGame('shakeTree', { shakeStrength })} hint="Lower is easier. On a laptop, dragging the tree works too." />
+    </>
+  )
+}
+
 const FIELDS: Readonly<Record<GameSettingsKey, () => ReturnType<typeof WavePopFields>>> = {
   wavePop: WavePopFields,
   fruitSlice: FruitSliceFields,
@@ -173,6 +223,10 @@ const FIELDS: Readonly<Record<GameSettingsKey, () => ReturnType<typeof WavePopFi
   beepMeow: BeepMeowFields,
   wiggleMirror: WiggleMirrorFields,
   toyTown: ToyTownFields,
+  simonSays: SimonSaysFields,
+  tapFarm: TapFarmFields,
+  animalCall: AnimalCallFields,
+  shakeTree: ShakeTreeFields,
 }
 
 export const GameSettingsSection = ({ settingsKey, title }: { readonly settingsKey: GameSettingsKey; readonly title?: string }) => {

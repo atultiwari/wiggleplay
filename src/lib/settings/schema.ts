@@ -91,6 +91,30 @@ export interface ToyTownSettings {
   readonly showCursor: boolean
 }
 
+export interface SimonSaysSettings {
+  readonly gapSec: number
+  readonly harderMoves: boolean
+  readonly showSkeleton: boolean
+}
+
+export interface TapFarmSettings {
+  readonly animalCount: number
+  readonly askQuestions: boolean
+  readonly animalSize: number
+}
+
+export interface AnimalCallSettings {
+  /** 0..1: how loud the child must be. Lower is easier. */
+  readonly loudness: number
+  readonly showMeter: boolean
+}
+
+export interface ShakeTreeSettings {
+  readonly appleCount: number
+  /** 0..1: how hard the tablet must be shaken. Lower is easier. */
+  readonly shakeStrength: number
+}
+
 export interface Settings {
   readonly global: GlobalSettings
   readonly wavePop: WavePopSettings
@@ -103,6 +127,10 @@ export interface Settings {
   readonly beepMeow: BeepMeowSettings
   readonly wiggleMirror: WiggleMirrorSettings
   readonly toyTown: ToyTownSettings
+  readonly simonSays: SimonSaysSettings
+  readonly tapFarm: TapFarmSettings
+  readonly animalCall: AnimalCallSettings
+  readonly shakeTree: ShakeTreeSettings
 }
 
 export type GameSettingsKey = Exclude<keyof Settings, 'global'>
@@ -178,6 +206,24 @@ export const TOY_TOWN_RANGES = {
   speed: { min: 0.3, max: 2, step: 0.1 },
 } as const satisfies Record<string, NumberRange>
 
+export const SIMON_SAYS_RANGES = {
+  gapSec: { min: 2, max: 8, step: 0.5 },
+} as const satisfies Record<string, NumberRange>
+
+export const TAP_FARM_RANGES = {
+  animalCount: { min: 2, max: 6, step: 1 },
+  animalSize: { min: 0.7, max: 1.5, step: 0.1 },
+} as const satisfies Record<string, NumberRange>
+
+export const ANIMAL_CALL_RANGES = {
+  loudness: { min: 0.1, max: 0.9, step: 0.05 },
+} as const satisfies Record<string, NumberRange>
+
+export const SHAKE_TREE_RANGES = {
+  appleCount: { min: 3, max: 10, step: 1 },
+  shakeStrength: { min: 0.1, max: 1, step: 0.05 },
+} as const satisfies Record<string, NumberRange>
+
 export const BEEP_MEOW_RANGES = {
   maxThings: { min: 1, max: 10, step: 1 },
   speed: { min: 0.3, max: 3, step: 0.1 },
@@ -208,6 +254,10 @@ export const DEFAULT_SETTINGS: Settings = {
   beepMeow: { maxThings: 5, speed: 1, thingSize: 1, askQuestions: true },
   wiggleMirror: { puppetSize: 1, reactions: true, showSkeleton: false },
   toyTown: { propSize: 1, speed: 1, prompts: true, showCursor: true },
+  simonSays: { gapSec: 4, harderMoves: false, showSkeleton: false },
+  tapFarm: { animalCount: 4, askQuestions: true, animalSize: 1 },
+  animalCall: { loudness: 0.35, showMeter: true },
+  shakeTree: { appleCount: 5, shakeStrength: 0.4 },
 }
 
 /** Maps a game id from the catalogue to its settings slice. */
@@ -222,6 +272,10 @@ export const GAME_SETTINGS_KEYS: Readonly<Record<string, GameSettingsKey>> = {
   'beep-meow-whoosh': 'beepMeow',
   'wiggle-mirror': 'wiggleMirror',
   'toy-town': 'toyTown',
+  'simon-says': 'simonSays',
+  'tap-farm': 'tapFarm',
+  'animal-call': 'animalCall',
+  'shake-tree': 'shakeTree',
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
@@ -363,6 +417,44 @@ const sanitizeToyTown = (raw: unknown): ToyTownSettings => {
   }
 }
 
+const sanitizeSimonSays = (raw: unknown): SimonSaysSettings => {
+  const r = isRecord(raw) ? raw : {}
+  const d = DEFAULT_SETTINGS.simonSays
+  return {
+    gapSec: num(r.gapSec, d.gapSec, SIMON_SAYS_RANGES.gapSec),
+    harderMoves: bool(r.harderMoves, d.harderMoves),
+    showSkeleton: bool(r.showSkeleton, d.showSkeleton),
+  }
+}
+
+const sanitizeTapFarm = (raw: unknown): TapFarmSettings => {
+  const r = isRecord(raw) ? raw : {}
+  const d = DEFAULT_SETTINGS.tapFarm
+  return {
+    animalCount: Math.round(num(r.animalCount, d.animalCount, TAP_FARM_RANGES.animalCount)),
+    askQuestions: bool(r.askQuestions, d.askQuestions),
+    animalSize: num(r.animalSize, d.animalSize, TAP_FARM_RANGES.animalSize),
+  }
+}
+
+const sanitizeAnimalCall = (raw: unknown): AnimalCallSettings => {
+  const r = isRecord(raw) ? raw : {}
+  const d = DEFAULT_SETTINGS.animalCall
+  return {
+    loudness: num(r.loudness, d.loudness, ANIMAL_CALL_RANGES.loudness),
+    showMeter: bool(r.showMeter, d.showMeter),
+  }
+}
+
+const sanitizeShakeTree = (raw: unknown): ShakeTreeSettings => {
+  const r = isRecord(raw) ? raw : {}
+  const d = DEFAULT_SETTINGS.shakeTree
+  return {
+    appleCount: Math.round(num(r.appleCount, d.appleCount, SHAKE_TREE_RANGES.appleCount)),
+    shakeStrength: num(r.shakeStrength, d.shakeStrength, SHAKE_TREE_RANGES.shakeStrength),
+  }
+}
+
 /** Never trust stored data: every field is validated and clamped, unknown fields are dropped. */
 export const sanitizeSettings = (raw: unknown): Settings => {
   const r = isRecord(raw) ? raw : {}
@@ -378,5 +470,9 @@ export const sanitizeSettings = (raw: unknown): Settings => {
     beepMeow: sanitizeBeepMeow(r.beepMeow),
     wiggleMirror: sanitizeWiggleMirror(r.wiggleMirror),
     toyTown: sanitizeToyTown(r.toyTown),
+    simonSays: sanitizeSimonSays(r.simonSays),
+    tapFarm: sanitizeTapFarm(r.tapFarm),
+    animalCall: sanitizeAnimalCall(r.animalCall),
+    shakeTree: sanitizeShakeTree(r.shakeTree),
   }
 }

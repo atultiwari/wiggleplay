@@ -27,9 +27,15 @@ on-device hand tracking, so a small child can play by simply waving at the scree
 | 🚍 **Beep Meow Whoosh** | Planes, buses and cats cross the screen. Touch them to hear their sounds and names, then find the one we ask for. | First words, listening, sounds |
 | 🪞 **Wiggle Mirror** | A 3D WigglePlay monster copies the child's body live: wave, lean, step, lift both hands for a hooray. | Body awareness, imitation, gross motor |
 | 🏘️ **3D Toy Town** | A little 3D town in the child's room: the bus drives, the aeroplane flies, the cat watches. Touch a toy with any body part to make it beep, whoosh or meow, and find the one the voice asks for. | First words, listening, reaching |
+| 🪞 **Simon Says Mirror** | "Simon says: touch your nose!" The camera watches the child do hands up, touch nose / head / tummy, clap, wave and (optionally) jump or stand on one foot, and cheers each one. | Body parts, listening, gross motor |
+| 🐄 **Tap the Farm** *(touch)* | Tap the cow, pig, sheep, chicken, duck and horse to hear them talk; then find the one the voice asks for. | Animal names and sounds, listening |
+| 🐮 **Animal Call** *(microphone)* | "What does the cow say?" Moo, baa or quack loud enough and the animal dances. Only the loudness is measured, nothing is recorded. | Animal sounds, speaking confidence |
+| 🌳 **Shake the Tree** *(motion)* | Shake the tablet (or drag the tree on a laptop): apples fall one by one and the voice counts them to ten. | Counting, cause and effect |
 
-More games (Simon Says mirror, Tap the Farm, Animal Call, Shake the Tree…) are listed as
-"coming soon" in the catalogue. The complete idea list lives in [docs/IDEAS.md](docs/IDEAS.md).
+Every game in the catalogue is playable. Camera games share one shell (camera + tracking +
+parent gate); touch, microphone and motion games share a lighter shell (`ActivityShell`) with
+the same session timer, break screen and settings. The complete idea list lives in
+[docs/IDEAS.md](docs/IDEAS.md).
 
 ## Designed for tiny hands (and feet, and heads)
 
@@ -108,6 +114,7 @@ Tooling that supports it:
 
 - [Vite](https://vite.dev) + [React 19](https://react.dev) + TypeScript
 - [MediaPipe Tasks Vision](https://ai.google.dev/edge/mediapipe/solutions/vision) hand landmarker and pose landmarker (on-device, WebGL/WASM)
+- Web Audio `AnalyserNode` for the microphone loudness meter and `devicemotion` for shaking, both on-device only
 - [Three.js](https://threejs.org) for the procedural 3D mascot and props, generated with img2threejs
 - HTML canvas for rendering, Web Audio for procedural sound effects, Web Speech for the voice
 - [Vitest](https://vitest.dev) + Testing Library for tests, [oxlint](https://oxc.rs) for linting
@@ -193,8 +200,8 @@ grown-up controls, loud happy sounds, on-device privacy — follows from that. C
 2. **Camera games** ✅ Air Painting, Catch the Stars, Wave to Pop, Fruit Slice
 3. **Whole-body play + themed games** ✅ pose tracking, Tickle the Cat, Fly High, Bus Driver, Beep Meow Whoosh
 4. **3D layer** ✅ procedural mascot puppet (img2threejs) + Wiggle Mirror; ✅ bus, aeroplane and cat as animated 3D props + 3D Toy Town; next: a 3D Fly High / Bus Driver using the props and more toys
-5. **Next:** Simon Says mirror, Tap the Farm, tap-along rhymes
-6. Voice games, tilt & shake games, bilingual voice (English + home language)
+5. **Touch, voice and motion** ✅ Simon Says Mirror, Tap the Farm, Animal Call (microphone loudness), Shake the Tree (device motion with a drag fallback)
+6. **Next:** tap-along rhymes, more farm and vehicle toys, bilingual voice (English + home language)
 7. Adaptive layer: skill graph per child, AI-picked next activity, parent summary
 8. More age bands (3–4, 4–5) and interest-based playlists
 

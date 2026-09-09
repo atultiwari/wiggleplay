@@ -8,7 +8,7 @@
 import { chromium } from 'playwright-core'
 
 const BASE_URL = process.env.BASE_URL ?? 'http://localhost:5173'
-const GAMES = (process.env.GAMES ? process.env.GAMES.split(',') : ['air-paint', 'catch-stars', 'wave-pop', 'fruit-slice', 'cat-tickle', 'fly-high', 'bus-driver', 'beep-meow-whoosh', 'wiggle-mirror', 'toy-town'])
+const GAMES = (process.env.GAMES ? process.env.GAMES.split(',') : ['air-paint', 'catch-stars', 'wave-pop', 'fruit-slice', 'cat-tickle', 'fly-high', 'bus-driver', 'beep-meow-whoosh', 'wiggle-mirror', 'toy-town', 'simon-says', 'tap-farm', 'animal-call', 'shake-tree'])
 const PLAYING_TIMEOUT_MS = 60_000
 
 const run = async () => {
@@ -17,7 +17,7 @@ const run = async () => {
     headless: !process.env.HEADED,
     args: ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream', '--autoplay-policy=no-user-gesture-required'],
   })
-  const context = await browser.newContext({ viewport: { width: 1280, height: 720 }, permissions: ['camera'] })
+  const context = await browser.newContext({ viewport: { width: 1280, height: 720 }, permissions: ['camera', 'microphone'] })
   const page = await context.newPage()
   const consoleErrors = []
   page.on('console', (message) => {

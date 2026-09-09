@@ -19,4 +19,8 @@ export const GAME_COMPONENTS: Readonly<Record<string, LazyGame>> = {
   'beep-meow-whoosh': lazy(() => import('./beep-meow-whoosh/BeepMeowGame')),
   'wiggle-mirror': lazy(() => import('./wiggle-mirror/WiggleMirrorGame')),
   'toy-town': lazy(() => import('./toy-town/ToyTownGame')),
+  'simon-says': lazy(() => import('./simon-says/SimonSaysGame')),
+  'tap-farm': lazy(() => import('./tap-farm/TapFarmGame')),
+  'animal-call': lazy(() => import('./animal-call/AnimalCallGame')),
+  'shake-tree': lazy(() => import('./shake-tree/ShakeTreeGame')),
 }

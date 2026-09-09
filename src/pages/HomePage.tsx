@@ -36,7 +36,7 @@ export const HomePage = () => {
           <div className="catalogue__head">
             <h2 id="catalogue-title">Games</h2>
             <p className="catalogue__count">
-              {readyCount} ready to play · {GAMES.length - readyCount} coming soon
+              {readyCount} ready to play{GAMES.length > readyCount ? ` · ${GAMES.length - readyCount} coming soon` : ' · more on the way'}
             </p>
           </div>
           <FilterBar filter={filter} onChange={setFilter} />

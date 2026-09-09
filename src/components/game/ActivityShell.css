@@ -1,0 +1,7 @@
+.shell--activity {
+  background: linear-gradient(180deg, #bfe3ff 0%, #e8f7d8 100%);
+}
+
+.shell--activity .shell__stage {
+  cursor: pointer;
+}

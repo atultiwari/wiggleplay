@@ -4,7 +4,7 @@ import { GAMES } from '../../config/games'
 import { GameCard } from './GameCard'
 
 const ready = GAMES.find((g) => g.status === 'ready')!
-const soon = GAMES.find((g) => g.status === 'soon')!
+const soon = { ...ready, id: 'someday', title: 'Someday Game', status: 'soon' as const }
 
 describe('GameCard', () => {
   it('links to the play route for ready games', () => {

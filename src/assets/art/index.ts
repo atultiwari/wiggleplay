@@ -14,6 +14,14 @@ import planeUrl from './plane.webp'
 import starUrl from './star.webp'
 import strawberryUrl from './strawberry.webp'
 import watermelonUrl from './watermelon.webp'
+import cowUrl from './cow.webp'
+import pigUrl from './pig.webp'
+import sheepUrl from './sheep.webp'
+import chickenUrl from './chicken.webp'
+import duckUrl from './duck.webp'
+import horseUrl from './horse.webp'
+import treeUrl from './tree.webp'
+import barnUrl from './barn.webp'
 
 export const ART = {
   mascot: mascotUrl,
@@ -32,6 +40,14 @@ export const ART = {
   dog: dogUrl,
   bunny: bunnyUrl,
   cloud: cloudUrl,
+  cow: cowUrl,
+  pig: pigUrl,
+  sheep: sheepUrl,
+  chicken: chickenUrl,
+  duck: duckUrl,
+  horse: horseUrl,
+  tree: treeUrl,
+  barn: barnUrl,
 } as const
 
 export type ArtKey = keyof typeof ART

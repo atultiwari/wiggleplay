@@ -168,6 +168,70 @@ export const playWhoosh = (): void =>
     playTone(ctx, { from: 180, to: 720, duration: 0.45, type: 'triangle', gain: 0.12 })
   })
 
+/** Cow moo: low, slow slide with a breathy top. */
+export const playMoo = (): void =>
+  withContext((ctx) => {
+    playTone(ctx, { from: 160, to: 130, duration: 0.7, type: 'sawtooth', gain: 0.18 })
+    playTone(ctx, { from: 320, to: 260, duration: 0.7, type: 'triangle', gain: 0.12 })
+    playNoise(ctx, 0.5, 600, 0.08)
+  })
+
+/** Pig oink: two quick nasal grunts. */
+export const playOink = (): void =>
+  withContext((ctx) => {
+    ;[0, 0.18].forEach((delay) => {
+      playTone(ctx, { from: 240, to: 380, duration: 0.09, type: 'square', gain: 0.14, delay })
+      playNoise(ctx, 0.08, 1200, 0.2)
+    })
+  })
+
+/** Sheep baa: a wobbly mid tone. */
+export const playBaa = (): void =>
+  withContext((ctx) => {
+    ;[0, 0.1, 0.2, 0.3, 0.4].forEach((delay, i) =>
+      playTone(ctx, { from: i % 2 ? 360 : 400, duration: 0.12, type: 'sawtooth', gain: 0.13, delay }),
+    )
+  })
+
+/** Chicken cluck: short pecky blips. */
+export const playCluck = (): void =>
+  withContext((ctx) => {
+    ;[0, 0.14, 0.28, 0.5].forEach((delay, i) =>
+      playTone(ctx, { from: i === 3 ? 900 : 620, to: i === 3 ? 500 : 420, duration: i === 3 ? 0.25 : 0.08, type: 'square', gain: 0.12, delay }),
+    )
+  })
+
+/** Duck quack: a buzzy honk that drops. */
+export const playQuack = (): void =>
+  withContext((ctx) => {
+    ;[0, 0.22].forEach((delay) => {
+      playTone(ctx, { from: 520, to: 300, duration: 0.18, type: 'sawtooth', gain: 0.16, delay })
+      playNoise(ctx, 0.12, 1500, 0.12)
+    })
+  })
+
+/** Horse neigh: a high whinny falling into a rumble. */
+export const playNeigh = (): void =>
+  withContext((ctx) => {
+    playTone(ctx, { from: 900, to: 1300, duration: 0.2, type: 'sawtooth', gain: 0.1 })
+    playTone(ctx, { from: 1300, to: 400, duration: 0.5, type: 'sawtooth', gain: 0.14, delay: 0.2 })
+    playTone(ctx, { from: 220, to: 160, duration: 0.4, type: 'triangle', gain: 0.1, delay: 0.5 })
+  })
+
+/** Dog woof: a short bark. */
+export const playWoof = (): void =>
+  withContext((ctx) => {
+    playTone(ctx, { from: 300, to: 180, duration: 0.14, type: 'square', gain: 0.18 })
+    playNoise(ctx, 0.1, 800, 0.2)
+  })
+
+/** Apple thud: a soft bump when a fruit lands. */
+export const playThud = (): void =>
+  withContext((ctx) => {
+    playTone(ctx, { from: 180, to: 90, duration: 0.12, type: 'sine', gain: 0.3 })
+    playNoise(ctx, 0.04, 500, 0.15)
+  })
+
 /** Painting note: a soft tone whose pitch follows the brush. */
 export const playNote = (frequency: number, duration = 0.12): void =>
   withContext((ctx) => playTone(ctx, { from: frequency, duration, type: 'sine', gain: 0.14 }))

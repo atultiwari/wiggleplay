@@ -21,7 +21,7 @@ Every idea below follows the same ground rules.
 | # | Project | What the child does | What they learn |
 |---|---------|---------------------|-----------------|
 | 1 | Musical finger paint | Drag to paint; each colour is an instrument. Shake to clear, mirror mode for symmetry. | Colours, cause & effect, fine motor |
-| 2 | Tap the farm | Tap animals to animate and hear sounds. Voice then asks "where is the cow?" | Animal names, sounds, listening vocabulary |
+| 2 | **Tap the Farm** ✅ | Tap the cow, pig, sheep, chicken, duck and horse to hear them; the voice asks "where is the pig?" | Animal names, sounds, listening vocabulary |
 | 3 | Bubble pop counting | Pop floating bubbles; voice counts each pop. Grows 1→3→5→10. | Counting, number words |
 
 ### A2. Sorting and matching
@@ -57,7 +57,7 @@ Every idea below follows the same ground rules.
 
 | # | Project | What the child does | What they learn |
 |---|---------|---------------------|-----------------|
-| 14 | Simon Says mirror | Pose tracking checks "touch your nose", "jump", "clap", "arms up". | Body parts, listening, gross motor |
+| 14 | **Simon Says Mirror** ✅ | Pose tracking checks hands up, touch your nose/head/tummy, clap, wave, and (optionally) jump and one foot. | Body parts, listening, gross motor |
 | 15 | **Air painting** | Index finger paints in the air; screen shows the trail. | Fine motor, colours, creativity |
 | 16 | **Catch the stars** | Step left/right (or move hand) to catch falling stars with an avatar. | Gross motor, tracking, counting |
 | 17 | **Wave to pop** | Bubbles drift across the camera feed; any hand movement pops them. | Cause & effect, gross motor |
@@ -77,7 +77,7 @@ Every idea below follows the same ground rules.
 
 | # | Project | What the child does | What they learn |
 |---|---------|---------------------|-----------------|
-| 23 | Animal call and response | "What does the cow say?" Any moo (volume/pitch only) makes the cow dance. | Animal sounds, speaking confidence |
+| 23 | **Animal Call** ✅ | "What does the cow say?" Any loud enough moo (volume only, nothing recorded) makes the cow dance. | Animal sounds, speaking confidence |
 | 24 | Say the colour | Big colour appears, child says the word; lenient matching. | Colour words, speech |
 | 25 | Blow to play | Blow into the mic to spin a windmill, blow out candles, push a sailboat. | Breath control, counting |
 | 26 | Clap counter | Character claps N times, child claps back, screen counts along. | Counting, imitation |
@@ -89,7 +89,7 @@ Every idea below follows the same ground rules.
 | # | Project | What the child does | What they learn |
 |---|---------|---------------------|-----------------|
 | 29 | Tilt marble maze | Tilt the tablet to roll a ball into a hole; three ball colours. | Motor control, colours |
-| 30 | Shake the tree | Shake the device, apples fall, voice counts them. | Counting, cause & effect |
+| 30 | **Shake the Tree** ✅ | Shake the tablet (or drag the tree on a laptop), apples fall one by one and the voice counts them. | Counting, cause & effect |
 | 31 | Rock the baby | Gentle rocking puts a cartoon baby to sleep. | Calm, slow movement, empathy |
 
 ### B4. Physical-world hybrids (less screen focus)
