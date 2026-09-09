@@ -7,5 +7,7 @@ export JAVA_HOME=${JAVA_HOME:-/opt/homebrew/opt/openjdk@21}
 export ANDROID_HOME=${ANDROID_HOME:-$HOME/Library/Android/sdk}
 npm run sync-web
 [ -d android ] || LANG=en_US.UTF-8 npx expo prebuild --platform android --no-install
+# Gradle sometimes reuses a stale JS/asset bundle; clear it so the new web.zip and version go in.
+rm -rf android/app/build/generated/assets/react android/app/build/generated/res/react android/app/build/intermediates/assets/release android/app/build/intermediates/packaged_res/release
 cd android && ./gradlew assembleRelease --no-daemon
 echo "APK: $(pwd)/app/build/outputs/apk/release/app-release.apk"

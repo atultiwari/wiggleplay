@@ -1,8 +1,7 @@
 import { Asset } from 'expo-asset'
 import * as FileSystem from 'expo-file-system/legacy'
 import manifest from '../assets/web-manifest.json'
-import { fromBase64 } from './base64'
-import { extractZip, type ExtractProgress } from './extract'
+import { extractZip, readFileBytes, type ExtractProgress } from './extract'
 
 export type { ExtractProgress } from './extract'
 
@@ -32,7 +31,7 @@ const readBundledZip = async (): Promise<Uint8Array> => {
     const response = await fetch(uri)
     return new Uint8Array(await response.arrayBuffer())
   } catch {
-    return fromBase64(await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 }))
+    return readFileBytes(uri)
   }
 }
 

@@ -1,6 +1,5 @@
-import * as FileSystem from 'expo-file-system/legacy'
+import { Directory, File } from 'expo-file-system'
 import { unzipSync } from 'fflate'
-import { toBase64 } from './base64'
 
 export interface ExtractProgress {
   readonly done: number
@@ -8,32 +7,37 @@ export interface ExtractProgress {
   readonly file: string
 }
 
-const CHUNK = 0x8000
+/**
+ * Reads a whole local file as bytes. The legacy base64 API needs ~2.7x the file size as a Java
+ * string, which is too much for a 40 MB games bundle on a phone; the File API streams bytes.
+ */
+export const readFileBytes = async (uri: string): Promise<Uint8Array<ArrayBuffer>> => new Uint8Array(await new File(uri).arrayBuffer())
 
-const ensureDir = async (dir: string, made: Set<string>): Promise<void> => {
+const parentOf = (path: string): string => path.slice(0, path.lastIndexOf('/'))
+
+const ensureDir = (dir: string, made: Set<string>): void => {
   if (made.has(dir)) return
-  await FileSystem.makeDirectoryAsync(dir, { intermediates: true }).catch(() => undefined)
+  new Directory(dir).create({ intermediates: true, idempotent: true })
   made.add(dir)
 }
 
-const encode = (data: Uint8Array): string => {
-  let base64 = ''
-  for (let i = 0; i < data.length; i += CHUNK * 3) base64 += toBase64(data.subarray(i, Math.min(data.length, i + CHUNK * 3)))
-  return base64
-}
-
-/** Unpacks a stored zip into `dir` (replacing it), writing files through the legacy file-system API. */
+/** Unpacks a stored zip into `dir` (replacing it), writing raw bytes straight to disk. */
 export const extractZip = async (zip: Uint8Array, dir: string, onProgress?: (progress: ExtractProgress) => void): Promise<void> => {
   const entries = unzipSync(zip)
   const names = Object.keys(entries).filter((name) => !name.endsWith('/'))
   if (!names.includes('index.html')) throw new Error('The games bundle is missing its start page.')
-  await FileSystem.deleteAsync(dir, { idempotent: true })
+  const root = new Directory(dir)
+  if (root.exists) root.delete()
   const made = new Set<string>()
-  await ensureDir(dir, made)
+  ensureDir(dir, made)
   for (const [index, name] of names.entries()) {
     const target = `${dir}/${name}`
-    await ensureDir(target.slice(0, target.lastIndexOf('/')), made)
-    await FileSystem.writeAsStringAsync(target, encode(entries[name]), { encoding: FileSystem.EncodingType.Base64 })
+    ensureDir(parentOf(target), made)
+    const file = new File(target)
+    file.create({ overwrite: true })
+    file.write(entries[name])
     onProgress?.({ done: index + 1, total: names.length, file: name })
+    // Let the UI breathe between files; the writes above are synchronous native calls.
+    if (index % 8 === 0) await new Promise((resolve) => setTimeout(resolve, 0))
   }
 }

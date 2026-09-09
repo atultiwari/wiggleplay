@@ -1,8 +1,7 @@
 import * as Crypto from 'expo-crypto'
 import * as FileSystem from 'expo-file-system/legacy'
-import { fromBase64 } from './base64'
 import { BUNDLED_VERSION, webRootDir } from './bundle'
-import { extractZip } from './extract'
+import { extractZip, readFileBytes } from './extract'
 import { hexOf, isManifest, isNewerVersion, MANIFEST_URL, statusFor, type UpdateManifest, type UpdateStatus } from './manifest'
 
 const CHECK_TIMEOUT_MS = 8000
@@ -88,8 +87,8 @@ export class MobileUpdater {
       })
       const result = await download.downloadAsync()
       if (!result || result.status !== 200) throw new Error('The download did not finish. Please try again.')
-      const zip = fromBase64(await FileSystem.readAsStringAsync(zipPath, { encoding: FileSystem.EncodingType.Base64 }))
-      const digest = hexOf(await Crypto.digest(Crypto.CryptoDigestAlgorithm.SHA256, zip as Uint8Array<ArrayBuffer>))
+      const zip = await readFileBytes(zipPath)
+      const digest = hexOf(await Crypto.digest(Crypto.CryptoDigestAlgorithm.SHA256, zip))
       if (digest !== manifest.sha256) throw new Error('The downloaded file was damaged; please try again.')
       await extractZip(zip, target, (p) => this.set({ ...this.status, state: 'downloading', progress: 0.9 + (0.1 * p.done) / p.total }))
       await FileSystem.writeAsStringAsync(currentFile(), JSON.stringify({ version: manifest.version, dir: target } satisfies Current))
