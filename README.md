@@ -221,9 +221,15 @@ npm run dist:win   # NSIS installer + portable exe (release/)
 ```bash
 cd mobile
 npm install
-npm run ios        # builds the web app, packs it into assets/web.zip, prebuilds and runs on a simulator
-npm run android    # same for Android (needs Android Studio's SDK and a JDK)
+npm run ios                      # builds the web app, packs it into assets/web.zip, prebuilds and runs on a simulator
+scripts/build-android-apk.sh     # self-contained Android APK (release variant) for phones and emulators
+npm run android                  # developer loop against a Metro server (the *debug* APK is not portable)
 ```
+
+Only the **release** APK (`android/app/build/outputs/apk/release/app-release.apk`) carries the
+JavaScript bundle; a debug APK shows "Unable to load script" unless a Metro dev server is
+reachable. `node scripts/collect-builds.mjs` (repo root) copies every installable build into
+`builds/` with platform names.
 
 - The whole web build (games, art, MediaPipe runtime, models: ~38 MB) travels inside the app as
   one zip asset. On first launch it is unpacked into the app's documents folder and served by a
