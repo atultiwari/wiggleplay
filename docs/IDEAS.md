@@ -48,8 +48,8 @@ Every idea below follows the same ground rules.
 | 11 | Dress the bear | Drag hat to head, socks to feet; voice names each body part. | Body parts, clothing |
 | 12 | Bedtime routine game | Brush teeth, pyjamas, lights off. Real pre-sleep wind-down. | Routines, sequencing |
 | 13 | AI colouring book | Parent says "dinosaur on a bicycle"; app generates thick-line SVG to finger-paint. | Colours, creativity |
-| 13a | Alphabet trail | Trace each letter along a dotted path; diamonds and balls appear along the way and are collected as the finger passes. Letters progress A→Z with the letter name and a word spoken. | Letter shapes, letter names, fine motor |
-| 13b | Path tracer | Trace simple shapes and structures (line, circle, zigzag, house, star) with rewards along the path; later tracing of numbers. | Shapes, pre-writing strokes, fine motor |
+| 13a | **Alphabet Trail** ✅ | Trace each letter along a dotted path; diamonds and balls appear along the way and are collected as the finger passes. Letters progress A→Z with the letter name and a word spoken. | Letter shapes, letter names, fine motor |
+| 13b | **Path Tracer** ✅ | Trace simple shapes and structures (line, circle, zigzag, house, star) with rewards along the path; later tracing of numbers. | Shapes, pre-writing strokes, fine motor |
 
 ---
 

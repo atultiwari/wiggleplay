@@ -15,6 +15,9 @@ import {
   SIMON_SAYS_RANGES,
   TAP_FARM_RANGES,
   TOY_TOWN_RANGES,
+  TRACE_RANGES,
+  LETTER_ORDERS,
+  type LetterOrder,
   WIGGLE_MIRROR_RANGES,
   type GameSettingsKey,
   type SliceTolerance,
@@ -212,6 +215,31 @@ const ShakeTreeFields = () => {
   )
 }
 
+const ORDER_LABELS: Readonly<Record<LetterOrder, string>> = { abc: 'A to Z', random: 'Mixed up' }
+
+const AlphabetTrailFields = () => {
+  const { settings, updateGame } = useSettings()
+  const v = settings.alphabetTrail
+  return (
+    <>
+      <SliderField id="at-size" label="Diamond size" value={v.gemSize} range={TRACE_RANGES.gemSize} format={formatTimes} onChange={(gemSize) => updateGame('alphabetTrail', { gemSize })} hint="Bigger diamonds are spaced further apart and easier to hit." />
+      <ChoiceField label="Letter order" value={v.order} options={LETTER_ORDERS.map((value) => ({ value, label: ORDER_LABELS[value] }))} onChange={(order) => updateGame('alphabetTrail', { order })} />
+      <ToggleField id="at-words" label="Say a word for each letter" checked={v.sayWords} onChange={(sayWords) => updateGame('alphabetTrail', { sayWords })} hint="“A is for apple” after each letter." />
+    </>
+  )
+}
+
+const PathTracerFields = () => {
+  const { settings, updateGame } = useSettings()
+  const v = settings.pathTracer
+  return (
+    <>
+      <SliderField id="pt-size" label="Ball size" value={v.gemSize} range={TRACE_RANGES.gemSize} format={formatTimes} onChange={(gemSize) => updateGame('pathTracer', { gemSize })} />
+      <ToggleField id="pt-hard" label="Harder shapes (star, heart, spiral…)" checked={v.harderShapes} onChange={(harderShapes) => updateGame('pathTracer', { harderShapes })} />
+    </>
+  )
+}
+
 const FIELDS: Readonly<Record<GameSettingsKey, () => ReturnType<typeof WavePopFields>>> = {
   wavePop: WavePopFields,
   fruitSlice: FruitSliceFields,
@@ -227,6 +255,8 @@ const FIELDS: Readonly<Record<GameSettingsKey, () => ReturnType<typeof WavePopFi
   tapFarm: TapFarmFields,
   animalCall: AnimalCallFields,
   shakeTree: ShakeTreeFields,
+  alphabetTrail: AlphabetTrailFields,
+  pathTracer: PathTracerFields,
 }
 
 export const GameSettingsSection = ({ settingsKey, title }: { readonly settingsKey: GameSettingsKey; readonly title?: string }) => {

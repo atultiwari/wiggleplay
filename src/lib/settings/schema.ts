@@ -115,6 +115,20 @@ export interface ShakeTreeSettings {
   readonly shakeStrength: number
 }
 
+export type LetterOrder = 'abc' | 'random'
+export const LETTER_ORDERS: readonly LetterOrder[] = ['abc', 'random']
+
+export interface AlphabetTrailSettings {
+  readonly gemSize: number
+  readonly order: LetterOrder
+  readonly sayWords: boolean
+}
+
+export interface PathTracerSettings {
+  readonly gemSize: number
+  readonly harderShapes: boolean
+}
+
 export interface Settings {
   readonly global: GlobalSettings
   readonly wavePop: WavePopSettings
@@ -131,6 +145,8 @@ export interface Settings {
   readonly tapFarm: TapFarmSettings
   readonly animalCall: AnimalCallSettings
   readonly shakeTree: ShakeTreeSettings
+  readonly alphabetTrail: AlphabetTrailSettings
+  readonly pathTracer: PathTracerSettings
 }
 
 export type GameSettingsKey = Exclude<keyof Settings, 'global'>
@@ -224,6 +240,10 @@ export const SHAKE_TREE_RANGES = {
   shakeStrength: { min: 0.1, max: 1, step: 0.05 },
 } as const satisfies Record<string, NumberRange>
 
+export const TRACE_RANGES = {
+  gemSize: { min: 0.7, max: 1.6, step: 0.1 },
+} as const satisfies Record<string, NumberRange>
+
 export const BEEP_MEOW_RANGES = {
   maxThings: { min: 1, max: 10, step: 1 },
   speed: { min: 0.3, max: 3, step: 0.1 },
@@ -258,6 +278,8 @@ export const DEFAULT_SETTINGS: Settings = {
   tapFarm: { animalCount: 4, askQuestions: true, animalSize: 1 },
   animalCall: { loudness: 0.35, showMeter: true },
   shakeTree: { appleCount: 5, shakeStrength: 0.4 },
+  alphabetTrail: { gemSize: 1, order: 'abc', sayWords: true },
+  pathTracer: { gemSize: 1, harderShapes: false },
 }
 
 /** Maps a game id from the catalogue to its settings slice. */
@@ -276,6 +298,8 @@ export const GAME_SETTINGS_KEYS: Readonly<Record<string, GameSettingsKey>> = {
   'tap-farm': 'tapFarm',
   'animal-call': 'animalCall',
   'shake-tree': 'shakeTree',
+  'alphabet-trail': 'alphabetTrail',
+  'path-tracer': 'pathTracer',
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
@@ -455,6 +479,25 @@ const sanitizeShakeTree = (raw: unknown): ShakeTreeSettings => {
   }
 }
 
+const sanitizeAlphabetTrail = (raw: unknown): AlphabetTrailSettings => {
+  const r = isRecord(raw) ? raw : {}
+  const d = DEFAULT_SETTINGS.alphabetTrail
+  return {
+    gemSize: num(r.gemSize, d.gemSize, TRACE_RANGES.gemSize),
+    order: LETTER_ORDERS.includes(r.order as LetterOrder) ? (r.order as LetterOrder) : d.order,
+    sayWords: bool(r.sayWords, d.sayWords),
+  }
+}
+
+const sanitizePathTracer = (raw: unknown): PathTracerSettings => {
+  const r = isRecord(raw) ? raw : {}
+  const d = DEFAULT_SETTINGS.pathTracer
+  return {
+    gemSize: num(r.gemSize, d.gemSize, TRACE_RANGES.gemSize),
+    harderShapes: bool(r.harderShapes, d.harderShapes),
+  }
+}
+
 /** Never trust stored data: every field is validated and clamped, unknown fields are dropped. */
 export const sanitizeSettings = (raw: unknown): Settings => {
   const r = isRecord(raw) ? raw : {}
@@ -474,5 +517,7 @@ export const sanitizeSettings = (raw: unknown): Settings => {
     tapFarm: sanitizeTapFarm(r.tapFarm),
     animalCall: sanitizeAnimalCall(r.animalCall),
     shakeTree: sanitizeShakeTree(r.shakeTree),
+    alphabetTrail: sanitizeAlphabetTrail(r.alphabetTrail),
+    pathTracer: sanitizePathTracer(r.pathTracer),
   }
 }

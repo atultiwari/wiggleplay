@@ -23,4 +23,6 @@ export const GAME_COMPONENTS: Readonly<Record<string, LazyGame>> = {
   'tap-farm': lazy(() => import('./tap-farm/TapFarmGame')),
   'animal-call': lazy(() => import('./animal-call/AnimalCallGame')),
   'shake-tree': lazy(() => import('./shake-tree/ShakeTreeGame')),
+  'alphabet-trail': lazy(() => import('./alphabet-trail/AlphabetTrailGame')),
+  'path-tracer': lazy(() => import('./path-tracer/PathTracerGame')),
 }

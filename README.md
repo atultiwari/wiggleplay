@@ -30,6 +30,8 @@ on-device hand tracking, so a small child can play by simply waving at the scree
 | 🪞 **Simon Says Mirror** | "Simon says: touch your nose!" The camera watches the child do hands up, touch nose / head / tummy, clap, wave and (optionally) jump or stand on one foot, and cheers each one. | Body parts, listening, gross motor |
 | 🐄 **Tap the Farm** *(touch)* | Tap the cow, pig, sheep, chicken, duck and horse to hear them talk; then find the one the voice asks for. | Animal names and sounds, listening |
 | 🐮 **Animal Call** *(microphone)* | "What does the cow say?" Moo, baa or quack loud enough and the animal dances. Only the loudness is measured, nothing is recorded. | Animal sounds, speaking confidence |
+| 🔤 **Alphabet Trail** *(touch)* | Trace each capital letter along a dotted guide, scooping up diamonds with a finger; the letter lights up and the voice says “A is for apple”. | Letter shapes and names, fine motor |
+| ✏️ **Path Tracer** *(touch)* | Follow lines, circles, zigzags, then stars, hearts, spirals and little pictures, catching balls along the path. | Shapes, pre-writing strokes |
 | 🌳 **Shake the Tree** *(motion)* | Shake the tablet (or drag the tree on a laptop): apples fall one by one and the voice counts them to ten. | Counting, cause and effect |
 
 Every game in the catalogue is playable. Camera games share one shell (camera + tracking +
@@ -254,9 +256,10 @@ grown-up controls, loud happy sounds, on-device privacy — follows from that. C
 3. **Whole-body play + themed games** ✅ pose tracking, Tickle the Cat, Fly High, Bus Driver, Beep Meow Whoosh
 4. **3D layer** ✅ procedural mascot puppet (img2threejs) + Wiggle Mirror; ✅ bus, aeroplane and cat as animated 3D props + 3D Toy Town; next: a 3D Fly High / Bus Driver using the props and more toys
 5. **Touch, voice and motion** ✅ Simon Says Mirror, Tap the Farm, Animal Call (microphone loudness), Shake the Tree (device motion with a drag fallback)
-6. **Next:** alphabet trail (trace letters and collect diamonds), path tracer for simple shapes, tap-along rhymes, bilingual voice (English + home language)
-7. Adaptive layer: skill graph per child, AI-picked next activity, parent summary
-8. More age bands (3–4, 4–5) and interest-based playlists
+6. **Tracing games** ✅ Alphabet Trail and Path Tracer (shared engine in `src/lib/trace/`)
+7. **Next:** tap-along rhymes, bilingual voice (English + home language), lowercase letters and numbers in the trail
+8. Adaptive layer: skill graph per child, AI-picked next activity, parent summary
+9. More age bands (3–4, 4–5) and interest-based playlists
 
 See [docs/IDEAS.md](docs/IDEAS.md) for the full list.
 
