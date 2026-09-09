@@ -1,7 +1,7 @@
 import { useCameraPermissions, useMicrophonePermissions } from 'expo-camera'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { ensureWebRoot, type ExtractProgress } from './src/bundle'
 import { startWebServer } from './src/server'
@@ -76,13 +76,16 @@ export default function App() {
   }
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.page}>
       <StatusBar hidden />
       <WebView
-        style={styles.web}
+        style={styles.fill}
+        containerStyle={styles.fill}
         source={{ uri: `${phase.origin}/index.html` }}
-        originWhitelist={['http://127.0.0.1:*', 'http://localhost:*']}
+        originWhitelist={['*']}
         onShouldStartLoadWithRequest={(request) => LOCAL.test(request.url)}
+        onError={(event) => setPhase({ kind: 'error', message: `The games page could not be shown (${event.nativeEvent.description}).` })}
+        onHttpError={(event) => setPhase({ kind: 'error', message: `The games page answered with an error (${event.nativeEvent.statusCode}).` })}
         allowsInlineMediaPlayback
         mediaPlaybackRequiresUserAction={false}
         mediaCapturePermissionGrantType="grant"
@@ -96,13 +99,14 @@ export default function App() {
         webviewDebuggingEnabled={__DEV__}
         cacheEnabled
       />
-    </View>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#1b1533', alignItems: 'center', justifyContent: 'center', padding: 24, gap: 12 },
-  web: { flex: 1, alignSelf: 'stretch', backgroundColor: '#1b1533' },
+  page: { flex: 1, backgroundColor: '#fff7ef' },
+  fill: { flex: 1, width: '100%', height: '100%', backgroundColor: '#fff7ef' },
   title: { color: '#ffffff', fontSize: 32, fontWeight: '800' },
   text: { color: '#e9e4ff', fontSize: 18, textAlign: 'center' },
   note: { color: '#b8b0d6', fontSize: 14, textAlign: 'center' },
