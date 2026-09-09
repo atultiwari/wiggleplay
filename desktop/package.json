@@ -12,8 +12,9 @@
     "build:main": "tsc -p tsconfig.json",
     "build": "npm run build:web && npm run build:main",
     "start": "npm run build && electron .",
-    "test": "npm run build:main && node --test dist-main/assets.test.js",
+    "test": "npm run build:main && node --test dist-main/assets.test.js dist-main/updates.test.js",
     "smoke": "node e2e/smoke.mjs",
+    "smoke:updates": "node e2e/update.mjs",
     "dist": "npm run build && electron-builder --mac --win --publish never",
     "dist:mac": "npm run build && electron-builder --mac --publish never",
     "dist:win": "npm run build && electron-builder --win --publish never"
@@ -30,6 +31,12 @@
     "productName": "WigglePlay",
     "copyright": "Copyright © 2026 Atul Tiwari",
     "asar": true,
+    "publish": {
+      "provider": "github",
+      "owner": "atultiwari",
+      "repo": "wiggleplay",
+      "releaseType": "release"
+    },
     "directories": {
       "output": "release",
       "buildResources": "build"
@@ -43,8 +50,20 @@
     "mac": {
       "category": "public.app-category.education",
       "target": [
-        { "target": "dmg", "arch": ["arm64", "x64"] },
-        { "target": "zip", "arch": ["arm64", "x64"] }
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
       ],
       "icon": "build/icon.png",
       "hardenedRuntime": false,
@@ -55,8 +74,18 @@
     },
     "win": {
       "target": [
-        { "target": "nsis", "arch": ["x64"] },
-        { "target": "portable", "arch": ["x64"] }
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
       ],
       "icon": "build/icon.png"
     },
@@ -65,5 +94,9 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true
     }
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9",
+    "fflate": "^0.8.3"
   }
 }

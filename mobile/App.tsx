@@ -1,20 +1,29 @@
+import Constants from 'expo-constants'
 import { useCameraPermissions, useMicrophonePermissions } from 'expo-camera'
 import { StatusBar } from 'expo-status-bar'
-import { useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native'
-import { WebView } from 'react-native-webview'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { ActivityIndicator, Linking, Platform, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { WebView, type WebViewMessageEvent } from 'react-native-webview'
 import { ensureWebRoot, type ExtractProgress } from './src/bundle'
+import { bridgeScript, parseHostCall, replyScript, statusScript } from './src/host-bridge'
 import { startWebServer } from './src/server'
+import { activeBundle, MobileUpdater } from './src/updates'
 
 type Phase = { readonly kind: 'preparing'; readonly progress: ExtractProgress | null } | { readonly kind: 'ready'; readonly origin: string } | { readonly kind: 'error'; readonly message: string }
 
 const LOCAL = /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?\//
+const UPDATE_SITE = 'https://atultiwari.github.io/'
+const KIND = Platform.OS === 'ios' ? 'ios' : 'android'
+const APP_VERSION = Constants.expoConfig?.version ?? '0.0.0'
+const AUTO_CHECK_DELAY_MS = 4000
 
 export default function App() {
   const [phase, setPhase] = useState<Phase>({ kind: 'preparing', progress: null })
   const [camera, requestCamera] = useCameraPermissions()
   const [microphone, requestMicrophone] = useMicrophonePermissions()
   const stopRef = useRef<(() => Promise<void>) | null>(null)
+  const webRef = useRef<WebView | null>(null)
+  const updaterRef = useRef<MobileUpdater | null>(null)
   const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
@@ -22,15 +31,17 @@ export default function App() {
     ;(async () => {
       if (attempt > 0) setPhase({ kind: 'preparing', progress: null })
       try {
-        const dir = await ensureWebRoot((progress) => {
+        await ensureWebRoot((progress) => {
           if (!cancelled) setPhase({ kind: 'preparing', progress })
         })
-        const server = await startWebServer(dir)
+        const active = await activeBundle()
+        const server = await startWebServer(active.dir)
         if (cancelled) {
           await server.stop()
           return
         }
         stopRef.current = server.stop
+        updaterRef.current = new MobileUpdater(active.version, (status) => webRef.current?.injectJavaScript(statusScript(status)))
         setPhase({ kind: 'ready', origin: server.origin })
       } catch (error) {
         if (!cancelled) setPhase({ kind: 'error', message: error instanceof Error ? error.message : 'Something went wrong while unpacking the games.' })
@@ -44,11 +55,43 @@ export default function App() {
   }, [attempt])
 
   useEffect(() => {
+    if (phase.kind !== 'ready') return
+    const timer = setTimeout(() => updaterRef.current?.check().catch(() => undefined), AUTO_CHECK_DELAY_MS)
+    return () => clearTimeout(timer)
+  }, [phase.kind])
+
+  useEffect(() => {
     if (camera && !camera.granted && camera.canAskAgain) requestCamera().catch(() => undefined)
   }, [camera, requestCamera])
   useEffect(() => {
     if (camera?.granted && microphone && !microphone.granted && microphone.canAskAgain) requestMicrophone().catch(() => undefined)
   }, [camera, microphone, requestMicrophone])
+
+  const onMessage = useCallback((event: WebViewMessageEvent) => {
+    const call = parseHostCall(event.nativeEvent.data)
+    const updater = updaterRef.current
+    if (!call || !updater) return
+    const reply = (result: unknown, error?: string) => webRef.current?.injectJavaScript(replyScript(call.id, result, error))
+    const run = async () => {
+      switch (call.method) {
+        case 'status':
+          return reply(updater.getStatus())
+        case 'check':
+          return reply(await updater.check())
+        case 'download':
+          return reply(await updater.download())
+        case 'apply':
+          reply(null)
+          return setAttempt((n) => n + 1)
+        case 'open':
+          if (call.url?.startsWith(UPDATE_SITE)) await Linking.openURL(call.url)
+          return
+        default:
+          return
+      }
+    }
+    run().catch((error: unknown) => reply(null, error instanceof Error ? error.message : 'Something went wrong.'))
+  }, [])
 
   if (phase.kind === 'error') {
     return (
@@ -79,10 +122,14 @@ export default function App() {
     <SafeAreaView style={styles.page}>
       <StatusBar hidden />
       <WebView
+        key={phase.origin}
+        ref={webRef}
         style={styles.fill}
         containerStyle={styles.fill}
         source={{ uri: `${phase.origin}/index.html` }}
         originWhitelist={['*']}
+        injectedJavaScriptBeforeContentLoaded={bridgeScript(KIND, APP_VERSION)}
+        onMessage={onMessage}
         onShouldStartLoadWithRequest={(request) => LOCAL.test(request.url)}
         onError={(event) => setPhase({ kind: 'error', message: `The games page could not be shown (${event.nativeEvent.description}).` })}
         onHttpError={(event) => setPhase({ kind: 'error', message: `The games page answered with an error (${event.nativeEvent.statusCode}).` })}

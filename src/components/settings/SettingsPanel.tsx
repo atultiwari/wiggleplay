@@ -13,6 +13,7 @@ import { INTERACTION_MODES, modeInfo } from '../../lib/tracking/modes'
 import { ChoiceField, SliderField, ToggleField } from './fields'
 import { formatMinutes, formatPercent } from './format'
 import { GameSettingsSection } from './GameSettingsSection'
+import { UpdatesSection } from './UpdatesSection'
 import './SettingsPanel.css'
 
 export interface SettingsPanelProps {
@@ -147,6 +148,8 @@ export const SettingsPanel = ({ gameId, onClose }: SettingsPanelProps) => {
           </section>
 
           {!currentGameKey && gameKeys.map((key) => <GameSettingsSection key={key} settingsKey={key} />)}
+
+          {!currentGameKey && <UpdatesSection />}
 
           <button type="button" className="btn btn--ghost settings__reset-all" onClick={resetAll}>
             Reset everything to defaults

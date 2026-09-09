@@ -165,3 +165,32 @@
     opacity: 1;
   }
 }
+
+.settings__hint {
+  margin: 0.35rem 0;
+  font-size: 0.95rem;
+  color: var(--color-muted);
+}
+
+.settings__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0.6rem 0;
+}
+
+.settings__progress {
+  width: 100%;
+  height: 12px;
+  accent-color: var(--color-primary);
+}
+
+.settings-button__badge {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-left: 0.3rem;
+  border-radius: 50%;
+  background: #3ddc84;
+  box-shadow: 0 0 0 3px rgba(61, 220, 132, 0.3);
+}

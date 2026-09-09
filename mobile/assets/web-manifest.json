@@ -1,5 +1,13 @@
 {
-  "version": "20260909060645-cfecc2f",
-  "files": 76,
-  "bytes": 40095385
+  "version": "20260909063410-8dd57ec",
+  "zip": "https://atultiwari.github.io/wiggleplay/updates/web.zip",
+  "bytes": 40124247,
+  "sha256": "3c87081a5cfe0f7dfd3f4aeb58184e0860d991fb62254a3ef1f6be4eab88622b",
+  "files": 79,
+  "publishedAt": "2026-09-09T06:34:13.836Z",
+  "notes": "feat: Alphabet Trail and Path Tracer touch games",
+  "desktop": {
+    "version": "0.1.0",
+    "releases": "https://github.com/atultiwari/wiggleplay/releases/latest"
+  }
 }

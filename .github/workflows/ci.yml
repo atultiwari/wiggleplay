@@ -29,12 +29,18 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run test:coverage
+      - name: Stamp the build version
+        run: echo "WIGGLE_BUILD_VERSION=$(date -u +%Y%m%d%H%M%S)-$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
       - name: Build for GitHub Pages
         run: npm run build
         env:
           VITE_BASE_PATH: /${{ github.event.repository.name }}/
       - name: Add SPA fallback
         run: cp dist/index.html dist/404.html
+      - name: Publish the games bundle for the desktop and mobile apps (updates/)
+        run: |
+          VITE_BASE_PATH=/ npx vite build --outDir dist-shell
+          node scripts/pack-web-bundle.mjs dist-shell dist/updates --site https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
