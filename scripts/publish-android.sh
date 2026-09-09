@@ -21,7 +21,9 @@ if [[ "${1:-}" == "--build" ]]; then
 fi
 [[ -f "$APK" ]] || { echo "No release APK at $APK; run with --build first." >&2; exit 1; }
 
-BUNDLE=$(node -e "console.log(JSON.parse(require('fs').readFileSync('mobile/assets/web-manifest.json','utf8')).version)")
+# The games-bundle stamp is read from the APK itself so the notes always match what was uploaded.
+BUNDLE=$(unzip -p "$APK" assets/index.android.bundle | grep -a -o '[0-9]\{14\}-[0-9a-f]\{7\}' | head -1 || true)
+[[ -n "$BUNDLE" ]] || BUNDLE=$(node -e "console.log(JSON.parse(require('fs').readFileSync('mobile/assets/web-manifest.json','utf8')).version)")
 APP_VERSION=$(node -e "console.log(require('./mobile/app.json').expo.version)")
 SIZE=$(du -h "$APK" | cut -f1)
 NOTES="WigglePlay for Android ${APP_VERSION} (games bundle ${BUNDLE}, ${SIZE}).
