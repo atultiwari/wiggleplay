@@ -3,6 +3,9 @@ import { CATEGORIES } from '../config/games'
 import { SESSION, SITE } from '../config/site'
 import './ParentsPage.css'
 
+/** Rolling release kept current by scripts/publish-android.sh. */
+const ANDROID_APK_URL = `${SITE.repo}/releases/download/android-latest/WigglePlay-Android.apk`
+
 export const ParentsPage = () => (
   <div className="parents">
     <SiteHeader />
@@ -52,6 +55,30 @@ export const ParentsPage = () => (
           <li>Buttons that leave a game must be pressed and held, so a curious tap does nothing.</li>
           <li>After about {SESSION.suggestedMinutes} minutes a friendly "bye bye" screen appears to make stopping easy.</li>
           <li>Every game speaks the names of colours, numbers or fruits so play doubles as vocabulary time.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Install the app (plays offline)</h2>
+        <p>
+          The website always has the newest games. For a phone, tablet or laptop that will be used without Wi-Fi, install the app once:
+          everything is inside it, and new games arrive later through Settings → Updates.
+        </p>
+        <ul>
+          <li>
+            <strong>📱 Android:</strong>{' '}
+            <a href={ANDROID_APK_URL} download>
+              download the APK
+            </a>{' '}
+            on the device, open it, and allow the browser to install it when Android asks (Android 7 or newer).
+          </li>
+          <li>
+            <strong>💻 Windows and macOS:</strong>{' '}
+            <a href={`${SITE.repo}/releases`} target="_blank" rel="noreferrer">
+              installers on the releases page
+            </a>
+            .
+          </li>
         </ul>
       </section>
 

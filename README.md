@@ -234,6 +234,13 @@ JavaScript bundle; a debug APK shows "Unable to load script" unless a Metro dev 
 reachable. `node scripts/collect-builds.mjs` (repo root) copies every installable build into
 `builds/` with platform names.
 
+**Sharing the APK with a phone or tablet:** `scripts/publish-android.sh [--build]` (repo root)
+uploads the release APK to a rolling GitHub release, so the stable link
+`https://github.com/atultiwari/wiggleplay/releases/download/android-latest/WigglePlay-Android.apk`
+(also on the site's "For grown-ups" page) always serves the newest build. On the device: open
+the link, download, allow the browser to install unknown apps once, done. For a device on a USB
+cable, `adb install -r builds/WigglePlay-Android.apk` works too.
+
 - The whole web build (games, art, MediaPipe runtime, models: ~38 MB) travels inside the app as
   one zip asset. On first launch it is unpacked into the app's documents folder and served by a
   tiny localhost server (`@dr.pogodin/react-native-static-server`) into a WebView, because a
