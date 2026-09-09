@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>WigglePlay</title>
+    <style>
+      :root { color-scheme: light; }
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: radial-gradient(circle at 50% 30%, #ffffff, #f4ecff); color: #1b1533; }
+      main { text-align: center; padding: 2rem; max-width: 34rem; }
+      h1 { font-size: 2.2rem; margin: 0 0 0.5rem; color: #4c2fb3; }
+      p { font-size: 1.1rem; color: #5b5470; margin: 0.4rem 0; }
+      .bar { width: min(80vw, 420px); height: 18px; margin: 1.4rem auto 0.6rem; border-radius: 999px; background: #e6e0f5; overflow: hidden; }
+      .bar > i { display: block; height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, #7c5cff, #3ddc84); transition: width 200ms ease; }
+      .mascot { font-size: 4rem; animation: bounce 900ms ease-in-out infinite; }
+      button { margin-top: 1rem; padding: 0.7rem 1.4rem; border: 0; border-radius: 999px; background: #7c5cff; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; }
+      @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="mascot" aria-hidden="true">🟣</div>
+      <h1>WigglePlay</h1>
+      <p id="status">Checking the wiggle magic…</p>
+      <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="fill"></i></div>
+      <p id="detail" style="font-size: 0.9rem"></p>
+      <button id="retry" type="button" hidden>Try again</button>
+      <p style="font-size: 0.85rem; opacity: 0.75">Grown-ups: the tracking files are downloaded once and then the app works without the internet. Nothing from the camera ever leaves this computer.</p>
+    </main>
+    <script>
+      const status = document.getElementById('status')
+      const detail = document.getElementById('detail')
+      const fill = document.getElementById('fill')
+      const retry = document.getElementById('retry')
+      const mb = (bytes) => `${(bytes / 1048576).toFixed(1)} MB`
+      window.wigglePlayDesktop.onSetupProgress((progress) => {
+        if (progress.done) {
+          status.textContent = 'All set! Starting…'
+          fill.style.width = '100%'
+          return
+        }
+        if (progress.error) {
+          status.textContent = 'The download did not finish.'
+          detail.textContent = `${progress.error} Check the internet connection and try again.`
+          retry.hidden = false
+          return
+        }
+        retry.hidden = true
+        const share = progress.totalBytes ? progress.receivedBytes / progress.totalBytes : 0
+        const overall = ((progress.index + share) / progress.total) * 100
+        status.textContent = `Downloading the tracking files (${progress.index + 1} of ${progress.total})…`
+        detail.textContent = `${progress.file} · ${mb(progress.receivedBytes)}${progress.totalBytes ? ` of ${mb(progress.totalBytes)}` : ''}`
+        fill.style.width = `${overall.toFixed(0)}%`
+        fill.parentElement.setAttribute('aria-valuenow', overall.toFixed(0))
+      })
+      retry.addEventListener('click', () => {
+        status.textContent = 'Trying again…'
+        window.wigglePlayDesktop.retrySetup()
+      })
+    </script>
+  </body>
+</html>

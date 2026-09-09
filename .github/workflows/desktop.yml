@@ -1,0 +1,59 @@
+name: Desktop installers
+
+# Builds the Windows and macOS apps and attaches them to a GitHub release.
+# Trigger by pushing a tag like desktop-v0.1.0, or run it by hand from the Actions tab.
+on:
+  push:
+    tags: ['desktop-v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            target: mac
+          - os: windows-latest
+            target: win
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            desktop/package-lock.json
+      - name: Install web app
+        run: npm ci
+      - name: Install desktop shell
+        run: npm ci
+        working-directory: desktop
+      - name: Test desktop shell
+        run: npm test
+        working-directory: desktop
+      - name: Build installers
+        run: npm run dist:${{ matrix.target }}
+        working-directory: desktop
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wiggleplay-${{ matrix.target }}
+          path: |
+            desktop/release/*.dmg
+            desktop/release/*.zip
+            desktop/release/*.exe
+          if-no-files-found: error
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            desktop/release/*.dmg
+            desktop/release/*.zip
+            desktop/release/*.exe

@@ -1,0 +1,69 @@
+{
+  "name": "wiggleplay-desktop",
+  "version": "0.1.0",
+  "description": "WigglePlay for Windows and macOS: camera-powered toddler learning games that run fully offline once installed.",
+  "author": "Atul Tiwari",
+  "license": "MIT",
+  "private": true,
+  "main": "dist-main/main.js",
+  "scripts": {
+    "build:web": "node scripts/build-web.mjs",
+    "build:web:lite": "node scripts/build-web.mjs --lite",
+    "build:main": "tsc -p tsconfig.json",
+    "build": "npm run build:web && npm run build:main",
+    "start": "npm run build && electron .",
+    "test": "npm run build:main && node --test dist-main/assets.test.js",
+    "smoke": "node e2e/smoke.mjs",
+    "dist": "npm run build && electron-builder --mac --win --publish never",
+    "dist:mac": "npm run build && electron-builder --mac --publish never",
+    "dist:win": "npm run build && electron-builder --win --publish never"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "electron": "^44.3.0",
+    "electron-builder": "^26.15.3",
+    "playwright-core": "^1.60.0",
+    "typescript": "^5.9.3"
+  },
+  "build": {
+    "appId": "in.atultiwari.wiggleplay",
+    "productName": "WigglePlay",
+    "copyright": "Copyright © 2026 Atul Tiwari",
+    "asar": true,
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist-main/**/*",
+      "!dist-main/**/*.test.js",
+      "setup/**/*",
+      "web/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.education",
+      "target": [
+        { "target": "dmg", "arch": ["arm64", "x64"] },
+        { "target": "zip", "arch": ["arm64", "x64"] }
+      ],
+      "icon": "build/icon.png",
+      "hardenedRuntime": false,
+      "extendInfo": {
+        "NSCameraUsageDescription": "WigglePlay uses the camera so your child can play with their hands and body. The picture never leaves this computer.",
+        "NSMicrophoneUsageDescription": "WigglePlay listens for how loud the room is in the Animal Call game. Nothing is recorded."
+      }
+    },
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
+  }
+}

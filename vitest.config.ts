@@ -5,6 +5,7 @@ export default mergeConfig(
   viteConfig({ mode: 'test', command: 'serve' }),
   defineConfig({
     test: {
+      exclude: ['**/node_modules/**', 'desktop/**', 'mobile/**'],
       environment: 'jsdom',
       globals: true,
       setupFiles: ['./src/test/setup.ts'],

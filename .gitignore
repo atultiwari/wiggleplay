@@ -42,3 +42,14 @@ e2e/screenshots/
 3d/*/part-coverage-*.json
 3d/*/pass-gate-check-*.txt
 3d/*/starter-spec.backup.json
+
+# desktop (Electron) and mobile (Expo) shells: generated bundles and native projects
+desktop/web/
+desktop/dist-main/
+desktop/release/
+desktop/build/
+mobile/assets/web/
+mobile/ios/
+mobile/android/
+mobile/.expo/
+mobile/assets/web.zip
