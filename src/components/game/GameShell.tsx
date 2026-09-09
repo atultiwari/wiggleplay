@@ -23,6 +23,8 @@ export interface GameShellProps {
 }
 
 const NO_POINTER_HINT_MS = 2500
+/** How long the camera may take to start before we give up and offer a retry. */
+const CAMERA_STALL_MS = 25_000
 const HINT_POLL_MS = 400
 /** Responsiveness 0..1 maps to this minimum smoothing share. */
 const SMOOTHING_RANGE = [0.22, 0.92] as const
@@ -71,6 +73,18 @@ export const GameShell = ({ game, children }: GameShellProps) => {
   })
   const ready = camera.status === 'ready' && tracking.status === 'ready'
   const phase: Phase = requestedPhase === 'starting' && ready ? 'playing' : requestedPhase
+  const [stalled, setStalled] = useState(false)
+
+  // A camera that never delivers a frame (another app holding it, a broken driver) would otherwise leave
+  // the child stuck on "Asking for the camera…" for ever.
+  useEffect(() => {
+    if (phase !== 'starting') return
+    const timer = setTimeout(() => setStalled(true), CAMERA_STALL_MS)
+    return () => {
+      clearTimeout(timer)
+      setStalled(false)
+    }
+  }, [phase])
   const active = phase === 'playing' && !settingsOpen
 
   useEffect(() => {
@@ -159,7 +173,7 @@ export const GameShell = ({ game, children }: GameShellProps) => {
         <LoadingOverlay
           camera={camera}
           trackerStatus={tracking.status}
-          trackerError={tracking.error}
+          trackerError={tracking.error ?? (stalled ? 'The camera did not start. Close other apps that use the camera, then try again.' : null)}
           onRetry={retry}
           onExit={exit}
         />

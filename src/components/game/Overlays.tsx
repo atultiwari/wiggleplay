@@ -80,6 +80,7 @@ export const LoadingOverlay = ({ camera, trackerStatus, trackerError, onRetry, o
       ) : (
         <p className="overlay__text overlay__text--big">{loadingMessage(camera, trackerStatus)}</p>
       )}
+      <HoldButton label="Hold to go home" icon="🏠" onHold={onExit} className="overlay__exit" />
     </div>
   )
 }
